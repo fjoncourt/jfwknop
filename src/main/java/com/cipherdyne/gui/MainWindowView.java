@@ -289,20 +289,60 @@ public class MainWindowView extends JFrame implements IConsole {
         return this.settingsTab.btnFwknopTest;
     }
 
+    /**
+     * @return the button used to remove Rijndael key
+     */
+    public JButton getBtnRemoveRijndaelKey() {
+        return this.cipherTab.removeRijndaelKey;
+    }
+
+    /**
+     * @return the button used to remove the base64 rijndael key
+     */
     public JButton getBtnRemoveBase64Rijndael() {
-        return this.cipherTab.removeBase64Rijndael;
+        return this.cipherTab.removeBase64RijndaelKey;
     }
 
+    /**
+     * @return the button used to generate random Rijndael key
+     */
+    public JButton getBtnGenerateRijndaelKey() {
+        return this.cipherTab.generateRijndaelKey;
+    }
+
+    /**
+     * @return the button used to generate random base64 rijndael key
+     */
     public JButton getBtnGenerateBase64Rijndael() {
-        return this.cipherTab.generateBase64Rijndael;
+        return this.cipherTab.generateBase64RijndaelKey;
     }
 
+    /**
+     * @return the button used to generate random HMAC key
+     */
+    public JButton getBtnGenerateHmacKey() {
+        return this.cipherTab.generateHmacKey;
+    }
+
+    /**
+     * @return the button used to remove HMAC key
+     */
+    public JButton getBtnRemoveHmacKey() {
+        return this.cipherTab.removeHmacKey;
+    }
+    
+    /**
+     * @return the button used to remove HMAC base64 key
+     */
     public JButton getBtnRemoveBase64Hmac() {
-        return this.cipherTab.removeBase64Hmac;
+        return this.cipherTab.removeBase64HmacKey;
     }
 
+    /**
+     * @return the button used to generate radom base64 HMAC key
+     */
     public JButton getBtnGenerateBase64Hmac() {
-        return this.cipherTab.generateBase64Hmac;
+        return this.cipherTab.generateBase64HmacKey;
     }
 
     @Override

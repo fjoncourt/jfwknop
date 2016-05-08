@@ -71,8 +71,12 @@
             <artifactId>miglayout</artifactId>
             <version>3.7.4</version>
         </dependency>
-                
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.1</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
 </project>

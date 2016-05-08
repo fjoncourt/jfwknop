@@ -21,14 +21,14 @@ import net.miginfocom.swing.MigLayout;
  */
 public class CipherTab extends JPanel {
 
-    public JButton generateRijndael;
-    public JButton removeRijndael;
-    public JButton generateBase64Rijndael;
-    public JButton removeBase64Rijndael;
-    public JButton generateHmac;
-    public JButton removeHmac;
-    public JButton generateBase64Hmac;
-    public JButton removeBase64Hmac;    
+    public JButton generateRijndaelKey;
+    public JButton removeRijndaelKey;
+    public JButton generateBase64RijndaelKey;
+    public JButton removeBase64RijndaelKey;
+    public JButton generateHmacKey;
+    public JButton removeHmacKey;
+    public JButton generateBase64HmacKey;
+    public JButton removeBase64HmacKey;    
 
     public CipherTab(Map<EnumFwknopRcKey, IFwknopVariable> varMap) {
         super(new MigLayout("fill", "[left][center][right]", ""));
@@ -49,21 +49,21 @@ public class CipherTab extends JPanel {
                 EnumFwknopRcKey.KEY_BASE64));
 
         JPanel rijndaelActionPanel = new JPanel(new MigLayout("insets 0, flowx, gap 0", "", ""));
-        this.generateRijndael = new JButton(plusImg);
-        this.generateRijndael.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.key"));
-        rijndaelActionPanel.add(this.generateRijndael);
-        this.removeRijndael = new JButton(removeImg);
-        this.removeRijndael.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.key"));
-        rijndaelActionPanel.add(this.removeRijndael);
+        this.generateRijndaelKey = new JButton(plusImg);
+        this.generateRijndaelKey.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.key"));
+        rijndaelActionPanel.add(this.generateRijndaelKey);
+        this.removeRijndaelKey = new JButton(removeImg);
+        this.removeRijndaelKey.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.key"));
+        rijndaelActionPanel.add(this.removeRijndaelKey);
         rijndaelPanel.add(rijndaelActionPanel, "cell 2 0");
         
         JPanel rijndaelBase64ActionPanel = new JPanel(new MigLayout("insets 0, flowx, gap 0", "", ""));
-        this.generateBase64Rijndael = new JButton(plusImg);
-        this.generateBase64Rijndael.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.base64.key"));
-        rijndaelBase64ActionPanel.add(this.generateBase64Rijndael);
-        this.removeBase64Rijndael = new JButton(removeImg);
-        this.removeBase64Rijndael.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.base64.key"));         
-        rijndaelBase64ActionPanel.add(this.removeBase64Rijndael);
+        this.generateBase64RijndaelKey = new JButton(plusImg);
+        this.generateBase64RijndaelKey.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.base64.key"));
+        rijndaelBase64ActionPanel.add(this.generateBase64RijndaelKey);
+        this.removeBase64RijndaelKey = new JButton(removeImg);
+        this.removeBase64RijndaelKey.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.base64.key"));         
+        rijndaelBase64ActionPanel.add(this.removeBase64RijndaelKey);
         rijndaelPanel.add(rijndaelBase64ActionPanel, "cell 2 1, aligny top");
         
         this.add(rijndaelPanel, "growy, aligny top");
@@ -92,21 +92,21 @@ public class CipherTab extends JPanel {
                 EnumFwknopRcKey.HMAC_DIGEST_TYPE));
         
         JPanel hmacActionPanel = new JPanel(new MigLayout("insets 0, flowx, gap 0", "", ""));
-        this.generateHmac = new JButton(plusImg);
-        this.generateHmac.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.key"));
-        hmacActionPanel.add(this.generateHmac);
-        this.removeHmac = new JButton(removeImg);
-        this.removeHmac.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.key"));
-        hmacActionPanel.add(this.removeHmac);
+        this.generateHmacKey = new JButton(plusImg);
+        this.generateHmacKey.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.key"));
+        hmacActionPanel.add(this.generateHmacKey);
+        this.removeHmacKey = new JButton(removeImg);
+        this.removeHmacKey.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.key"));
+        hmacActionPanel.add(this.removeHmacKey);
         hmacPanel.add(hmacActionPanel, "cell 2 1");
         
         JPanel hmacBase64ActionPanel = new JPanel(new MigLayout("insets 0, flowx, gap 0", "", ""));
-        this.generateBase64Hmac = new JButton(plusImg);
-        this.generateBase64Hmac.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.base64.key"));
-        hmacBase64ActionPanel.add(this.generateBase64Hmac);
-        this.removeBase64Hmac = new JButton(removeImg);
-        this.removeBase64Hmac.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.base64.key"));         
-        hmacBase64ActionPanel.add(this.removeBase64Hmac);
+        this.generateBase64HmacKey = new JButton(plusImg);
+        this.generateBase64HmacKey.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.base64.key"));
+        hmacBase64ActionPanel.add(this.generateBase64HmacKey);
+        this.removeBase64HmacKey = new JButton(removeImg);
+        this.removeBase64HmacKey.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.base64.key"));         
+        hmacBase64ActionPanel.add(this.removeBase64HmacKey);
         hmacPanel.add(hmacBase64ActionPanel, "cell 2 2, aligny top");
         
         this.add(hmacPanel, "growy, aligny top");

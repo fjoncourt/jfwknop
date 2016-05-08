@@ -14,6 +14,7 @@ import javax.swing.JCheckBox;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -105,6 +106,21 @@ public class MainWindowController {
             }
         });
 
+        // Add action listener to generate/remove rijndael key
+        this.view.getBtnGenerateRijndaelKey().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY).setText(RandomStringUtils.randomAlphabetic(16));
+            }
+        });
+
+        this.view.getBtnRemoveRijndaelKey().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY).setDefaultValue();
+            }
+        });
+
         // Add action listener to generate/remove rijndael base64 key
         this.view.getBtnGenerateBase64Rijndael().addActionListener(new ActionListener() {
             @Override
@@ -123,7 +139,24 @@ public class MainWindowController {
                 ((IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY_BASE64)).setDefaultValue();
             }
         });
+        
+        // Add action listener to generate/remove rijndael key
+        this.view.getBtnGenerateHmacKey().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY).setText(RandomStringUtils.randomAlphabetic(16));
+                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("Y");
+            }
+        });
 
+        this.view.getBtnRemoveHmacKey().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY).setDefaultValue();
+                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("N");                
+            }
+        });
+        
         // Add action listener to generate/remove HMAC base64 key
         this.view.getBtnGenerateBase64Hmac().addActionListener(new ActionListener() {
             @Override
@@ -132,21 +165,22 @@ public class MainWindowController {
                 new Random().nextBytes(byteArray);
                 IFwknopVariable keybase64 = (IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY_BASE64);
                 keybase64.setText(computeBase64(byteArray));
-                ((IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC)).setText("Y");
+                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("Y");
             }
         });
 
         this.view.getBtnRemoveBase64Hmac().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY_BASE64)).setDefaultValue();
-                ((IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC)).setText("N");
+                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY_BASE64).setDefaultValue();
+                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("N");
             }
         });
     }
 
     /**
-     * Update the fwknop client model with the settings set by the user in the user interface
+     * Update the fwknop client model with the settings set by the user in the
+     * user interface
      */
     private void updateFwknopModel() {
         MainWindowController.this.fwknopClientModel.setFwknopConfig(EnumFwknopConfigKey.FWKNOP_FILEPATH,
@@ -156,7 +190,7 @@ public class MainWindowController {
         MainWindowController.this.fwknopClientModel.setFwknopConfig(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS,
                 MainWindowController.this.view.getVarFwknopExtraArgs().getText());
         MainWindowController.this.fwknopClientModel.setFwknopConfig(EnumFwknopConfigKey.FWKNOP_VERBOSE,
-                MainWindowController.this.view.getBtnFwknopVerbose().isSelected() ? "1" : "0");        
+                MainWindowController.this.view.getBtnFwknopVerbose().isSelected() ? "1" : "0");
     }
 
     private void populateMenuBar() {
