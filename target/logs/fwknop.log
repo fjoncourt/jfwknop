@@ -1,0 +1,12 @@
+ERROR [08 05 16 11:11:03.883] (com.cipherdyne.jfwknop.JFwknopConfig) [AWT-EventQueue-1]  - Unable to load configuration file (config.properties) : config.properties (Aucun fichier ou dossier de ce type)
+WARN  [08 05 16 11:11:31.108] (com.cipherdyne.jfwknop.InternationalizationHelper) [AWT-EventQueue-1]  - No translation found for key i18n.generate.key
+WARN  [08 05 16 11:11:31.131] (com.cipherdyne.jfwknop.InternationalizationHelper) [AWT-EventQueue-1]  - No translation found for key i18n.remove.key
+WARN  [08 05 16 11:11:31.281] (com.cipherdyne.jfwknop.InternationalizationHelper) [AWT-EventQueue-1]  - No translation found for key i18n.generate.key
+WARN  [08 05 16 11:11:31.281] (com.cipherdyne.jfwknop.InternationalizationHelper) [AWT-EventQueue-1]  - No translation found for key i18n.remove.key
+WARN  [08 05 16 11:11:31.297] (com.cipherdyne.jfwknop.InternationalizationHelper) [AWT-EventQueue-1]  - No translation found for key i18n.save.key.settings
+WARN  [08 05 16 11:11:31.301] (com.cipherdyne.jfwknop.InternationalizationHelper) [AWT-EventQueue-1]  - No translation found for key i18n.key
+WARN  [08 05 16 11:11:31.302] (com.cipherdyne.jfwknop.InternationalizationHelper) [AWT-EventQueue-1]  - No translation found for key i18n.default.rijndael.key.length
+WARN  [08 05 16 11:11:31.308] (com.cipherdyne.jfwknop.InternationalizationHelper) [AWT-EventQueue-1]  - No translation found for key i18n.default.rijndael.base64.bytes.array.length
+WARN  [08 05 16 11:11:31.310] (com.cipherdyne.jfwknop.InternationalizationHelper) [AWT-EventQueue-1]  - No translation found for key i18n.default.hmac.key.length
+WARN  [08 05 16 11:11:31.312] (com.cipherdyne.jfwknop.InternationalizationHelper) [AWT-EventQueue-1]  - No translation found for key i18n.default.hmac.base64.bytes.array.length
+WARN  [08 05 16 11:11:31.315] (com.cipherdyne.jfwknop.InternationalizationHelper) [AWT-EventQueue-1]  - No translation found for key i18n.default.gpg.base64.bytes.array.length
