@@ -7,7 +7,6 @@ import com.cipherdyne.jfwknop.InternationalizationHelper;
 import com.cipherdyne.jfwknop.JFwknopArgs;
 import com.cipherdyne.jfwknop.JFwknopTextField;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -349,4 +348,25 @@ public class MainWindowView extends JFrame implements IConsole {
     public void setTitle(String title) {
         super.setTitle(JFWKNOP_TITLE + title);
     }
+    
+    /**
+     * @return the button used to select the recipient GPG id
+     */
+    public JButton getBtnRecipientGpgId() {
+        return this.cipherTab.selectRecipientGpgId;
+    }
+
+    /**
+     * @return the button used to select the signer GPG id
+     */    
+    public JButton getBtnSignerGpgId() {
+        return this.cipherTab.selectSignerGpgId;
+    }
+    
+    /**
+     * @return the button used to browse for the GPG home directory
+     */
+    public JButton getBtnGpgHomedir() {
+        return this.cipherTab.browseforGpgHomedir;
+    }    
 }

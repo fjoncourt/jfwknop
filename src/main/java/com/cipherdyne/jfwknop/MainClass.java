@@ -17,7 +17,4 @@ public class MainClass {
        
         javax.swing.SwingUtilities.invokeLater(() -> new MainWindowController());
     }
-
-    //YXplcnR5dWlvcHFzZGZnaDAxMjM0NTY3ODkwMTIzNDU=
-    //Yd/3bM6F2CRh1LkckhO5T/6myh9LB1bEXyatzmgNRlA=
 }

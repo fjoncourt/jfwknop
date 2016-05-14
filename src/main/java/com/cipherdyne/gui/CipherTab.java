@@ -28,7 +28,11 @@ public class CipherTab extends JPanel {
     public JButton generateHmacKey;
     public JButton removeHmacKey;
     public JButton generateBase64HmacKey;
-    public JButton removeBase64HmacKey;    
+    public JButton removeBase64HmacKey; 
+
+    public JButton selectSignerGpgId;
+    public JButton selectRecipientGpgId;
+    public JButton browseforGpgHomedir;
 
     public CipherTab(Map<EnumFwknopRcKey, IFwknopVariable> varMap) {
         super(new MigLayout("fill", "[left][center][right]", ""));
@@ -71,7 +75,7 @@ public class CipherTab extends JPanel {
         /**
          * GPG panel
          */
-        this.add(FwknopFactory.createPanel(new MigLayout("insets 1, wrap 2, gapy 1!", "[120]0![220]", ""),
+        JPanel gpgPanel = (JPanel)FwknopFactory.createPanel(new MigLayout("insets 1, wrap 2, gapy 1!", "[120]0![220]0![16]", ""),
                 InternationalizationHelper.getMessage("i18n.gpg"), varMap, Arrays.asList(
                 EnumFwknopRcKey.USE_GPG,
                 EnumFwknopRcKey.USE_GPG_AGENT,
@@ -79,8 +83,15 @@ public class CipherTab extends JPanel {
                 EnumFwknopRcKey.GPG_SIGNING_PW_BASE64,
                 EnumFwknopRcKey.GPG_SIGNER,
                 EnumFwknopRcKey.GPG_RECIPIENT,
-                EnumFwknopRcKey.GPG_HOMEDIR)), "growy, aligny top");
-
+                EnumFwknopRcKey.GPG_HOMEDIR));
+        this.add(gpgPanel, "growy, aligny top");
+        this.selectSignerGpgId = new JButton(InternationalizationHelper.getMessage("i18n.browse"));
+        gpgPanel.add(this.selectSignerGpgId, "cell 2 4");
+        this.selectRecipientGpgId = new JButton(InternationalizationHelper.getMessage("i18n.browse"));
+        gpgPanel.add(this.selectRecipientGpgId, "cell 2 5");
+        this.browseforGpgHomedir = new JButton(InternationalizationHelper.getMessage("i18n.browse"));
+        gpgPanel.add(this.browseforGpgHomedir, "cell 2 6");
+        
         /**
          * Hmac panel
          */

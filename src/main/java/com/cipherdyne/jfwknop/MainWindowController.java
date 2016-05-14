@@ -1,5 +1,6 @@
 package com.cipherdyne.jfwknop;
 
+import com.cipherdyne.gui.gpg.GpgController;
 import com.cipherdyne.gui.MainWindowView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -139,7 +140,7 @@ public class MainWindowController {
                 ((IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY_BASE64)).setDefaultValue();
             }
         });
-        
+
         // Add action listener to generate/remove rijndael key
         this.view.getBtnGenerateHmacKey().addActionListener(new ActionListener() {
             @Override
@@ -153,10 +154,10 @@ public class MainWindowController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY).setDefaultValue();
-                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("N");                
+                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("N");
             }
         });
-        
+
         // Add action listener to generate/remove HMAC base64 key
         this.view.getBtnGenerateBase64Hmac().addActionListener(new ActionListener() {
             @Override
@@ -176,21 +177,54 @@ public class MainWindowController {
                 MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("N");
             }
         });
+
+        // Add action listener to select a GPG key and its home directory
+        this.view.getBtnRecipientGpgId().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                javax.swing.SwingUtilities.invokeLater(() -> new GpgController(MainWindowController.this.view, 
+                    EnumFwknopRcKey.GPG_RECIPIENT, 
+                    MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).getText()));
+            }
+        });
+
+        this.view.getBtnSignerGpgId().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                javax.swing.SwingUtilities.invokeLater(() -> new GpgController(MainWindowController.this.view, 
+                    EnumFwknopRcKey.GPG_SIGNER, 
+                    MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).getText()));
+            }
+        });
+
+        this.view.getBtnGpgHomedir().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                final JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                fileChooser.setFileHidingEnabled(false);
+                fileChooser.setDialogTitle(InternationalizationHelper.getMessage("i18n.browse"));
+                final int result = fileChooser.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).setText(fileChooser.getSelectedFile().getAbsolutePath());
+                }
+
+            }
+        });
     }
 
     /**
-     * Update the fwknop client model with the settings set by the user in the
-     * user interface
+     * Update the fwknop client model with the settings set by the user in the user interface
      */
     private void updateFwknopModel() {
         MainWindowController.this.fwknopClientModel.setFwknopConfig(EnumFwknopConfigKey.FWKNOP_FILEPATH,
-                MainWindowController.this.view.getVarFwknopFilePath().getText());
+            MainWindowController.this.view.getVarFwknopFilePath().getText());
         MainWindowController.this.fwknopClientModel.setFwknopConfig(EnumFwknopConfigKey.FWKNOP_ARGS,
-                MainWindowController.this.view.getVarFwknopArgs().getText());
+            MainWindowController.this.view.getVarFwknopArgs().getText());
         MainWindowController.this.fwknopClientModel.setFwknopConfig(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS,
-                MainWindowController.this.view.getVarFwknopExtraArgs().getText());
+            MainWindowController.this.view.getVarFwknopExtraArgs().getText());
         MainWindowController.this.fwknopClientModel.setFwknopConfig(EnumFwknopConfigKey.FWKNOP_VERBOSE,
-                MainWindowController.this.view.getBtnFwknopVerbose().isSelected() ? "1" : "0");
+            MainWindowController.this.view.getBtnFwknopVerbose().isSelected() ? "1" : "0");
     }
 
     private void populateMenuBar() {
@@ -233,8 +267,7 @@ public class MainWindowController {
     }
 
     /**
-     * Open browser to allow user to select the filename to save the current
-     * configuration to
+     * Open browser to allow user to select the filename to save the current configuration to
      */
     private void saveAs() {
         final JFileChooser fileChooser = new JFileChooser();
@@ -243,7 +276,7 @@ public class MainWindowController {
         if (result == JFileChooser.APPROVE_OPTION) {
             final String filename = fileChooser.getSelectedFile().getAbsolutePath();
             MainWindowController.this.rcFileModel.saveAsRcFile(convertViewToConfig(this.view.getVariables()),
-                    filename);
+                filename);
             updateNewRcFile(filename);
         }
     }
@@ -251,8 +284,8 @@ public class MainWindowController {
     /**
      * Populate recent file list from the file menu.
      *
-     * This function adds action listener to each entry in the recent file list.
-     * When selected, the file is loaded.
+     * This function adds action listener to each entry in the recent file list. When selected, the
+     * file is loaded.
      */
     private void populateRecentFiles() {
         for (final JMenuItem miFilename : this.view.getVarRecentRcFiles()) {

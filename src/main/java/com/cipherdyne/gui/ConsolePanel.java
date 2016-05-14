@@ -29,7 +29,7 @@ public class ConsolePanel extends JPanel {
     public JButton btnExecute;
 
     public ConsolePanel(Map<EnumFwknopRcKey, IFwknopVariable> varMap) {
-        super(new MigLayout("insets 0, aligny top, flowy, gap 0", "[grow]", "[grow]"));
+        super(new MigLayout("insets 0 10 10 10, aligny top, flowy, gap 0", "[grow]", "[grow]"));
         initialize(varMap);
     }
 
