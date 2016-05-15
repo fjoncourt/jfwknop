@@ -38,6 +38,7 @@ public class MainWindowView extends JFrame implements IConsole {
     private JMenuItem openMenuItem;
     private JMenu recentsMenu;
     private JMenuItem openTerminalMenuItem;
+    private JMenuItem importGpgKeyMenuItem;
     private JMenuItem aboutMenuItem;
 
     private final Map<EnumFwknopRcKey, IFwknopVariable> varMap;
@@ -79,10 +80,9 @@ public class MainWindowView extends JFrame implements IConsole {
     }
 
     /**
-     * Build the recent files menu from the recent file list. For each entry an
-     * index provides an easy way to know which file is the most recent (1).
-     * Also a shortcut (Ctrl + R) is available to quickly load the most recent
-     * file used.
+     * Build the recent files menu from the recent file list. For each entry an index provides an
+     * easy way to know which file is the most recent (1). Also a shortcut (Ctrl + R) is available
+     * to quickly load the most recent file used.
      *
      * @param recentFiles List of files recently used
      */
@@ -120,8 +120,12 @@ public class MainWindowView extends JFrame implements IConsole {
         final JMenu menu = new JMenu(InternationalizationHelper.getMessage("window.menu.tools"));
 
         this.openTerminalMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.tools.openterminal"),
-                new ImageIcon(this.getClass().getResource("/openterminal16.png")));
+            new ImageIcon(this.getClass().getResource("/openterminal16.png")));
         menu.add(this.openTerminalMenuItem);
+
+        this.importGpgKeyMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.tools.importgpgkey"), 
+            new ImageIcon(this.getClass().getResource("/import16.png")));
+        menu.add(this.importGpgKeyMenuItem);
 
         return menu;
     }
@@ -141,16 +145,16 @@ public class MainWindowView extends JFrame implements IConsole {
         menu.setMnemonic(KeyEvent.VK_F);
 
         this.openMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.file.openfile"),
-                new ImageIcon(this.getClass().getResource("/open16.png")));
+            new ImageIcon(this.getClass().getResource("/open16.png")));
         menu.add(this.openMenuItem);
 
         this.saveMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.file.savefile"),
-                new ImageIcon(this.getClass().getResource("/save16.png")));
+            new ImageIcon(this.getClass().getResource("/save16.png")));
         this.saveMenuItem.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         menu.add(this.saveMenuItem);
 
         this.saveAsMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.file.saveasfile"),
-                new ImageIcon(this.getClass().getResource("/saveas16.png")));
+            new ImageIcon(this.getClass().getResource("/saveas16.png")));
         menu.add(this.saveAsMenuItem);
 
         menu.addSeparator();
@@ -252,6 +256,10 @@ public class MainWindowView extends JFrame implements IConsole {
         return this.openTerminalMenuItem;
     }
 
+    public JMenuItem getImportGpgKeyMenuItem() {
+        return this.importGpgKeyMenuItem;
+    }
+
     @Override
     public void appendToConsole(String msg) {
         SwingUtilities.invokeLater(() -> {
@@ -329,7 +337,7 @@ public class MainWindowView extends JFrame implements IConsole {
     public JButton getBtnRemoveHmacKey() {
         return this.cipherTab.removeHmacKey;
     }
-    
+
     /**
      * @return the button used to remove HMAC base64 key
      */
@@ -348,7 +356,7 @@ public class MainWindowView extends JFrame implements IConsole {
     public void setTitle(String title) {
         super.setTitle(JFWKNOP_TITLE + title);
     }
-    
+
     /**
      * @return the button used to select the recipient GPG id
      */
@@ -358,15 +366,15 @@ public class MainWindowView extends JFrame implements IConsole {
 
     /**
      * @return the button used to select the signer GPG id
-     */    
+     */
     public JButton getBtnSignerGpgId() {
         return this.cipherTab.selectSignerGpgId;
     }
-    
+
     /**
      * @return the button used to browse for the GPG home directory
      */
     public JButton getBtnGpgHomedir() {
         return this.cipherTab.browseforGpgHomedir;
-    }    
+    }
 }

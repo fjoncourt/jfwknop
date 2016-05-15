@@ -21,9 +21,7 @@ import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPPublicKey;
 import org.bouncycastle.openpgp.PGPPublicKeyRing;
 import org.bouncycastle.openpgp.PGPPublicKeyRingCollection;
-import static org.bouncycastle.openpgp.examples.PubringDump.getAlgorithm;
 import org.bouncycastle.openpgp.operator.jcajce.JcaKeyFingerprintCalculator;
-import org.bouncycastle.util.encoders.Hex;
 
 /**
  *
@@ -35,35 +33,35 @@ public class GpgTableModel extends AbstractTableModel {
     static public final int USER_ID_COL = 1;
 
     // Name of the available columns in the table model
-    private String[] columnNames = {InternationalizationHelper.getMessage("i18n.key.id"), InternationalizationHelper.getMessage("i18n.user.id")};
+    final private String[] columnNames = {InternationalizationHelper.getMessage("i18n.key.id"), InternationalizationHelper.getMessage("i18n.user.id")};
 
     // List of GPG key that are displayed in the jtable
-    private List<SimpleGpgKey> gpgKeyData = new ArrayList<>();
+    final private List<SimpleGpgKey> gpgKeyData = new ArrayList<>();
 
     /**
      * Create the GPG table model. The keyring is parsed to provide data to fill the table model
      *
      * @param gpgHomeDirectory GPG home directory where pubring.gpg file can be find
-     * 
+     *
      * @throws java.io.IOException
      * @throws java.io.FileNotFoundException
      * @throws org.bouncycastle.openpgp.PGPException
      */
     public GpgTableModel(String gpgHomeDirectory) throws IOException, FileNotFoundException, PGPException {
         super();
-        processKeyring(gpgHomeDirectory);
+        parseKeyring(gpgHomeDirectory);
     }
 
     /**
      * Read keyring and fetch keys and user ids
      *
      * @param gpgHomeDirectory
-     * 
+     *
      * @throws FileNotFoundException
      * @throws IOException
      * @throws PGPException
      */
-    private void processKeyring(String gpgHomeDirectory) throws FileNotFoundException, IOException, PGPException {
+    private void parseKeyring(String gpgHomeDirectory) throws FileNotFoundException, IOException, PGPException {
 
         FileInputStream in = new FileInputStream(gpgHomeDirectory + "/pubring.gpg");
         Security.addProvider(new BouncyCastleProvider());
@@ -77,7 +75,7 @@ public class GpgTableModel extends AbstractTableModel {
             try {
                 pubKey = pgpPub.getPublicKey();
             } catch (Exception e) {
-                e.printStackTrace();
+                Logger.getLogger(GpgTableModel.class.getName()).log(Level.SEVERE, null, e);
                 continue;
             }
 
@@ -100,14 +98,13 @@ public class GpgTableModel extends AbstractTableModel {
                     if (firstId) {
                         firstId = false;
                         userId = (String) iid.next();
-                    }
-                    else {
+                    } else {
                         iid.next();
                     }
                 }
             }
 
-            this.gpgKeyData.add(new SimpleGpgKey(keyId, userId));
+            this.gpgKeyData.add(new GpgTableModel.SimpleGpgKey(keyId, userId));
         }
 
         try {

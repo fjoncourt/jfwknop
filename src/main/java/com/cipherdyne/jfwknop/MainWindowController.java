@@ -4,11 +4,13 @@ import com.cipherdyne.gui.gpg.GpgController;
 import com.cipherdyne.gui.MainWindowView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JCheckBox;
@@ -18,6 +20,7 @@ import javax.swing.JMenuItem;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.bouncycastle.openpgp.PGPException;
 
 public class MainWindowController {
 
@@ -182,8 +185,8 @@ public class MainWindowController {
         this.view.getBtnRecipientGpgId().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                javax.swing.SwingUtilities.invokeLater(() -> new GpgController(MainWindowController.this.view, 
-                    EnumFwknopRcKey.GPG_RECIPIENT, 
+                javax.swing.SwingUtilities.invokeLater(() -> new GpgController(MainWindowController.this.view,
+                    EnumFwknopRcKey.GPG_RECIPIENT,
                     MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).getText()));
             }
         });
@@ -191,8 +194,8 @@ public class MainWindowController {
         this.view.getBtnSignerGpgId().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                javax.swing.SwingUtilities.invokeLater(() -> new GpgController(MainWindowController.this.view, 
-                    EnumFwknopRcKey.GPG_SIGNER, 
+                javax.swing.SwingUtilities.invokeLater(() -> new GpgController(MainWindowController.this.view,
+                    EnumFwknopRcKey.GPG_SIGNER,
                     MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).getText()));
             }
         });
@@ -263,6 +266,23 @@ public class MainWindowController {
         this.view.getOpenTerminalMenuItem().addActionListener(e -> {
             ExternalCommand extCmd = new ExternalCommand("/usr/bin/x-terminal-emulator");
             extCmd.execute();
+        });
+
+        // Set up action listener to import GPG key to the keyring
+        this.view.getImportGpgKeyMenuItem().addActionListener(e -> {
+           final JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Browse for GPG key");
+            final int result = fileChooser.showOpenDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+               String gpgHomeDirectory = MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).getText();
+               try {
+                   GpgUtils.addKeyToKeyring(gpgHomeDirectory, fileChooser.getSelectedFile().getAbsolutePath());
+               } catch (IOException ex) {
+                   java.util.logging.Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+               } catch (PGPException ex) {
+                   java.util.logging.Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+               }
+            }
         });
     }
 
