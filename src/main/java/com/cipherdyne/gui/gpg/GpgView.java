@@ -29,6 +29,9 @@ public class GpgView extends JDialog {
 
     // Button used to cancel the action and go back to the main window
     final private JButton btnCancel;
+    
+    // Button used to export the selected key
+    final private JButton btnExport;
 
     // Table that displays all keys from the keyring
     private JTable keyTable = null;
@@ -36,7 +39,7 @@ public class GpgView extends JDialog {
     public GpgView(JFrame frame, String gpgHomeDirectory) {
         super(frame, InternationalizationHelper.getMessage("i18n.key.management"), true);
 
-        this.setLayout(new MigLayout("inset 5, gap 0, flowx", "[240!][240!]", ""));
+        this.setLayout(new MigLayout("inset 5, gap 0, flowx", "[150!][150!][150!]", ""));
 
         // Build the key table and ensure the GPG home directory is parsable
         try {
@@ -56,12 +59,14 @@ public class GpgView extends JDialog {
 
         // Build the action buttons
         btnSelect = new JButton(InternationalizationHelper.getMessage("i18n.key.select"));
+        btnExport = new JButton(InternationalizationHelper.getMessage("i18n.key.export"));
         btnCancel = new JButton(InternationalizationHelper.getMessage("i18n.key.cancel"));
 
         // Add components to the ui
         JScrollPane scrollPane = new JScrollPane(keyTable);
-        this.getContentPane().add(scrollPane, "span 2, growx, wrap");
+        this.getContentPane().add(scrollPane, "span 3, growx, wrap");
         this.add(btnSelect, "growx");
+        this.add(btnExport, "growx");
         this.add(btnCancel, "growx");
 
         this.pack();
@@ -75,12 +80,19 @@ public class GpgView extends JDialog {
     }
 
     /**
-     * @return the cacncel button
+     * @return the cancel button
      */
     public JButton getBtnCancel() {
         return this.btnCancel;
     }
 
+    /**
+     * @return the cacncel button
+     */
+    public JButton getBtnExport() {
+        return this.btnExport;
+    }    
+    
     /**
      * @return the key id currently selected
      */

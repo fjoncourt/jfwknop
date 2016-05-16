@@ -7,8 +7,15 @@ package com.cipherdyne.gui.gpg;
 
 import com.cipherdyne.gui.MainWindowView;
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
+import com.cipherdyne.jfwknop.GpgUtils;
+import com.cipherdyne.jfwknop.InternationalizationHelper;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import org.bouncycastle.openpgp.PGPException;
 
 /**
  *
@@ -21,9 +28,11 @@ public class GpgController {
 
     // Parent window we come from
     private MainWindowView parentWindow;
-    
+
     // Fwknop key to update when the key is slected
-    EnumFwknopRcKey fwknopKey; 
+    EnumFwknopRcKey fwknopKey;
+
+    private String homedirectory;
 
     /**
      *
@@ -32,17 +41,36 @@ public class GpgController {
      */
     public GpgController(MainWindowView frame, EnumFwknopRcKey fwknopKey, String gpgHomeDirectory) {
         this.parentWindow = frame;
+        this.homedirectory = gpgHomeDirectory;
         this.fwknopKey = fwknopKey;
-        
+
         this.gpgView = new GpgView(this.parentWindow, gpgHomeDirectory);
 
         this.gpgView.getBtnSelect().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String keyId = GpgController.this.gpgView.getSelectKeyId();
-                System.out.println(keyId);
                 GpgController.this.parentWindow.getVariables().get(GpgController.this.fwknopKey).setText(keyId);
                 GpgController.this.gpgView.dispose();
+            }
+        });
+        this.gpgView.getBtnExport().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedKeyId = GpgController.this.gpgView.getSelectKeyId();
+                try {
+                    GpgUtils.exportKey(GpgController.this.homedirectory, selectedKeyId);
+                    JOptionPane.showMessageDialog(frame,
+                        InternationalizationHelper.getMessage("i18n.export.key.success") + ": " + selectedKeyId,
+                        InternationalizationHelper.getMessage("i18n.information"),
+                        JOptionPane.INFORMATION_MESSAGE);
+                } catch (IOException | PGPException ex) {
+                    JOptionPane.showMessageDialog(frame,
+                        InternationalizationHelper.getMessage("i18n.unable.to.export.key") + ": " + selectedKeyId + "\n" + ex.getMessage(),
+                        InternationalizationHelper.getMessage("i18n.gpg.error"),
+                        JOptionPane.ERROR_MESSAGE);
+                    Logger.getLogger(GpgController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         this.gpgView.getBtnCancel().addActionListener(new ActionListener() {
