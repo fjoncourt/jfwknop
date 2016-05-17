@@ -5,7 +5,9 @@
  */
 package com.cipherdyne.gui.gpg;
 
+import com.cipherdyne.jfwknop.FwknopFactory;
 import com.cipherdyne.jfwknop.InternationalizationHelper;
+import java.awt.Font;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,8 +15,10 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.TitledBorder;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.openpgp.PGPException;
@@ -29,12 +33,15 @@ public class GpgView extends JDialog {
 
     // Button used to cancel the action and go back to the main window
     final private JButton btnCancel;
-    
+
     // Button used to export the selected key
     final private JButton btnExport;
-    
+
     // Button used to import a key
     final private JButton btnImport;
+
+    // Button used to remove a key
+    final private JButton btnRemove;
 
     // Table that displays all keys from the keyring
     private JTable keyTable = null;
@@ -42,7 +49,7 @@ public class GpgView extends JDialog {
     public GpgView(JFrame frame, String gpgHomeDirectory) {
         super(frame, InternationalizationHelper.getMessage("i18n.key.management"), true);
 
-        this.setLayout(new MigLayout("inset 5, gap 0, flowx", "[150!][150!][150!][150!]", ""));
+        this.setLayout(new MigLayout("inset 5, gap 0, flowx", "[225!][225!]", ""));
 
         // Build the key table and ensure the GPG home directory is parsable
         try {
@@ -64,14 +71,21 @@ public class GpgView extends JDialog {
         btnSelect = new JButton(InternationalizationHelper.getMessage("i18n.key.select"));
         btnExport = new JButton(InternationalizationHelper.getMessage("i18n.key.export"));
         btnImport = new JButton(InternationalizationHelper.getMessage("i18n.key.import"));
+        btnRemove = new JButton(InternationalizationHelper.getMessage("i18n.key.remove"));
         btnCancel = new JButton(InternationalizationHelper.getMessage("i18n.key.cancel"));
 
         // Add components to the ui
         JScrollPane scrollPane = new JScrollPane(keyTable);
-        this.getContentPane().add(scrollPane, "span 4, growx, wrap");
+        this.getContentPane().add(scrollPane, "span 2, growx, wrap");
+        
+        JPanel operationPanel = new JPanel(new MigLayout("fill, flowx, gap 0, insets 1", "[130!][130!][130!]", ""));
+        operationPanel.setBorder(new TitledBorder(null, "Operations", TitledBorder.LEADING, TitledBorder.TOP, new Font(Font.SANS_SERIF, Font.ITALIC + Font.BOLD, 10)));
+        operationPanel.add(btnExport, "growx");
+        operationPanel.add(btnImport, "growx");
+        operationPanel.add(btnRemove, "growx");
+        this.add(operationPanel, "span 2, growx, wrap");
+        
         this.add(btnSelect, "growx");
-        this.add(btnExport, "growx");
-        this.add(btnImport, "growx");
         this.add(btnCancel, "growx");
 
         this.pack();
@@ -96,28 +110,35 @@ public class GpgView extends JDialog {
      */
     public JButton getBtnExport() {
         return this.btnExport;
-    }    
-    
+    }
+
     /**
      * @return the import button
      */
     public JButton getBtnImport() {
         return this.btnImport;
-    } 
-    
+    }
+
+    /**
+     * @return the remove button
+     */
+    public JButton getBtnRemove() {
+        return this.btnRemove;
+    }
+
     /**
      * @return the GPG key table
      */
     public JTable getKeyTable() {
         return this.keyTable;
     }
-    
+
     /**
      * @return the key id currently selected
      */
     public String getSelectKeyId() {
         String selectedKeyId = StringUtils.EMPTY;
-        
+
         // Ensure at least one row is selected
         if (keyTable.getSelectedRow() != -1) {
             selectedKeyId = (String) (keyTable.getValueAt(keyTable.getSelectedRow(), GpgTableModel.KEY_ID_COL));

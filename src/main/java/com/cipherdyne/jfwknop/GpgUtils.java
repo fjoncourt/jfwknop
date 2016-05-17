@@ -42,6 +42,26 @@ public class GpgUtils {
         pubRings.encode(out);
         out.close();
     }
+    
+    static public void removeKeyFromKeyring(String gpgHomeDirectory, String keyId) throws IOException, PGPException {
+        FileInputStream in = new FileInputStream(gpgHomeDirectory + "/pubring.gpg");
+        Security.addProvider(new BouncyCastleProvider());
+        PGPPublicKeyRingCollection pubRings = new PGPPublicKeyRingCollection(in, new JcaKeyFingerprintCalculator());
+
+        Iterator it = pubRings.getKeyRings();
+        while (it.hasNext()) {
+            PGPPublicKeyRing pgpKeyring = (PGPPublicKeyRing)it.next();
+            String crtId = Long.toHexString(pgpKeyring.getPublicKey().getKeyID()).toUpperCase();
+            if (keyId.equals(crtId)) {
+                pubRings = PGPPublicKeyRingCollection.removePublicKeyRing(pubRings, pgpKeyring);
+            }
+        }
+        in.close();
+            
+        FileOutputStream out = new FileOutputStream(new File(gpgHomeDirectory + "/pubring.gpg"));
+        pubRings.encode(out);
+        out.close();        
+    }
 
     static public void exportKey(String gpgHomeDirectory, String keyId) throws FileNotFoundException, IOException, PGPException {
         FileInputStream in = new FileInputStream(gpgHomeDirectory + "/pubring.gpg");
