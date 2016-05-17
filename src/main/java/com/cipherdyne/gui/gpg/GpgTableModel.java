@@ -25,18 +25,25 @@ import org.bouncycastle.openpgp.operator.jcajce.JcaKeyFingerprintCalculator;
 
 /**
  *
- * @author franck
  */
 public class GpgTableModel extends AbstractTableModel {
 
+    // KEY ID is column 0 of the table model
     static public final int KEY_ID_COL = 0;
+    
+    // USER ID is column 1 of the table model
     static public final int USER_ID_COL = 1;
 
     // Name of the available columns in the table model
-    final private String[] columnNames = {InternationalizationHelper.getMessage("i18n.key.id"), InternationalizationHelper.getMessage("i18n.user.id")};
+    final private String[] columnNames = {
+        InternationalizationHelper.getMessage("i18n.key.id"), 
+        InternationalizationHelper.getMessage("i18n.user.id")};
 
     // List of GPG key that are displayed in the jtable
-    final private List<SimpleGpgKey> gpgKeyData = new ArrayList<>();
+    private List<SimpleGpgKey> gpgKeyData;
+    
+    // GPG home directory where to find GPG keys
+    final private String gpgHomeDirectory;
 
     /**
      * Create the GPG table model. The keyring is parsed to provide data to fill the table model
@@ -49,21 +56,24 @@ public class GpgTableModel extends AbstractTableModel {
      */
     public GpgTableModel(String gpgHomeDirectory) throws IOException, FileNotFoundException, PGPException {
         super();
-        parseKeyring(gpgHomeDirectory);
+        this.gpgHomeDirectory = gpgHomeDirectory;
+        parseKeyring();
     }
 
     /**
      * Read keyring and fetch keys and user ids
      *
-     * @param gpgHomeDirectory
-     *
      * @throws FileNotFoundException
      * @throws IOException
      * @throws PGPException
      */
-    private void parseKeyring(String gpgHomeDirectory) throws FileNotFoundException, IOException, PGPException {
+    private void parseKeyring() throws FileNotFoundException, IOException, PGPException {
 
-        FileInputStream in = new FileInputStream(gpgHomeDirectory + "/pubring.gpg");
+        // Reset the key table
+        this.gpgKeyData = new ArrayList<>();
+        
+        // Read the keyring
+        FileInputStream in = new FileInputStream(this.gpgHomeDirectory + "/pubring.gpg");
         Security.addProvider(new BouncyCastleProvider());
         PGPPublicKeyRingCollection pubRings = new PGPPublicKeyRingCollection(in, new JcaKeyFingerprintCalculator());
 
@@ -146,6 +156,19 @@ public class GpgTableModel extends AbstractTableModel {
         return value;
     }
 
+    /**
+     * Reload the GPG table model
+     * 
+     * @throws IOException
+     * @throws FileNotFoundException
+     * @throws PGPException 
+     */
+    public void reload() throws IOException, FileNotFoundException, PGPException {
+        this.gpgKeyData = new ArrayList<>();
+        parseKeyring();
+        this.fireTableDataChanged();
+    }
+    
     /**
      * Class that represents a simple GPG object. It provides the key and its user id.
      */
