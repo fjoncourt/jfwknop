@@ -6,4 +6,6 @@ public interface IFwknopVariable {
     String getText();
     
     void setDefaultValue();
+    
+    boolean isDefault();
 }

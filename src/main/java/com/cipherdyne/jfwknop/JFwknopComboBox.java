@@ -29,4 +29,14 @@ public class JFwknopComboBox extends JComboBox<String>implements IFwknopVariable
     public void setDefaultValue() {
         setSelectedIndex(DEFAULT_ITEM_INDEX);
     }
+    
+    @Override
+    public boolean isDefault() {
+        boolean def = false;
+        if (this.getSelectedIndex() == DEFAULT_ITEM_INDEX) {
+            def = true;
+        }
+        
+        return def;
+    }        
 }

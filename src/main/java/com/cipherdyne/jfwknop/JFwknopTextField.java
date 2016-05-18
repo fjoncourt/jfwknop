@@ -5,6 +5,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 import javax.swing.JTextField;
+import org.apache.commons.lang3.StringUtils;
 
 public class JFwknopTextField extends JTextField implements IFwknopVariable {
 
@@ -18,12 +19,11 @@ public class JFwknopTextField extends JTextField implements IFwknopVariable {
         this.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                if (((JFwknopTextField)e.getSource()).getText().equals("")) {
+                if (((JFwknopTextField)e.getSource()).getText().equals(StringUtils.EMPTY)) {
                     setDefaultValue();
                 }
             }
@@ -34,4 +34,14 @@ public class JFwknopTextField extends JTextField implements IFwknopVariable {
     public void setDefaultValue() {
         this.setText(this.defaultVal);
     }
+    
+    @Override
+    public boolean isDefault() {
+        boolean def = false;
+        if (this.defaultVal.equals(this.getText())) {
+            def = true;
+        }
+        
+        return def;
+    }    
 }

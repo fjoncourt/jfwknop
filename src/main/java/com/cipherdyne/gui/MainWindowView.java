@@ -377,4 +377,11 @@ public class MainWindowView extends JFrame implements IConsole {
     public JButton getBtnGpgHomedir() {
         return this.cipherTab.browseforGpgHomedir;
     }
+    
+    /**
+     * @return the button used to encode the GPG passphrase to base64
+     */
+    public JButton getBtnEncodeGpgPassphrase() {
+        return this.cipherTab.btnGenerateBase64GpgPassphrase;
+    }
 }

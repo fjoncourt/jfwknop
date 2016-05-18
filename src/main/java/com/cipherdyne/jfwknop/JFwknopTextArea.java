@@ -45,4 +45,14 @@ public class JFwknopTextArea extends JTextArea implements IFwknopVariable {
     public void setDefaultValue() {
         this.setText(this.defaultVal);
     }
+    
+    @Override
+    public boolean isDefault() {
+        boolean def = false;
+        if (this.defaultVal.equals(this.getText())) {
+            def = true;
+        }
+        
+        return def;
+    }        
 }

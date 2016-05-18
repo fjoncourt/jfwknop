@@ -17,6 +17,7 @@ import javax.swing.JCheckBox;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -214,6 +215,22 @@ public class MainWindowController {
 
             }
         });
+
+        this.view.getBtnEncodeGpgPassphrase().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                IFwknopVariable gpgSigningPw = (IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_SIGNING_PW);
+                if (gpgSigningPw.isDefault()) {
+                    JOptionPane.showMessageDialog(MainWindowController.this.view,
+                        InternationalizationHelper.getMessage("i18n.please.fill.in.passphrase"),
+                        InternationalizationHelper.getMessage("i18n.error"),
+                        JOptionPane.ERROR_MESSAGE);
+                } else {
+                    IFwknopVariable gpgSigningPwBase64 = (IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_SIGNING_PW_BASE64);
+                    gpgSigningPwBase64.setText(computeBase64(gpgSigningPw.getText().getBytes()));
+                }
+            }
+        });
     }
 
     /**
@@ -270,18 +287,18 @@ public class MainWindowController {
 
         // Set up action listener to import GPG key to the keyring
         this.view.getImportGpgKeyMenuItem().addActionListener(e -> {
-           final JFileChooser fileChooser = new JFileChooser();
+            final JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Browse for GPG key");
             final int result = fileChooser.showOpenDialog(null);
             if (result == JFileChooser.APPROVE_OPTION) {
-               String gpgHomeDirectory = MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).getText();
-               try {
-                   GpgUtils.addKeyToKeyring(gpgHomeDirectory, fileChooser.getSelectedFile().getAbsolutePath());
-               } catch (IOException ex) {
-                   java.util.logging.Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
-               } catch (PGPException ex) {
-                   java.util.logging.Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
-               }
+                String gpgHomeDirectory = MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).getText();
+                try {
+                    GpgUtils.addKeyToKeyring(gpgHomeDirectory, fileChooser.getSelectedFile().getAbsolutePath());
+                } catch (IOException ex) {
+                    java.util.logging.Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (PGPException ex) {
+                    java.util.logging.Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
