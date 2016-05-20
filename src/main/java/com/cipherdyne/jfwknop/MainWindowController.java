@@ -1,7 +1,10 @@
 package com.cipherdyne.jfwknop;
 
+import com.cipherdyne.model.RcFileModel;
+import com.cipherdyne.model.FwknopClientModel;
 import com.cipherdyne.gui.gpg.GpgController;
 import com.cipherdyne.gui.MainWindowView;
+import com.cipherdyne.model.KeyModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -30,6 +33,7 @@ public class MainWindowController {
     private final MainWindowView view;
     private final RcFileModel rcFileModel;
     private final FwknopClientModel fwknopClientModel;
+    private final KeyModel keyModel;
     private final JFwknopConfig jfwknopConfig;
 
     public MainWindowController() {
@@ -47,6 +51,9 @@ public class MainWindowController {
 
         // Initialize the client model from the configuration
         this.fwknopClientModel = new FwknopClientModel(this.view);
+
+        // Initialize the key model from the configuration
+        this.keyModel = new KeyModel(this.view);
 
         populateMenuBar();
         populateBtn();
@@ -231,6 +238,15 @@ public class MainWindowController {
                 }
             }
         });
+
+        // Add action listener to save key settings
+        this.view.getBtnSaveKeySettings().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateKeyModel();
+                MainWindowController.this.keyModel.save();
+            }
+        });
     }
 
     /**
@@ -245,6 +261,22 @@ public class MainWindowController {
             MainWindowController.this.view.getVarFwknopExtraArgs().getText());
         MainWindowController.this.fwknopClientModel.setFwknopConfig(EnumFwknopConfigKey.FWKNOP_VERBOSE,
             MainWindowController.this.view.getBtnFwknopVerbose().isSelected() ? "1" : "0");
+    }
+
+    /**
+     * Update the key model with the settings set by the user in the user interface
+     */
+    private void updateKeyModel() {
+        MainWindowController.this.keyModel.setContext(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH,
+            MainWindowController.this.view.getVarKeyRijndaelLength().getText());
+        MainWindowController.this.keyModel.setContext(EnumFwknopConfigKey.KEY_HMAC_LENGTH,
+            MainWindowController.this.view.getVarKeyHmacLength().getText());
+        MainWindowController.this.keyModel.setContext(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH,
+            MainWindowController.this.view.getVarBase64RijndaelBytes().getText());
+        MainWindowController.this.keyModel.setContext(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH,
+            MainWindowController.this.view.getVarBase64HmacBytes().getText());
+        MainWindowController.this.keyModel.setContext(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH,
+            MainWindowController.this.view.getVarBase64GpgBytes().getText());        
     }
 
     private void populateMenuBar() {

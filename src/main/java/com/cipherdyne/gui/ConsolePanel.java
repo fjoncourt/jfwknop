@@ -8,6 +8,7 @@ package com.cipherdyne.gui;
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
 import com.cipherdyne.jfwknop.IFwknopVariable;
 import com.cipherdyne.jfwknop.InternationalizationHelper;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.util.Map;
 import javax.swing.ImageIcon;
@@ -29,7 +30,7 @@ public class ConsolePanel extends JPanel {
     public JButton btnExecute;
 
     public ConsolePanel(Map<EnumFwknopRcKey, IFwknopVariable> varMap) {
-        super(new MigLayout("insets 0 10 10 10, aligny top, flowy, gap 0", "[grow]", "[grow]"));
+        super(new MigLayout("insets 0 10 10 10, aligny top, flowy, gap 0, fill", "[grow]", "[][]"));
         initialize(varMap);
     }
 
@@ -48,12 +49,13 @@ public class ConsolePanel extends JPanel {
         this.add(btnPanel);
         
         // Set up console area
-        this.varConsole = new JTextArea(10, 60);
+        this.varConsole = new JTextArea();
+        this.varConsole.setRows(10);
         this.varConsole.setEditable(false);
         final Font font = this.varConsole.getFont();
         this.varConsole.setFont(new Font("Free Monospaced", font.getStyle(),
                 font.getSize() - 1));
-        this.add(createScrollablePanel(this.varConsole), "center, grow");
+        this.add(createScrollablePanel(this.varConsole), "grow");
     }
 
     /**
@@ -64,7 +66,7 @@ public class ConsolePanel extends JPanel {
      */
     private JPanel createScrollablePanel(final JComponent component) {
         final JPanel scrollablePanel = new JPanel(new MigLayout(
-                "fill, flowy, insets 0", "fill", "[grow]"));
+                "fill, flowy, insets 0", "", ""));
         JScrollPane scrollPane = new JScrollPane(component,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);

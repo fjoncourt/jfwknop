@@ -1,6 +1,8 @@
-package com.cipherdyne.jfwknop;
+package com.cipherdyne.model;
 
 import com.cipherdyne.gui.MainWindowView;
+import com.cipherdyne.jfwknop.EnumFwknopRcKey;
+import com.cipherdyne.jfwknop.RcFile;
 import java.util.Map;
 
 import org.apache.log4j.LogManager;

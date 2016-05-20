@@ -6,6 +6,12 @@ public enum EnumFwknopConfigKey {
     FWKNOP_EXTRA_ARGS("fwknop_extra_args"), 
     FWKNOP_VERBOSE("fwknop_verbose"), 
     
+    KEY_RIJNDAEL_LENGTH("key_rijndael_length"),
+    KEY_HMAC_LENGTH("key_hmac_length"),
+    KEY_BASE64_RIJNDAEL_LENGTH("key_base64_rijndael_length"),
+    KEY_BASE64_HMAC_LENGTH("key_base64_hmac_length"),
+    KEY_BASE64_GPG_LENGTH("key_base64_gpg_length"),
+    
     LANGUAGE("language");
 
     private final String key;

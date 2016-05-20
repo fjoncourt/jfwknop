@@ -66,6 +66,13 @@ public class JFwknopConfig {
         this.configKeyMap.put(EnumFwknopConfigKey.FWKNOP_VERBOSE, this.configProperties.getProperty(EnumFwknopConfigKey.FWKNOP_VERBOSE.getKey()));
         this.configKeyMap.put(EnumFwknopConfigKey.FWKNOP_FILEPATH, this.configProperties.getProperty(EnumFwknopConfigKey.FWKNOP_FILEPATH.getKey()));
         this.configKeyMap.put(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS, this.configProperties.getProperty(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS.getKey()));
+
+        // Read the key settings
+        this.configKeyMap.put(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH, this.configProperties.getProperty(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH.getKey()));
+        this.configKeyMap.put(EnumFwknopConfigKey.KEY_HMAC_LENGTH, this.configProperties.getProperty(EnumFwknopConfigKey.KEY_HMAC_LENGTH.getKey()));
+        this.configKeyMap.put(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH, this.configProperties.getProperty(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH.getKey()));
+        this.configKeyMap.put(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH, this.configProperties.getProperty(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH.getKey()));
+        this.configKeyMap.put(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH, this.configProperties.getProperty(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH.getKey()));
     }
 
     public static JFwknopConfig getInstance() {
@@ -83,9 +90,8 @@ public class JFwknopConfig {
     }
 
     /**
-     * Add a file path to the recent file lists if it does not exists. If added,
-     * the oldest file is removed from the list. The list is automatically
-     * saved.
+     * Add a file path to the recent file lists if it does not exists. If added, the oldest file is
+     * removed from the list. The list is automatically saved.
      *
      * @param filepath File path to add to the list
      */
@@ -125,6 +131,12 @@ public class JFwknopConfig {
         this.configProperties.setProperty(EnumFwknopConfigKey.FWKNOP_FILEPATH.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.FWKNOP_FILEPATH));
         this.configProperties.setProperty(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS));
 
+        this.configProperties.setProperty(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH));
+        this.configProperties.setProperty(EnumFwknopConfigKey.KEY_HMAC_LENGTH.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.KEY_HMAC_LENGTH));
+        this.configProperties.setProperty(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH));
+        this.configProperties.setProperty(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH));
+        this.configProperties.setProperty(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH));        
+        
         // Store settings
         try {
             this.configProperties.store(new FileOutputStream(CONFIG_PROPERTIES), null);

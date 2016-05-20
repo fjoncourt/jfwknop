@@ -52,7 +52,7 @@ public class MainWindowView extends JFrame implements IConsole {
     public MainWindowView(final String title) {
         super(JFWKNOP_TITLE + title);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new MigLayout("inset 0, gap 0, flowy", "[grow]", "[grow]"));
+        setLayout(new MigLayout("inset 0, gap 0, flowy", "[grow]", "[][fill]"));
         setIconImage(new ImageIcon(this.getClass().getResource("/cipherdyne.png")).getImage());
 
         varMap = new HashMap<>();
@@ -61,7 +61,7 @@ public class MainWindowView extends JFrame implements IConsole {
         createMenuBar();
 
         final JTabbedPane mainPane = new JTabbedPane(JTabbedPane.TOP);
-        this.add(mainPane, "grow");
+        this.add(mainPane, "growx, height 320!");
 
         final JTabbedPane rcConfigPane = new JTabbedPane(JTabbedPane.TOP);
         rcConfigPane.addTab("General", null, new GeneralTab(varMap), "General");
@@ -123,7 +123,7 @@ public class MainWindowView extends JFrame implements IConsole {
             new ImageIcon(this.getClass().getResource("/openterminal16.png")));
         menu.add(this.openTerminalMenuItem);
 
-        this.importGpgKeyMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.tools.importgpgkey"), 
+        this.importGpgKeyMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.tools.importgpgkey"),
             new ImageIcon(this.getClass().getResource("/import16.png")));
         menu.add(this.importGpgKeyMenuItem);
 
@@ -199,6 +199,21 @@ public class MainWindowView extends JFrame implements IConsole {
             this.settingsTab.btnFwknopVerbose.setSelected(true);
             this.settingsTab.varFwknopArgs.setVerbose(true);
         }
+
+        repaint();
+    }
+
+    /**
+     * Refresh the view when the key model is updated
+     * 
+     * @param keyContext key context to use to update the view
+     */
+    public void onKeyContextChange(Map<EnumFwknopConfigKey, String> keyContext) {
+        this.settingsTab.varRijndaelKeyLength.setText(keyContext.get(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH));
+        this.settingsTab.varHmacKeyLength.setText(keyContext.get(EnumFwknopConfigKey.KEY_HMAC_LENGTH));
+        this.settingsTab.varBase64RijndaelBytes.setText(keyContext.get(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH));
+        this.settingsTab.varBase64HmacBytes.setText(keyContext.get(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH));
+        this.settingsTab.varBase64GpgBytes.setText(keyContext.get(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH));
 
         repaint();
     }
@@ -289,13 +304,55 @@ public class MainWindowView extends JFrame implements IConsole {
      * @return the button used to save fwknop client settings
      */
     public JButton getBtnSaveFwknopSettings() {
-        return this.settingsTab.btnFwknopSaveConfig;
+        return this.settingsTab.btnSaveFwknopSettings;
+    }
+
+    /**
+     * @return the button used to save key settings
+     */
+    public JButton getBtnSaveKeySettings() {
+        return this.settingsTab.btnSaveKeySettings;
     }
 
     public JCheckBox getBtnFwknopTest() {
         return this.settingsTab.btnFwknopTest;
     }
 
+    /**
+     * @return the default rijndael key length
+     */
+    public JFwknopTextField getVarKeyRijndaelLength() {
+        return this.settingsTab.varRijndaelKeyLength;
+    }
+
+   /**
+     * @return the default hmac key length
+     */
+    public JFwknopTextField getVarKeyHmacLength() {
+        return this.settingsTab.varHmacKeyLength;
+    }    
+    
+   /**
+     * @return the base64 hmac byte array length
+     */
+    public JFwknopTextField getVarBase64HmacBytes() {
+        return this.settingsTab.varBase64HmacBytes;
+    }    
+    
+  /**
+     * @return the base64 rijndael byte array length
+     */
+    public JFwknopTextField getVarBase64RijndaelBytes() {
+        return this.settingsTab.varBase64RijndaelBytes;
+    }     
+    
+  /**
+     * @return the base64 gpg byte array length
+     */
+    public JFwknopTextField getVarBase64GpgBytes() {
+        return this.settingsTab.varBase64GpgBytes;
+    }     
+    
     /**
      * @return the button used to remove Rijndael key
      */
@@ -377,7 +434,7 @@ public class MainWindowView extends JFrame implements IConsole {
     public JButton getBtnGpgHomedir() {
         return this.cipherTab.browseforGpgHomedir;
     }
-    
+
     /**
      * @return the button used to encode the GPG passphrase to base64
      */
