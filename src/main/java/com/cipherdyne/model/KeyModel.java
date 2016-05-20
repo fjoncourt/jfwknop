@@ -10,9 +10,10 @@ import com.cipherdyne.jfwknop.EnumFwknopConfigKey;
 import com.cipherdyne.jfwknop.JFwknopConfig;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang3.RandomStringUtils;
 
 /**
- *
+ * Class used to handle key settings
  */
 public class KeyModel {
 
@@ -21,15 +22,23 @@ public class KeyModel {
 
     public KeyModel(MainWindowView view) {
         this.view = view;
-        this.context.put(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH, JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH));
-        this.context.put(EnumFwknopConfigKey.KEY_HMAC_LENGTH, JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.KEY_HMAC_LENGTH));
-        this.context.put(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH, JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH));
-        this.context.put(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH, JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH));
-        this.context.put(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH, JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH));
+        this.context.put(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH,
+            JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH));
+        this.context.put(EnumFwknopConfigKey.KEY_HMAC_LENGTH,
+            JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.KEY_HMAC_LENGTH));
+        this.context.put(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH,
+            JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH));
+        this.context.put(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH,
+            JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH));
+        this.context.put(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH,
+            JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH));
 
         updateListeners();
     }
 
+    /**
+     * Update the registered view with the new context
+     */
     private void updateListeners() {
         this.view.onKeyContextChange(this.context);
     }
@@ -63,5 +72,21 @@ public class KeyModel {
 
         // Save the Jwknop settings
         JFwknopConfig.getInstance().saveConfig();
+    }
+
+    /**
+     * @return a rijndael key with random data according to the default key length
+     */
+    public String getRandomeRijndaelKey() {
+        int defaultLength = Integer.parseInt(this.context.get(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH));
+        return RandomStringUtils.randomAlphabetic(defaultLength);
+    }
+
+    /**
+     * @return a HMAC key with random data according to the default key length
+     */    
+    public String getRandomeHmacKey() {
+        int defaultLength = Integer.parseInt(this.context.get(EnumFwknopConfigKey.KEY_HMAC_LENGTH));
+        return RandomStringUtils.randomAlphabetic(defaultLength);
     }
 }

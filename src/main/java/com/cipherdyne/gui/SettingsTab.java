@@ -105,12 +105,12 @@ public class SettingsTab extends JPanel {
         keyPanel.setBorder(new TitledBorder(null, InternationalizationHelper.getMessage("i18n.key"), TitledBorder.LEADING, TitledBorder.TOP, new Font(Font.SANS_SERIF, Font.ITALIC + Font.BOLD, 10)));
 
         // Add components
-        keyPanel.add(FwknopFactory.createLabel(InternationalizationHelper.getMessage("i18n.default.rijndael.key.length")), "growx");
+        keyPanel.add(FwknopFactory.createLabel(InternationalizationHelper.getMessage("i18n.rijndael.key.length")), "growx");
         keyPanel.add(this.varRijndaelKeyLength = new JFwknopTextField(StringUtils.EMPTY), "growx");        
         keyPanel.add(FwknopFactory.createLabel(InternationalizationHelper.getMessage("i18n.default.rijndael.base64.bytes.array.length")), "growx");
         keyPanel.add(this.varBase64RijndaelBytes = new JFwknopTextField(StringUtils.EMPTY), "growx");
         
-        keyPanel.add(FwknopFactory.createLabel(InternationalizationHelper.getMessage("i18n.default.hmac.key.length")), "growx");
+        keyPanel.add(FwknopFactory.createLabel(InternationalizationHelper.getMessage("i18n.hmac.key.length")), "growx");
         keyPanel.add(this.varHmacKeyLength = new JFwknopTextField(StringUtils.EMPTY), "growx");  
         keyPanel.add(FwknopFactory.createLabel(InternationalizationHelper.getMessage("i18n.default.hmac.base64.bytes.array.length")), "growx");
         keyPanel.add(this.varBase64HmacBytes = new JFwknopTextField(StringUtils.EMPTY), "growx");

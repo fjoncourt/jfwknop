@@ -122,7 +122,8 @@ public class MainWindowController {
         this.view.getBtnGenerateRijndaelKey().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY).setText(RandomStringUtils.randomAlphabetic(16));
+                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY).setText(
+                    MainWindowController.this.keyModel.getRandomeRijndaelKey());
             }
         });
 
@@ -156,7 +157,9 @@ public class MainWindowController {
         this.view.getBtnGenerateHmacKey().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY).setText(RandomStringUtils.randomAlphabetic(16));
+
+                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY).setText(
+                    MainWindowController.this.keyModel.getRandomeHmacKey());
                 MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("Y");
             }
         });
@@ -276,7 +279,7 @@ public class MainWindowController {
         MainWindowController.this.keyModel.setContext(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH,
             MainWindowController.this.view.getVarBase64HmacBytes().getText());
         MainWindowController.this.keyModel.setContext(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH,
-            MainWindowController.this.view.getVarBase64GpgBytes().getText());        
+            MainWindowController.this.view.getVarBase64GpgBytes().getText());
     }
 
     private void populateMenuBar() {
