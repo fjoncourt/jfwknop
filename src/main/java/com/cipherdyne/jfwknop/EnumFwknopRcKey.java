@@ -41,6 +41,7 @@ public enum EnumFwknopRcKey {
     
     SPA_SOURCE_PORT(SINGLE_PORT, "i18n.spa.client.sourceport"),
     FW_TIMEOUT(SECONDS, "i18n.misc.timeout"),
+    RESOLVE_IP_HTTP(Y_N, "i18n.resolve.ip.http"),
     RESOLVE_URL(URL, "i18n.spa.client.resolveurl"),
     TIME_OFFSET(TIME, "i18n.misc.timeoffset");
 

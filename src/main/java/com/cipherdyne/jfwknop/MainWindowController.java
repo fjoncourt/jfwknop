@@ -123,7 +123,7 @@ public class MainWindowController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY).setText(
-                    MainWindowController.this.keyModel.getRandomeRijndaelKey());
+                    MainWindowController.this.keyModel.getRandomRijndaelKey());
             }
         });
 
@@ -159,7 +159,7 @@ public class MainWindowController {
             public void actionPerformed(ActionEvent e) {
 
                 MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY).setText(
-                    MainWindowController.this.keyModel.getRandomeHmacKey());
+                    MainWindowController.this.keyModel.getRandomHmacKey());
                 MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("Y");
             }
         });

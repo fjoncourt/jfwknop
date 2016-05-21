@@ -8,6 +8,7 @@ package com.cipherdyne.model;
 import com.cipherdyne.gui.MainWindowView;
 import com.cipherdyne.jfwknop.EnumFwknopConfigKey;
 import com.cipherdyne.jfwknop.JFwknopConfig;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -77,16 +78,34 @@ public class KeyModel {
     /**
      * @return a rijndael key with random data according to the default key length
      */
-    public String getRandomeRijndaelKey() {
+    public String getRandomRijndaelKey() {
         int defaultLength = Integer.parseInt(this.context.get(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH));
         return RandomStringUtils.randomAlphabetic(defaultLength);
     }
 
     /**
      * @return a HMAC key with random data according to the default key length
-     */    
-    public String getRandomeHmacKey() {
+     */
+    public String getRandomHmacKey() {
         int defaultLength = Integer.parseInt(this.context.get(EnumFwknopConfigKey.KEY_HMAC_LENGTH));
         return RandomStringUtils.randomAlphabetic(defaultLength);
+    }
+
+    /**
+     * @return a Base64 HMAC key with random data according to the default key length
+     */
+    public String getRandomBase64HmacKey() {
+        int defaultLength = Integer.parseInt(this.context.get(EnumFwknopConfigKey.KEY_HMAC_LENGTH));
+        return RandomStringUtils.randomAlphabetic(defaultLength);
+    }
+
+    private String computeBase64(byte[] key) {
+        String base64Str = "failed";
+
+        base64Str = Base64.getEncoder().encodeToString(key);
+        //String decodedString = new String(Base64.getDecoder().decode(base64String), "utf-8");
+        //System.out.println(unencodedString + " ==> " + base64String + " ==> " + decodedString);
+
+        return base64Str;
     }
 }

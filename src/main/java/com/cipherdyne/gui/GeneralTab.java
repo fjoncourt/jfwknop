@@ -30,6 +30,7 @@ public class GeneralTab extends JPanel {
 
         List<EnumFwknopRcKey> list = Arrays.asList(
                 EnumFwknopRcKey.ALLOW_IP,
+                EnumFwknopRcKey.RESOLVE_IP_HTTP,
                 EnumFwknopRcKey.RESOLVE_URL,
                 EnumFwknopRcKey.ACCESS,
                 EnumFwknopRcKey.SPA_SOURCE_PORT,

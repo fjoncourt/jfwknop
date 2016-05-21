@@ -61,7 +61,7 @@ public class MainWindowView extends JFrame implements IConsole {
         createMenuBar();
 
         final JTabbedPane mainPane = new JTabbedPane(JTabbedPane.TOP);
-        this.add(mainPane, "growx, height 320!");
+        this.add(mainPane, "growx, height 350!");
 
         final JTabbedPane rcConfigPane = new JTabbedPane(JTabbedPane.TOP);
         rcConfigPane.addTab("General", null, new GeneralTab(varMap), "General");
