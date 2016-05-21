@@ -72,7 +72,6 @@ public class JFwknopConfig {
         this.configKeyMap.put(EnumFwknopConfigKey.KEY_HMAC_LENGTH, this.configProperties.getProperty(EnumFwknopConfigKey.KEY_HMAC_LENGTH.getKey()));
         this.configKeyMap.put(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH, this.configProperties.getProperty(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH.getKey()));
         this.configKeyMap.put(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH, this.configProperties.getProperty(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH.getKey()));
-        this.configKeyMap.put(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH, this.configProperties.getProperty(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH.getKey()));
     }
 
     public static JFwknopConfig getInstance() {
@@ -134,8 +133,7 @@ public class JFwknopConfig {
         this.configProperties.setProperty(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH));
         this.configProperties.setProperty(EnumFwknopConfigKey.KEY_HMAC_LENGTH.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.KEY_HMAC_LENGTH));
         this.configProperties.setProperty(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH));
-        this.configProperties.setProperty(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH));
-        this.configProperties.setProperty(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH));        
+        this.configProperties.setProperty(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH));       
         
         // Store settings
         try {

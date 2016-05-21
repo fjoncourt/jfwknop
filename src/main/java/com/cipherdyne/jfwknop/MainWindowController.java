@@ -138,11 +138,8 @@ public class MainWindowController {
         this.view.getBtnGenerateBase64Rijndael().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                byte[] byteArray = new byte[32];
-                new Random().nextBytes(byteArray);
-                IFwknopVariable keybase64 = (IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY_BASE64);
-                keybase64.setText(computeBase64(byteArray));
-
+                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY_BASE64).setText(
+                    MainWindowController.this.keyModel.getRandomBase64Rijndael());
             }
         });
 
@@ -176,10 +173,8 @@ public class MainWindowController {
         this.view.getBtnGenerateBase64Hmac().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                byte[] byteArray = new byte[64];
-                new Random().nextBytes(byteArray);
-                IFwknopVariable keybase64 = (IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY_BASE64);
-                keybase64.setText(computeBase64(byteArray));
+                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY_BASE64).setText(
+                    MainWindowController.this.keyModel.getRandomBase64Hmac());
                 MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("Y");
             }
         });
@@ -237,7 +232,7 @@ public class MainWindowController {
                         JOptionPane.ERROR_MESSAGE);
                 } else {
                     IFwknopVariable gpgSigningPwBase64 = (IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_SIGNING_PW_BASE64);
-                    gpgSigningPwBase64.setText(computeBase64(gpgSigningPw.getText().getBytes()));
+                    gpgSigningPwBase64.setText(KeyModel.encodeToBase64(gpgSigningPw.getText().getBytes()));
                 }
             }
         });
@@ -278,8 +273,6 @@ public class MainWindowController {
             MainWindowController.this.view.getVarBase64RijndaelBytes().getText());
         MainWindowController.this.keyModel.setContext(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH,
             MainWindowController.this.view.getVarBase64HmacBytes().getText());
-        MainWindowController.this.keyModel.setContext(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH,
-            MainWindowController.this.view.getVarBase64GpgBytes().getText());
     }
 
     private void populateMenuBar() {

@@ -11,6 +11,7 @@ import com.cipherdyne.jfwknop.JFwknopConfig;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import org.apache.commons.lang3.RandomStringUtils;
 
 /**
@@ -31,8 +32,6 @@ public class KeyModel {
             JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH));
         this.context.put(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH,
             JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH));
-        this.context.put(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH,
-            JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH));
 
         updateListeners();
     }
@@ -76,7 +75,7 @@ public class KeyModel {
     }
 
     /**
-     * @return a rijndael key with random data according to the default key length
+     * @return a rijndael key from random data according to the default key length
      */
     public String getRandomRijndaelKey() {
         int defaultLength = Integer.parseInt(this.context.get(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH));
@@ -84,7 +83,7 @@ public class KeyModel {
     }
 
     /**
-     * @return a HMAC key with random data according to the default key length
+     * @return a HMAC key from random data according to the default key length
      */
     public String getRandomHmacKey() {
         int defaultLength = Integer.parseInt(this.context.get(EnumFwknopConfigKey.KEY_HMAC_LENGTH));
@@ -92,20 +91,32 @@ public class KeyModel {
     }
 
     /**
-     * @return a Base64 HMAC key with random data according to the default key length
+     * @return a Base64 rijndael key from random data according to the default key length
      */
-    public String getRandomBase64HmacKey() {
-        int defaultLength = Integer.parseInt(this.context.get(EnumFwknopConfigKey.KEY_HMAC_LENGTH));
-        return RandomStringUtils.randomAlphabetic(defaultLength);
+    public String getRandomBase64Rijndael() {
+        byte[] byteArray = new byte[Integer.parseInt(this.context.get(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH))];
+        new Random().nextBytes(byteArray);
+        return encodeToBase64(byteArray);
     }
 
-    private String computeBase64(byte[] key) {
+    /**
+     * @return a Base64 HMAC key with random data according to the default key length
+     */
+    public String getRandomBase64Hmac() {
+        byte[] byteArray = new byte[Integer.parseInt(this.context.get(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH))];
+        new Random().nextBytes(byteArray);
+        return encodeToBase64(byteArray);
+    }    
+    
+    /**
+     * Encode a byte array to a base64 string;
+     * 
+     * @param key byte array to compute
+     * @return base64 string representation of the byte array key
+     */
+    static public String encodeToBase64(byte[] key) {
         String base64Str = "failed";
-
         base64Str = Base64.getEncoder().encodeToString(key);
-        //String decodedString = new String(Base64.getDecoder().decode(base64String), "utf-8");
-        //System.out.println(unencodedString + " ==> " + base64String + " ==> " + decodedString);
-
         return base64Str;
     }
 }

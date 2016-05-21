@@ -213,7 +213,6 @@ public class MainWindowView extends JFrame implements IConsole {
         this.settingsTab.varHmacKeyLength.setText(keyContext.get(EnumFwknopConfigKey.KEY_HMAC_LENGTH));
         this.settingsTab.varBase64RijndaelBytes.setText(keyContext.get(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH));
         this.settingsTab.varBase64HmacBytes.setText(keyContext.get(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH));
-        this.settingsTab.varBase64GpgBytes.setText(keyContext.get(EnumFwknopConfigKey.KEY_BASE64_GPG_LENGTH));
 
         repaint();
     }
@@ -344,14 +343,7 @@ public class MainWindowView extends JFrame implements IConsole {
      */
     public JFwknopTextField getVarBase64RijndaelBytes() {
         return this.settingsTab.varBase64RijndaelBytes;
-    }     
-    
-  /**
-     * @return the base64 gpg byte array length
-     */
-    public JFwknopTextField getVarBase64GpgBytes() {
-        return this.settingsTab.varBase64GpgBytes;
-    }     
+    }         
     
     /**
      * @return the button used to remove Rijndael key

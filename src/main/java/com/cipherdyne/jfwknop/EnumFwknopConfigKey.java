@@ -10,7 +10,6 @@ public enum EnumFwknopConfigKey {
     KEY_HMAC_LENGTH("key_hmac_length"),
     KEY_BASE64_RIJNDAEL_LENGTH("key_base64_rijndael_length"),
     KEY_BASE64_HMAC_LENGTH("key_base64_hmac_length"),
-    KEY_BASE64_GPG_LENGTH("key_base64_gpg_length"),
     
     LANGUAGE("language");
 

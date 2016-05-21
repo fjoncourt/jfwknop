@@ -39,7 +39,6 @@ public class SettingsTab extends JPanel {
     public JFwknopTextField varBase64RijndaelBytes;
     public JFwknopTextField varHmacKeyLength;
     public JFwknopTextField varBase64HmacBytes;
-    public JFwknopTextField varBase64GpgBytes;
     public JButton btnSaveKeySettings;
 
     public SettingsTab(Map<EnumFwknopRcKey, IFwknopVariable> varMap) {
@@ -107,16 +106,15 @@ public class SettingsTab extends JPanel {
         // Add components
         keyPanel.add(FwknopFactory.createLabel(InternationalizationHelper.getMessage("i18n.rijndael.key.length")), "growx");
         keyPanel.add(this.varRijndaelKeyLength = new JFwknopTextField(StringUtils.EMPTY), "growx");        
-        keyPanel.add(FwknopFactory.createLabel(InternationalizationHelper.getMessage("i18n.default.rijndael.base64.bytes.array.length")), "growx");
+        keyPanel.add(FwknopFactory.createLabel(InternationalizationHelper.getMessage("i18n.rijndael.base64.bytes.array.length")), "growx");
         keyPanel.add(this.varBase64RijndaelBytes = new JFwknopTextField(StringUtils.EMPTY), "growx");
         
         keyPanel.add(FwknopFactory.createLabel(InternationalizationHelper.getMessage("i18n.hmac.key.length")), "growx");
         keyPanel.add(this.varHmacKeyLength = new JFwknopTextField(StringUtils.EMPTY), "growx");  
-        keyPanel.add(FwknopFactory.createLabel(InternationalizationHelper.getMessage("i18n.default.hmac.base64.bytes.array.length")), "growx");
+        keyPanel.add(FwknopFactory.createLabel(InternationalizationHelper.getMessage("i18n.hmac.base64.bytes.array.length")), "growx");
         keyPanel.add(this.varBase64HmacBytes = new JFwknopTextField(StringUtils.EMPTY), "growx");
         
-        keyPanel.add(FwknopFactory.createLabel(InternationalizationHelper.getMessage("i18n.default.gpg.base64.bytes.array.length")), "growx");
-        keyPanel.add(this.varBase64GpgBytes = new JFwknopTextField(StringUtils.EMPTY), "growx");
+        keyPanel.add(new JLabel(" "), "wrap");
         keyPanel.add(this.btnSaveKeySettings, "gaptop 5, span 2, growx");
 
         return keyPanel;
