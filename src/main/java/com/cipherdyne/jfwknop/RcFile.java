@@ -116,4 +116,10 @@ public class RcFile {
         return this.config;
     }
 
+    /**
+     * @return the rc filename
+     */
+    public String getRcFilename() {
+        return this.filepath;
+    }
 }

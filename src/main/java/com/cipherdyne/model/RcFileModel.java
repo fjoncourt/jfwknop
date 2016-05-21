@@ -4,6 +4,7 @@ import com.cipherdyne.gui.MainWindowView;
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
 import com.cipherdyne.jfwknop.RcFile;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -13,8 +14,8 @@ public class RcFileModel {
     static final Logger logger = LogManager.getLogger(RcFileModel.class.getName());
 
     private Map<EnumFwknopRcKey, String> context;
-    private final MainWindowView         view;
-    private RcFile                       rcFile;
+    private final MainWindowView view;
+    private RcFile rcFile;
 
     public RcFileModel(final MainWindowView view) {
         super();
@@ -48,11 +49,24 @@ public class RcFileModel {
         logger.info("Save config as :" + filename);
         this.rcFile.saveAs(filename);
     }
-    
+
     /**
-     * @return true if the configuration exists in a savec file, false otherwise
+     * @return true if the configuration exists in a save file, false otherwise
      */
     public boolean exists() {
-        return (this.rcFile != null) ;
+        return (this.rcFile != null);
+    }
+
+    /**
+     * @return the rc filename used by the RcFileModel or an empty string if uninitialized
+     */
+    public String getRcFilename() {
+        String filename = StringUtils.EMPTY;
+
+        if (this.exists()) {
+            filename = this.rcFile.getRcFilename();
+        }
+
+        return filename;
     }
 }

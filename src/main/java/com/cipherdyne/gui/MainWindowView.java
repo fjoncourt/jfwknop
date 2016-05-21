@@ -38,7 +38,7 @@ public class MainWindowView extends JFrame implements IConsole {
     private JMenuItem openMenuItem;
     private JMenu recentsMenu;
     private JMenuItem openTerminalMenuItem;
-    private JMenuItem importGpgKeyMenuItem;
+    private JMenuItem openRcFileMenuItem;
     private JMenuItem aboutMenuItem;
 
     private final Map<EnumFwknopRcKey, IFwknopVariable> varMap;
@@ -123,10 +123,10 @@ public class MainWindowView extends JFrame implements IConsole {
             new ImageIcon(this.getClass().getResource("/openterminal16.png")));
         menu.add(this.openTerminalMenuItem);
 
-        this.importGpgKeyMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.tools.importgpgkey"),
-            new ImageIcon(this.getClass().getResource("/import16.png")));
-        menu.add(this.importGpgKeyMenuItem);
-
+        this.openRcFileMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.tools.openrcfile"),
+            new ImageIcon(this.getClass().getResource("/edit16.png")));
+        menu.add(this.openRcFileMenuItem);        
+        
         return menu;
     }
 
@@ -266,12 +266,18 @@ public class MainWindowView extends JFrame implements IConsole {
         return this.varRecentRcFiles;
     }
 
+    /**
+     * @return the menu item used to open a terminal
+     */
     public JMenuItem getOpenTerminalMenuItem() {
         return this.openTerminalMenuItem;
     }
 
-    public JMenuItem getImportGpgKeyMenuItem() {
-        return this.importGpgKeyMenuItem;
+    /**
+     * @return the menu item used to open the current rc file
+     */
+    public JMenuItem getOpenRcFileMenuItem() {
+        return this.openRcFileMenuItem;
     }
 
     @Override
