@@ -115,8 +115,6 @@ public class KeyModel {
      * @return base64 string representation of the byte array key
      */
     static public String encodeToBase64(byte[] key) {
-        String base64Str = "failed";
-        base64Str = Base64.getEncoder().encodeToString(key);
-        return base64Str;
+        return Base64.getEncoder().encodeToString(key);
     }
 }

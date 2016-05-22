@@ -17,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import org.bouncycastle.openpgp.PGPException;
 
 /**
@@ -124,11 +123,18 @@ public class GpgController {
                 }
             }
         });
+        this.gpgView.getBtnCreate().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GpgUtils.createKey(gpgHomeDirectory);
+            }
+        });
         this.gpgView.getBtnCancel().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GpgController.this.gpgView.dispose();
             }
         });
+
     }
 }

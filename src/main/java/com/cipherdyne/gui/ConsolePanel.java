@@ -8,7 +8,7 @@ package com.cipherdyne.gui;
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
 import com.cipherdyne.jfwknop.IFwknopVariable;
 import com.cipherdyne.jfwknop.InternationalizationHelper;
-import java.awt.Dimension;
+import com.cipherdyne.jfwknop.JFwknopComboBox;
 import java.awt.Font;
 import java.util.Map;
 import javax.swing.ImageIcon;
@@ -25,9 +25,17 @@ import net.miginfocom.swing.MigLayout;
  */
 public class ConsolePanel extends JPanel {
 
+    /* Console that displays the fwknop output */
     public JTextArea varConsole;
+    
+    /* Button to clear the console */
     public JButton btnClearConsole;
+    
+    /* Button to Execute the fwknop client with the curent selected configuration */
     public JButton btnExecute;
+    
+    /* Rc file list combo box used to select the configuration to apply to knock */
+    public JFwknopComboBox CbRcFileList;
 
     public ConsolePanel(Map<EnumFwknopRcKey, IFwknopVariable> varMap) {
         super(new MigLayout("insets 0 10 10 10, aligny top, flowy, gap 0, fill", "[grow]", "[][]"));
@@ -44,7 +52,8 @@ public class ConsolePanel extends JPanel {
         ImageIcon executeImg = new ImageIcon(this.getClass().getResource("/execute16.png"));
         this.btnExecute = new JButton(executeImg);
         this.btnExecute.setToolTipText(InternationalizationHelper.getMessage("i18n.btn.execute"));
-        btnPanel.add(btnExecute);
+        btnPanel.add(btnExecute);        
+        btnPanel.add(new JFwknopComboBox(new String[]{"Default"}));
         
         this.add(btnPanel);
         

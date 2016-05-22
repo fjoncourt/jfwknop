@@ -5,12 +5,16 @@ import com.cipherdyne.model.FwknopClientModel;
 import com.cipherdyne.gui.gpg.GpgController;
 import com.cipherdyne.gui.MainWindowView;
 import com.cipherdyne.model.KeyModel;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JCheckBox;
@@ -319,11 +323,15 @@ public class MainWindowController {
                     InternationalizationHelper.getMessage("i18n.no.rcfile.loaded"),
                     InternationalizationHelper.getMessage("i18n.error"),
                     JOptionPane.ERROR_MESSAGE);
-            } 
-            // Otherwise launch the editor
+            } // Otherwise launch the editor
             else {
-                ExternalCommand extCmd = new ExternalCommand("xdg-open " + filename);
-                extCmd.execute();
+                try {
+                    Desktop.getDesktop().open(new File(filename));
+                    //ExternalCommand extCmd = new ExternalCommand("xdg-open " + filename);
+                    //extCmd.execute();
+                } catch (IOException ex) {
+                    java.util.logging.Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
