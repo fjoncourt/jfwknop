@@ -125,8 +125,8 @@ public class MainWindowView extends JFrame implements IConsole {
 
         this.openRcFileMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.tools.openrcfile"),
             new ImageIcon(this.getClass().getResource("/edit16.png")));
-        menu.add(this.openRcFileMenuItem);        
-        
+        menu.add(this.openRcFileMenuItem);
+
         return menu;
     }
 
@@ -176,11 +176,14 @@ public class MainWindowView extends JFrame implements IConsole {
     public void onRcFileChange(final Map<EnumFwknopRcKey, String> rcFileContext) {
 
         this.varMap.entrySet().stream().map((entry) -> entry.getKey()).forEach((crtKey) -> {
+            final IFwknopVariable component = this.varMap.get(crtKey);
             final String newVal = rcFileContext.get(crtKey);
-            if (!(newVal == null)) {
-                final IFwknopVariable component = this.varMap.get(crtKey);
-                if (!(component == null)) {
+            if (component != null) {
+                if (newVal != null) {
                     component.setText(newVal);
+                }
+                else {
+                    component.setDefaultValue();
                 }
             }
         });
@@ -205,7 +208,7 @@ public class MainWindowView extends JFrame implements IConsole {
 
     /**
      * Refresh the view when the key model is updated
-     * 
+     *
      * @param keyContext key context to use to update the view
      */
     public void onKeyContextChange(Map<EnumFwknopConfigKey, String> keyContext) {
@@ -330,27 +333,27 @@ public class MainWindowView extends JFrame implements IConsole {
         return this.settingsTab.varRijndaelKeyLength;
     }
 
-   /**
+    /**
      * @return the default hmac key length
      */
     public JFwknopTextField getVarKeyHmacLength() {
         return this.settingsTab.varHmacKeyLength;
-    }    
-    
-   /**
+    }
+
+    /**
      * @return the base64 hmac byte array length
      */
     public JFwknopTextField getVarBase64HmacBytes() {
         return this.settingsTab.varBase64HmacBytes;
-    }    
-    
-  /**
+    }
+
+    /**
      * @return the base64 rijndael byte array length
      */
     public JFwknopTextField getVarBase64RijndaelBytes() {
         return this.settingsTab.varBase64RijndaelBytes;
-    }         
-    
+    }
+
     /**
      * @return the button used to remove Rijndael key
      */
