@@ -129,37 +129,61 @@ public class GpgUtils {
         }
     }
 
-    public static void createKey(String gpgHomeDirectory) {
+    public static void createKey(String gpgHomeDirectory, String userId, String passphrase) {
 
         try {
-            Logger.getLogger(GpgTableModel.class.getName()).log(Level.INFO, "Create key");
-
             Security.addProvider(new BouncyCastleProvider());
 
+            // Create the main key set
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
             keyGen.initialize(1024);
             KeyPair pair = keyGen.generateKeyPair();
 
+            // Create output stream
+            // FIXME : should not be files
             OutputStream pubOut = new FileOutputStream(new File("public.asc"));
             OutputStream privOut = new FileOutputStream(new File("private.asc"));
 
+            // Create the private key with the provided settings
             privOut = new ArmoredOutputStream(privOut);
-
             PGPDigestCalculator sha1Calc = new JcaPGPDigestCalculatorProviderBuilder().build().get(HashAlgorithmTags.SHA1);
             PGPKeyPair keyPair = new JcaPGPKeyPair(PGPPublicKey.RSA_GENERAL, pair, new Date());
             PGPSecretKey secretKey = new PGPSecretKey(PGPSignature.DEFAULT_CERTIFICATION, keyPair,
-                "mybctestkey", sha1Calc, null, null,
+                userId, sha1Calc, null, null,
                 new JcaPGPContentSignerBuilder(keyPair.getPublicKey().getAlgorithm(), HashAlgorithmTags.SHA1),
-                new JcePBESecretKeyEncryptorBuilder(PGPEncryptedData.CAST5, sha1Calc).setProvider("BC").build("mybcpassword".toCharArray()));
-
+                new JcePBESecretKeyEncryptorBuilder(PGPEncryptedData.CAST5, sha1Calc).setProvider("BC").build(passphrase.toCharArray()));
             secretKey.encode(privOut);
-
             privOut.close();
 
+            // Create Public key
             pubOut = new ArmoredOutputStream(pubOut);
             PGPPublicKey key = secretKey.getPublicKey();
             key.encode(pubOut);
             pubOut.close();
+ 
+            // Open provided keyring
+            FileInputStream in = new FileInputStream(gpgHomeDirectory + "/pubring.gpg");
+            Security.addProvider(new BouncyCastleProvider());
+            PGPPublicKeyRingCollection pubRings = new PGPPublicKeyRingCollection(in, new JcaKeyFingerprintCalculator());
+
+            // Add public key to the keyring
+            PGPPublicKeyRing pgpKeyring;
+            FileOutputStream out;/*
+            pgpKeyring = new PGPPublicKeyRing(PGPUtil.getDecoderStream(new FileInputStream(new File("public.asc"))), 
+                new JcaKeyFingerprintCalculator());
+            pubRings = PGPPublicKeyRingCollection.addPublicKeyRing(pubRings, pgpKeyring);
+            out = new FileOutputStream(new File(gpgHomeDirectory + "/pubring.gpg"));
+            pubRings.encode(out);
+            out.close();*/
+            
+            // Add private key to the keyring
+            /*
+            pgpKeyring = new PGPPublicKeyRing(PGPUtil.getDecoderStream(new FileInputStream(new File("private.asc"))), 
+                new JcaKeyFingerprintCalculator());
+            pubRings = PGPPublicKeyRingCollection.addPublicKeyRing(pubRings, pgpKeyring);
+            out = new FileOutputStream(new File(gpgHomeDirectory + "/pubring.gpg"));
+            pubRings.encode(out);
+            out.close();*/
         } catch (NoSuchAlgorithmException | IOException | PGPException ex) {
             Logger.getLogger(GpgUtils.class.getName()).log(Level.SEVERE, null, ex);
         }

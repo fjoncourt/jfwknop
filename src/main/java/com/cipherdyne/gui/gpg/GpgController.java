@@ -126,7 +126,9 @@ public class GpgController {
         this.gpgView.getBtnCreate().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GpgUtils.createKey(gpgHomeDirectory);
+
+                    GpgKeySettingsController keyController = new GpgKeySettingsController(GpgController.this.parentWindow, gpgHomeDirectory);
+                    //((GpgTableModel) (GpgController.this.gpgView.getKeyTable().getModel())).reload();
             }
         });
         this.gpgView.getBtnCancel().addActionListener(new ActionListener() {
