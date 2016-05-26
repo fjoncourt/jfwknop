@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -81,11 +82,6 @@ public class MainWindowController {
         this.view.getBtnExecute().addActionListener(e -> {
             updateFwknopModel();
             MainWindowController.this.fwknopClientModel.execute();
-            //ExternalCommand ext = new ExternalCommand("/usr/bin/x-terminal-emulator -e \"notify-send -t 5000 test\"");
-            //ExternalCommand ext = new ExternalCommand("/usr/bin/x-terminal-emulator_-x_'ssh franck@127.0.0.1'");
-            //ExternalCommand ext = new ExternalCommand("ssh -T -t franck@127.0.0.1");
-            //ExternalCommand ext = new ExternalCommand("/usr/bin/iceweasel");
-            //ext.execute();
         });
 
         // Add action listener to clear the console
@@ -245,6 +241,15 @@ public class MainWindowController {
                 MainWindowController.this.keyModel.save();
             }
         });
+
+        this.view.getCbConfigList().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String filename = ((JFwknopComboBox) e.getSource()).getText();
+                MainWindowController.this.rcFileModel.loadRcFile(filename);
+                updateNewRcFile(filename);
+            }
+        });
     }
 
     /**
@@ -287,6 +292,7 @@ public class MainWindowController {
                 final String filename = fileChooser.getSelectedFile().getAbsolutePath();
                 this.rcFileModel.loadRcFile(filename);
                 updateNewRcFile(filename);
+                updateConfigurationList();
             }
         });
 
@@ -304,8 +310,6 @@ public class MainWindowController {
         this.view.getSaveAsMenuItem().addActionListener(e -> {
             MainWindowController.this.saveAs();
         });
-
-        populateRecentFiles();
 
         // Set up action listener to open a terminal
         this.view.getOpenTerminalMenuItem().addActionListener(e -> {
@@ -334,6 +338,15 @@ public class MainWindowController {
                 }
             }
         });
+
+        populateRecentFiles();
+
+        // FIXME: Not very nice
+        // Set up config list and select default config
+        ArrayList<String> configs = new ArrayList<String>();
+        configs.add(InternationalizationHelper.getMessage("i18n.default"));
+        configs.addAll(1, this.jfwknopConfig.getRecentFileList());
+        this.view.setCbConfigList(configs.toArray(new String[0]));
     }
 
     /**
@@ -348,6 +361,7 @@ public class MainWindowController {
             MainWindowController.this.rcFileModel.saveAsRcFile(convertViewToConfig(this.view.getVariables()),
                 filename);
             updateNewRcFile(filename);
+            updateConfigurationList();
         }
     }
 
@@ -363,8 +377,16 @@ public class MainWindowController {
                 MainWindowController.this.rcFileModel.loadRcFile(e.getActionCommand());
                 updateNewRcFile(e.getActionCommand());
             });
-
         }
+    }
+
+    /**
+     * Update the combo box list with the latest configuration files loaded by the user
+     */
+    private void updateConfigurationList() {
+        String[] configs = new String[this.jfwknopConfig.getRecentFileList().size()];
+        configs = this.jfwknopConfig.getRecentFileList().toArray(configs);
+        this.view.setCbConfigList(configs);
     }
 
     private void updateNewRcFile(String rcFilename) {
@@ -405,15 +427,5 @@ public class MainWindowController {
         }
 
         return valid;
-    }
-
-    private String computeBase64(byte[] key) {
-        String base64Str = "failed";
-
-        base64Str = Base64.getEncoder().encodeToString(key);
-        //String decodedString = new String(Base64.getDecoder().decode(base64String), "utf-8");
-        //System.out.println(unencodedString + " ==> " + base64String + " ==> " + decodedString);
-
-        return base64Str;
     }
 }

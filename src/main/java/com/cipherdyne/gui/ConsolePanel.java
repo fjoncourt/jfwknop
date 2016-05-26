@@ -34,8 +34,8 @@ public class ConsolePanel extends JPanel {
     /* Button to Execute the fwknop client with the curent selected configuration */
     public JButton btnExecute;
     
-    /* Rc file list combo box used to select the configuration to apply to knock */
-    public JFwknopComboBox CbRcFileList;
+    /* Combo box used to select the configuration to apply to knock */
+    public JFwknopComboBox cbConfigList;
 
     public ConsolePanel(Map<EnumFwknopRcKey, IFwknopVariable> varMap) {
         super(new MigLayout("insets 0 10 10 10, aligny top, flowy, gap 0, fill", "[grow]", "[][]"));
@@ -53,7 +53,8 @@ public class ConsolePanel extends JPanel {
         this.btnExecute = new JButton(executeImg);
         this.btnExecute.setToolTipText(InternationalizationHelper.getMessage("i18n.btn.execute"));
         btnPanel.add(btnExecute);        
-        btnPanel.add(new JFwknopComboBox(new String[]{"Default"}));
+        this.cbConfigList = new JFwknopComboBox(new String[]{"Default"});
+        btnPanel.add(this.cbConfigList);
         
         this.add(btnPanel);
         

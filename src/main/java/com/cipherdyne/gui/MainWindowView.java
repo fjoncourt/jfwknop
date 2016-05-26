@@ -5,6 +5,7 @@ import com.cipherdyne.jfwknop.EnumFwknopRcKey;
 import com.cipherdyne.jfwknop.IFwknopVariable;
 import com.cipherdyne.jfwknop.InternationalizationHelper;
 import com.cipherdyne.jfwknop.JFwknopArgs;
+import com.cipherdyne.jfwknop.JFwknopComboBox;
 import com.cipherdyne.jfwknop.JFwknopTextField;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
@@ -181,8 +182,7 @@ public class MainWindowView extends JFrame implements IConsole {
             if (component != null) {
                 if (newVal != null) {
                     component.setText(newVal);
-                }
-                else {
+                } else {
                     component.setDefaultValue();
                 }
             }
@@ -441,5 +441,21 @@ public class MainWindowView extends JFrame implements IConsole {
      */
     public JButton getBtnEncodeGpgPassphrase() {
         return this.cipherTab.btnGenerateBase64GpgPassphrase;
+    }
+
+    /**
+     * Update the configuration list. Firstly the list is cleared and then all new items are added
+     *
+     * @param configs list of configuration to
+     */
+    public void setCbConfigList(String[] configs) {
+        this.consolePanel.cbConfigList.removeAllItems();
+        for (String config : configs) {
+            this.consolePanel.cbConfigList.addItem(config);
+        }
+    }
+    
+    public JFwknopComboBox getCbConfigList() {
+        return this.consolePanel.cbConfigList;
     }
 }
