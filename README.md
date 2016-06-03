@@ -79,16 +79,23 @@ Go to the target directory. You will find:
 * the application configuration file: config.properties .
 
 
-# Execution
+# Run
 
 Once the application is built go to the target directory and run:
 ```
-java -jar com.cipherdyne.jfwknop-1.0.5.jar
+java -jar com.cipherdyne.jfwknop-1.0.0.jar
 ```
 
-# Multi-plateform
+# Multi-platform
 The application, can be run on windows, Linux or any other OS. The only requirements is to have JRE 1.8 isntalled on the target computer.
 
 Once built, you can deploy the application wherever you want by copying the jar file, its configuration file and the lib directory.
 
 
+# Features
+* Easy access to gnupg directories and ability to import, export, remove and even create GPG keys
+* Random password generation
+* Base64 encoding from clear passwords
+* Fwknop client binary selection
+* Last configurations can be quickly accessed and run
+* Internationalization support - English and French available - More can be easily added
