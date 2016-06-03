@@ -1,7 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license header, choose License Headers inPriv Project Properties.
  * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * and open the template inPriv the editor.
  */
 package com.cipherdyne.jfwknop;
 
@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.Security;
 import java.util.Date;
 import java.util.Iterator;
@@ -31,6 +32,8 @@ import org.bouncycastle.openpgp.PGPPublicKey;
 import org.bouncycastle.openpgp.PGPPublicKeyRing;
 import org.bouncycastle.openpgp.PGPPublicKeyRingCollection;
 import org.bouncycastle.openpgp.PGPSecretKey;
+import org.bouncycastle.openpgp.PGPSecretKeyRing;
+import org.bouncycastle.openpgp.PGPSecretKeyRingCollection;
 import org.bouncycastle.openpgp.PGPSignature;
 import org.bouncycastle.openpgp.PGPUtil;
 import org.bouncycastle.openpgp.operator.PGPDigestCalculator;
@@ -46,36 +49,70 @@ import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyEncryptorBuilder;
  */
 public class GpgUtils {
 
-    static public void addKeyToKeyring(String gpgHomeDirectory, String keyringFile) throws FileNotFoundException, IOException, PGPException {
-        FileInputStream in = new FileInputStream(gpgHomeDirectory + "/pubring.gpg");
+    static public void addPrivateKeyToKeyring(String gpgHomeDirectory, String keyringFile) throws FileNotFoundException, IOException, PGPException {
         Security.addProvider(new BouncyCastleProvider());
+
+        // Read user secret keyring
+        FileInputStream inPriv = new FileInputStream(gpgHomeDirectory + "/secring.gpg");
+        PGPSecretKeyRingCollection privRings = new PGPSecretKeyRingCollection(inPriv, new JcaKeyFingerprintCalculator());
+
+        // Read keys (public and private) from armored file
+        PGPSecretKeyRingCollection pgpSec = new PGPSecretKeyRingCollection(
+            PGPUtil.getDecoderStream(new FileInputStream(keyringFile)), new JcaKeyFingerprintCalculator());
+
+        // Iterate over the keys
+        Iterator keyRingIter = pgpSec.getKeyRings();
+        while (keyRingIter.hasNext()) {
+            PGPSecretKeyRing keyRing = (PGPSecretKeyRing) keyRingIter.next();
+            privRings = PGPSecretKeyRingCollection.addSecretKeyRing(privRings, keyRing);
+
+            Iterator keyIter = keyRing.getSecretKeys();
+            while (keyIter.hasNext()) {
+                PGPSecretKey key = (PGPSecretKey) keyIter.next();
+
+                if (key.isSigningKey()) {
+                    System.out.println("Private key imported " + Long.toHexString(key.getKeyID()).toUpperCase());
+                }
+            }
+        }
+
+        try (FileOutputStream out = new FileOutputStream(new File(gpgHomeDirectory + "/secring.gpg"))) {
+            privRings.encode(out);
+        }
+    }
+
+    static public void addPublicKeyToKeyring(String gpgHomeDirectory, String keyringFile) throws FileNotFoundException, IOException, PGPException {
+        Security.addProvider(new BouncyCastleProvider());
+
+        FileInputStream in = new FileInputStream(gpgHomeDirectory + "/pubring.gpg");
         PGPPublicKeyRingCollection pubRings = new PGPPublicKeyRingCollection(in, new JcaKeyFingerprintCalculator());
 
         PGPPublicKeyRing pgpKeyring = new PGPPublicKeyRing(PGPUtil.getDecoderStream(new FileInputStream(keyringFile)), new JcaKeyFingerprintCalculator());
         pubRings = PGPPublicKeyRingCollection.addPublicKeyRing(pubRings, pgpKeyring);
-        FileOutputStream out = new FileOutputStream(new File(gpgHomeDirectory + "/pubring.gpg"));
-        pubRings.encode(out);
-        out.close();
+
+        try (FileOutputStream out = new FileOutputStream(new File(gpgHomeDirectory + "/pubring.gpg"))) {
+            pubRings.encode(out);
+        }
     }
 
     static public void removeKeyFromKeyring(String gpgHomeDirectory, String keyId) throws IOException, PGPException {
-        FileInputStream in = new FileInputStream(gpgHomeDirectory + "/pubring.gpg");
-        Security.addProvider(new BouncyCastleProvider());
-        PGPPublicKeyRingCollection pubRings = new PGPPublicKeyRingCollection(in, new JcaKeyFingerprintCalculator());
-
-        Iterator it = pubRings.getKeyRings();
-        while (it.hasNext()) {
-            PGPPublicKeyRing pgpKeyring = (PGPPublicKeyRing) it.next();
-            String crtId = Long.toHexString(pgpKeyring.getPublicKey().getKeyID()).toUpperCase();
-            if (keyId.equals(crtId)) {
-                pubRings = PGPPublicKeyRingCollection.removePublicKeyRing(pubRings, pgpKeyring);
+        PGPPublicKeyRingCollection pubRings;
+        try (FileInputStream in = new FileInputStream(gpgHomeDirectory + "/pubring.gpg")) {
+            Security.addProvider(new BouncyCastleProvider());
+            pubRings = new PGPPublicKeyRingCollection(in, new JcaKeyFingerprintCalculator());
+            Iterator it = pubRings.getKeyRings();
+            while (it.hasNext()) {
+                PGPPublicKeyRing pgpKeyring = (PGPPublicKeyRing) it.next();
+                String crtId = Long.toHexString(pgpKeyring.getPublicKey().getKeyID()).toUpperCase();
+                if (keyId.equals(crtId)) {
+                    pubRings = PGPPublicKeyRingCollection.removePublicKeyRing(pubRings, pgpKeyring);
+                }
             }
         }
-        in.close();
 
-        FileOutputStream out = new FileOutputStream(new File(gpgHomeDirectory + "/pubring.gpg"));
-        pubRings.encode(out);
-        out.close();
+        try (FileOutputStream out = new FileOutputStream(new File(gpgHomeDirectory + "/pubring.gpg"))) {
+            pubRings.encode(out);
+        }
     }
 
     static public void exportKey(String gpgHomeDirectory, String keyId) throws FileNotFoundException, IOException, PGPException {
@@ -98,7 +135,6 @@ public class GpgUtils {
             Iterator it = pgpPub.getPublicKeys();
 
             boolean firstKey = true;
-            boolean firstId = true;
             while (it.hasNext()) {
                 PGPPublicKey pgpKey = (PGPPublicKey) it.next();
 
@@ -106,16 +142,14 @@ public class GpgUtils {
                     String crtkeyid = Long.toHexString(pgpKey.getKeyID()).toUpperCase();
                     if (crtkeyid.equals(keyId)) {
                         ByteArrayOutputStream encOut = new ByteArrayOutputStream();
-                        ArmoredOutputStream armorOut
-                            = new ArmoredOutputStream(encOut);
-                        armorOut.write(pgpKey.getEncoded());
-                        armorOut.flush();
-                        armorOut.close();
-                        FileOutputStream out = new FileOutputStream(new File(keyId + ".asc"));
-                        out.write(encOut.toByteArray());
-                        out.flush();
-                        out.close();
-                        //System.out.println(new String(encOut.toByteArray()));
+                        try (ArmoredOutputStream armorOut = new ArmoredOutputStream(encOut)) {
+                            armorOut.write(pgpKey.getEncoded());
+                            armorOut.flush();
+                        }
+                        try (FileOutputStream out = new FileOutputStream(new File(keyId + ".asc"))) {
+                            out.write(encOut.toByteArray());
+                            out.flush();
+                        }
                     }
                     firstKey = false;
                 }
@@ -130,12 +164,11 @@ public class GpgUtils {
     }
 
     public static void createKey(String gpgHomeDirectory, String userId, String passphrase) {
-
         try {
             Security.addProvider(new BouncyCastleProvider());
 
             // Create the main key set
-            KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+            KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA", "BC");
             keyGen.initialize(1024);
             KeyPair pair = keyGen.generateKeyPair();
 
@@ -160,31 +193,11 @@ public class GpgUtils {
             PGPPublicKey key = secretKey.getPublicKey();
             key.encode(pubOut);
             pubOut.close();
- 
-            // Open provided keyring
-            FileInputStream in = new FileInputStream(gpgHomeDirectory + "/pubring.gpg");
-            Security.addProvider(new BouncyCastleProvider());
-            PGPPublicKeyRingCollection pubRings = new PGPPublicKeyRingCollection(in, new JcaKeyFingerprintCalculator());
 
-            // Add public key to the keyring
-            PGPPublicKeyRing pgpKeyring;
-            FileOutputStream out;/*
-            pgpKeyring = new PGPPublicKeyRing(PGPUtil.getDecoderStream(new FileInputStream(new File("public.asc"))), 
-                new JcaKeyFingerprintCalculator());
-            pubRings = PGPPublicKeyRingCollection.addPublicKeyRing(pubRings, pgpKeyring);
-            out = new FileOutputStream(new File(gpgHomeDirectory + "/pubring.gpg"));
-            pubRings.encode(out);
-            out.close();*/
+            GpgUtils.addPublicKeyToKeyring(gpgHomeDirectory, "public.asc");
+            GpgUtils.addPrivateKeyToKeyring(gpgHomeDirectory, "private.asc");
             
-            // Add private key to the keyring
-            /*
-            pgpKeyring = new PGPPublicKeyRing(PGPUtil.getDecoderStream(new FileInputStream(new File("private.asc"))), 
-                new JcaKeyFingerprintCalculator());
-            pubRings = PGPPublicKeyRingCollection.addPublicKeyRing(pubRings, pgpKeyring);
-            out = new FileOutputStream(new File(gpgHomeDirectory + "/pubring.gpg"));
-            pubRings.encode(out);
-            out.close();*/
-        } catch (NoSuchAlgorithmException | IOException | PGPException ex) {
+        } catch (NoSuchAlgorithmException | IOException | PGPException | NoSuchProviderException ex) {
             Logger.getLogger(GpgUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

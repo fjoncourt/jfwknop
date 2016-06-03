@@ -87,7 +87,7 @@ public class GpgView extends JDialog {
         operationPanel.add(btnExport, "growx");
         operationPanel.add(btnImport, "growx");
         operationPanel.add(btnRemove, "growx");
-        //operationPanel.add(btnCreate, "growx");
+        operationPanel.add(btnCreate, "growx");
         this.add(operationPanel, "span 2, growx, wrap");
         
         this.add(btnSelect, "growx");

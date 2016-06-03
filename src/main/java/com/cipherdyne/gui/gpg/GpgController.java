@@ -95,7 +95,7 @@ public class GpgController {
                 final int result = fileChooser.showOpenDialog(null);
                 if (result == JFileChooser.APPROVE_OPTION) {
                     try {
-                        GpgUtils.addKeyToKeyring(gpgHomeDirectory, fileChooser.getSelectedFile().getAbsolutePath());
+                        GpgUtils.addPublicKeyToKeyring(gpgHomeDirectory, fileChooser.getSelectedFile().getAbsolutePath());
                         ((GpgTableModel) (GpgController.this.gpgView.getKeyTable().getModel())).reload();
                         JOptionPane.showMessageDialog(GpgController.this.parentWindow,
                             InternationalizationHelper.getMessage("i18n.import.key.success") + ": " + fileChooser.getSelectedFile().getAbsolutePath(),
@@ -126,9 +126,12 @@ public class GpgController {
         this.gpgView.getBtnCreate().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                try {
                     GpgKeySettingsController keyController = new GpgKeySettingsController(GpgController.this.parentWindow, gpgHomeDirectory);
-                    //((GpgTableModel) (GpgController.this.gpgView.getKeyTable().getModel())).reload();
+                    ((GpgTableModel) (GpgController.this.gpgView.getKeyTable().getModel())).reload();
+                } catch (IOException | PGPException ex) {
+                    Logger.getLogger(GpgController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         this.gpgView.getBtnCancel().addActionListener(new ActionListener() {
