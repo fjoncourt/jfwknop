@@ -91,14 +91,6 @@ public class FwknopFactory {
         return component;
     }
 
-    static public JLabel createLabel(String label) {
-        JLabel labelComponent = new JLabel(label);
-        Border paddingBorder = BorderFactory.createEmptyBorder(0, 2, 0, 2);
-        MatteBorder border = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.lightGray);
-        labelComponent.setBorder(BorderFactory.createCompoundBorder(border, paddingBorder));
-        return labelComponent;
-    }
-
     static public Component createPanel(Map<EnumFwknopRcKey, IFwknopVariable> varMap, List<EnumFwknopRcKey> keyList) {
         final JPanel pane = new JPanel(new MigLayout("insets 1, wrap 2, gapy 1!", "[120]0![200]", ""));
         keyList.forEach((item) -> {
@@ -118,7 +110,7 @@ public class FwknopFactory {
 
     static private void addVarToPanel(Map<EnumFwknopRcKey, IFwknopVariable> varMap, final JPanel panel, final EnumFwknopRcKey rcKey) {
         varMap.put(rcKey, FwknopFactory.createComponent(rcKey));
-        panel.add(FwknopFactory.createLabel(rcKey.getLabel()), "growx");
+        panel.add(new JFwknopLabel(rcKey.getLabel()), "growx");
         panel.add((JComponent)(varMap.get(rcKey)), "growx");
     }
 }

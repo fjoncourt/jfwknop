@@ -19,9 +19,9 @@ import net.miginfocom.swing.MigLayout;
  */
 public class GpgKeySettingsView extends JDialog {
     
-    private JFwknopTextField userId;
-    private JFwknopTextField passphrase;
-    private JButton btnSubmit;
+    private final JFwknopTextField userId;
+    private final JFwknopTextField passphrase;
+    private final JButton btnSubmit;
     
     public GpgKeySettingsView(JFrame parentWindow) {
         super(parentWindow, InternationalizationHelper.getMessage("i18n.key.creation"), true);

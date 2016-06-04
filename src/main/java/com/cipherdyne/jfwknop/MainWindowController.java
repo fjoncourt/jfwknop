@@ -4,8 +4,8 @@ import com.cipherdyne.model.RcFileModel;
 import com.cipherdyne.model.FwknopClientModel;
 import com.cipherdyne.gui.gpg.GpgController;
 import com.cipherdyne.gui.MainWindowView;
+import com.cipherdyne.gui.ssh.SshController;
 import com.cipherdyne.model.KeyModel;
-import com.cipherdyne.utils.SshUtils;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -340,8 +340,8 @@ public class MainWindowController {
         });
 
         // Set up action listener to ssh fil to remote server
-        this.view.getScpFileMenuItem().addActionListener(e -> {
-            SshUtils.scpFile("127.0.0.1", "franck", "mypassword", "B1145405DB246448.asc");
+        this.view.getExportFileMenuItem().addActionListener(e -> {
+            new SshController(this.view);
         });
 
         populateRecentFiles();

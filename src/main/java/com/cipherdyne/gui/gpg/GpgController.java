@@ -25,7 +25,7 @@ import org.bouncycastle.openpgp.PGPException;
 public class GpgController {
 
     // View used to display all GPG user interface components
-    final private GpgView gpgView;
+    final private GpgView view;
 
     // Parent window we come from
     final private MainWindowView parentWindow;
@@ -37,9 +37,11 @@ public class GpgController {
     final private String gpgHomeDirectory;
 
     /**
-     *
+     * Create a GPG controller that handled the GPG view
+     * 
      * @param frame parent window
      * @param fwknopKey GPG_SIGNER or GPG_RECIPIENT fwknop key to update when the key is selected
+     * @param gpgHomeDirectory GPG home directory to use to display GPG settings
      */
     public GpgController(MainWindowView frame, EnumFwknopRcKey fwknopKey, String gpgHomeDirectory) {
         this.parentWindow = frame;
@@ -47,31 +49,31 @@ public class GpgController {
         this.fwknopKey = fwknopKey;
 
         // Build the GPG view according to the GPG home directory selected
-        this.gpgView = new GpgView(this.parentWindow, gpgHomeDirectory);
+        this.view = new GpgView(this.parentWindow, gpgHomeDirectory);
 
         // Configure button action listeners
         updateBtnBehaviour();
 
         // Display the view
-        this.gpgView.setVisible(true);
+        this.view.setVisible(true);
     }
 
     /**
      * Update the behaviour of all buttons displayed in the GPG view
      */
     private void updateBtnBehaviour() {
-        this.gpgView.getBtnSelect().addActionListener(new ActionListener() {
+        this.view.getBtnSelect().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String keyId = GpgController.this.gpgView.getSelectKeyId();
+                String keyId = GpgController.this.view.getSelectKeyId();
                 GpgController.this.parentWindow.getVariables().get(GpgController.this.fwknopKey).setText(keyId);
-                GpgController.this.gpgView.dispose();
+                GpgController.this.view.dispose();
             }
         });
-        this.gpgView.getBtnExport().addActionListener(new ActionListener() {
+        this.view.getBtnExport().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selectedKeyId = GpgController.this.gpgView.getSelectKeyId();
+                String selectedKeyId = GpgController.this.view.getSelectKeyId();
                 try {
                     GpgUtils.exportKey(GpgController.this.gpgHomeDirectory, selectedKeyId);
                     JOptionPane.showMessageDialog(GpgController.this.parentWindow,
@@ -87,7 +89,7 @@ public class GpgController {
                 }
             }
         });
-        this.gpgView.getBtnImport().addActionListener(new ActionListener() {
+        this.view.getBtnImport().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 final JFileChooser fileChooser = new JFileChooser();
@@ -96,7 +98,7 @@ public class GpgController {
                 if (result == JFileChooser.APPROVE_OPTION) {
                     try {
                         GpgUtils.addPublicKeyToKeyring(gpgHomeDirectory, fileChooser.getSelectedFile().getAbsolutePath());
-                        ((GpgTableModel) (GpgController.this.gpgView.getKeyTable().getModel())).reload();
+                        ((GpgTableModel) (GpgController.this.view.getKeyTable().getModel())).reload();
                         JOptionPane.showMessageDialog(GpgController.this.parentWindow,
                             InternationalizationHelper.getMessage("i18n.import.key.success") + ": " + fileChooser.getSelectedFile().getAbsolutePath(),
                             InternationalizationHelper.getMessage("i18n.information"),
@@ -111,33 +113,33 @@ public class GpgController {
                 }
             }
         });
-        this.gpgView.getBtnRemove().addActionListener(new ActionListener() {
+        this.view.getBtnRemove().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    String selectedKeyId = GpgController.this.gpgView.getSelectKeyId();
+                    String selectedKeyId = GpgController.this.view.getSelectKeyId();
                     GpgUtils.removeKeyFromKeyring(gpgHomeDirectory, selectedKeyId);
-                    ((GpgTableModel) (GpgController.this.gpgView.getKeyTable().getModel())).reload();
+                    ((GpgTableModel) (GpgController.this.view.getKeyTable().getModel())).reload();
                 } catch (IOException | PGPException ex) {
                     Logger.getLogger(GpgController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
-        this.gpgView.getBtnCreate().addActionListener(new ActionListener() {
+        this.view.getBtnCreate().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     GpgKeySettingsController keyController = new GpgKeySettingsController(GpgController.this.parentWindow, gpgHomeDirectory);
-                    ((GpgTableModel) (GpgController.this.gpgView.getKeyTable().getModel())).reload();
+                    ((GpgTableModel) (GpgController.this.view.getKeyTable().getModel())).reload();
                 } catch (IOException | PGPException ex) {
                     Logger.getLogger(GpgController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
-        this.gpgView.getBtnCancel().addActionListener(new ActionListener() {
+        this.view.getBtnCancel().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GpgController.this.gpgView.dispose();
+                GpgController.this.view.dispose();
             }
         });
 

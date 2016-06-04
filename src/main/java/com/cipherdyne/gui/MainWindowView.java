@@ -40,7 +40,7 @@ public class MainWindowView extends JFrame implements IConsole {
     private JMenu recentsMenu;
     private JMenuItem openTerminalMenuItem;
     private JMenuItem openRcFileMenuItem;
-    private JMenuItem scpFileMenuItem;
+    private JMenuItem exportFileMenuItem;
     private JMenuItem aboutMenuItem;
 
     private final Map<EnumFwknopRcKey, IFwknopVariable> varMap;
@@ -129,8 +129,9 @@ public class MainWindowView extends JFrame implements IConsole {
             new ImageIcon(this.getClass().getResource("/edit16.png")));
         menu.add(this.openRcFileMenuItem);
 
-        this.scpFileMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.tools.scpfile"));
-        menu.add(this.scpFileMenuItem);        
+        this.exportFileMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.tools.exportfile"),
+            new ImageIcon(this.getClass().getResource("/export16.png")));
+        menu.add(this.exportFileMenuItem);        
         
         return menu;
     }
@@ -290,8 +291,8 @@ public class MainWindowView extends JFrame implements IConsole {
     /**
      * @return the menu item used to send file through sssh copy
      */
-    public JMenuItem getScpFileMenuItem() {
-        return this.scpFileMenuItem;
+    public JMenuItem getExportFileMenuItem() {
+        return this.exportFileMenuItem;
     }
 
     @Override

@@ -54,7 +54,8 @@ public class SshUtils {
     static public int scpFile(String hostname, int port, String username, String password, String filename) {
         try {
             String sourceFile = filename;
-            String destFile = filename;
+            String destFile = sourceFile
+                        .substring(sourceFile.lastIndexOf('/') + 1);
             FileInputStream fis;
 
             // Create a SSH session and connect to the remote SSH server
