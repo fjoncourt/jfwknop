@@ -5,13 +5,13 @@ import com.cipherdyne.model.FwknopClientModel;
 import com.cipherdyne.gui.gpg.GpgController;
 import com.cipherdyne.gui.MainWindowView;
 import com.cipherdyne.model.KeyModel;
+import com.cipherdyne.utils.SshUtils;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -317,7 +317,7 @@ public class MainWindowController {
             extCmd.execute();
         });
 
-        // Set up action listener to import GPG key to the keyring
+        // Set up action listener to edit rc file with the default text editor
         this.view.getOpenRcFileMenuItem().addActionListener(e -> {
             String filename = MainWindowController.this.rcFileModel.getRcFilename();
 
@@ -339,11 +339,16 @@ public class MainWindowController {
             }
         });
 
+        // Set up action listener to ssh fil to remote server
+        this.view.getScpFileMenuItem().addActionListener(e -> {
+            SshUtils.scpFile("127.0.0.1", "franck", "mypassword", "B1145405DB246448.asc");
+        });
+
         populateRecentFiles();
 
         // FIXME: Not very nice
         // Set up config list and select default config
-        ArrayList<String> configs = new ArrayList<String>();
+        ArrayList<String> configs = new ArrayList<>();
         configs.add(InternationalizationHelper.getMessage("i18n.default"));
         configs.addAll(1, this.jfwknopConfig.getRecentFileList());
         this.view.setCbConfigList(configs.toArray(new String[0]));

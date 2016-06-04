@@ -5,7 +5,7 @@
  */
 package com.cipherdyne.gui.gpg;
 
-import com.cipherdyne.jfwknop.GpgUtils;
+import com.cipherdyne.utils.GpgUtils;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;

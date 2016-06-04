@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template inPriv the editor.
  */
-package com.cipherdyne.jfwknop;
+package com.cipherdyne.utils;
 
 import com.cipherdyne.gui.gpg.GpgTableModel;
 import java.io.ByteArrayOutputStream;
@@ -44,6 +44,7 @@ import org.bouncycastle.openpgp.operator.jcajce.JcaPGPKeyPair;
 import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyEncryptorBuilder;
 
 /**
+ * Utility class that provides GPG helpers
  *
  * @author franck
  */

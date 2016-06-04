@@ -7,7 +7,7 @@ package com.cipherdyne.gui.gpg;
 
 import com.cipherdyne.gui.MainWindowView;
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
-import com.cipherdyne.jfwknop.GpgUtils;
+import com.cipherdyne.utils.GpgUtils;
 import com.cipherdyne.jfwknop.InternationalizationHelper;
 import com.cipherdyne.jfwknop.MainWindowController;
 import java.awt.event.ActionEvent;
