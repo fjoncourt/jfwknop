@@ -2,7 +2,6 @@ package com.cipherdyne.jfwknop;
 
 import com.cipherdyne.utils.InternationalizationHelper;
 import com.cipherdyne.gui.components.JFwknopComboBox;
-import com.cipherdyne.gui.components.JFwknopConfig;
 import com.cipherdyne.model.RcFileModel;
 import com.cipherdyne.model.FwknopClientModel;
 import com.cipherdyne.gui.gpg.GpgController;

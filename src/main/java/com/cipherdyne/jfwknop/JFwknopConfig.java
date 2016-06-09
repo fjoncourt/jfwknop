@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.cipherdyne.gui.components;
+package com.cipherdyne.jfwknop;
 
 import com.cipherdyne.jfwknop.EnumFwknopConfigKey;
 import com.cipherdyne.jfwknop.RecentFiles;

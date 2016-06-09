@@ -7,7 +7,7 @@ package com.cipherdyne.model;
 
 import com.cipherdyne.gui.MainWindowView;
 import com.cipherdyne.jfwknop.EnumFwknopConfigKey;
-import com.cipherdyne.gui.components.JFwknopConfig;
+import com.cipherdyne.jfwknop.JFwknopConfig;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
