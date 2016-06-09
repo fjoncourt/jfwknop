@@ -5,7 +5,7 @@
  */
 package com.cipherdyne.gui.gpg;
 
-import com.cipherdyne.jfwknop.InternationalizationHelper;
+import com.cipherdyne.utils.InternationalizationHelper;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;

@@ -5,7 +5,7 @@
  */
 package com.cipherdyne.gui.gpg;
 
-import com.cipherdyne.jfwknop.InternationalizationHelper;
+import com.cipherdyne.utils.InternationalizationHelper;
 import java.awt.Font;
 import java.io.IOException;
 import java.util.logging.Level;

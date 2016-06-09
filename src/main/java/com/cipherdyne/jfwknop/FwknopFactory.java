@@ -5,6 +5,10 @@
  */
 package com.cipherdyne.jfwknop;
 
+import com.cipherdyne.gui.components.JFwknopTextField;
+import com.cipherdyne.gui.components.JFwknopLabel;
+import com.cipherdyne.gui.components.JFwknopComboBox;
+import com.cipherdyne.gui.components.JFwknopTextArea;
 import static com.cipherdyne.jfwknop.EnumFwknopRcType.*;
 import java.awt.Component;
 import java.awt.Font;

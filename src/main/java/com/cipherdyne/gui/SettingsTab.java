@@ -7,10 +7,10 @@ package com.cipherdyne.gui;
 
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
 import com.cipherdyne.jfwknop.IFwknopVariable;
-import com.cipherdyne.jfwknop.InternationalizationHelper;
-import com.cipherdyne.jfwknop.JFwknopArgs;
-import com.cipherdyne.jfwknop.JFwknopLabel;
-import com.cipherdyne.jfwknop.JFwknopTextField;
+import com.cipherdyne.utils.InternationalizationHelper;
+import com.cipherdyne.gui.components.JFwknopArgs;
+import com.cipherdyne.gui.components.JFwknopLabel;
+import com.cipherdyne.gui.components.JFwknopTextField;
 import java.awt.Font;
 import java.util.Map;
 import javax.swing.JButton;

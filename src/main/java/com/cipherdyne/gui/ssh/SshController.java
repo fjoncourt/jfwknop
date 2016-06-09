@@ -8,7 +8,7 @@ package com.cipherdyne.gui.ssh;
 import com.cipherdyne.gui.MainWindowView;
 import com.cipherdyne.gui.ssh.SshView.EnumSshSettings;
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
-import com.cipherdyne.jfwknop.InternationalizationHelper;
+import com.cipherdyne.utils.InternationalizationHelper;
 import com.cipherdyne.utils.SshUtils;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -1,5 +1,6 @@
 package com.cipherdyne.jfwknop;
 
+import com.cipherdyne.utils.InternationalizationHelper;
 import static com.cipherdyne.jfwknop.EnumFwknopRcType.*;
 
 public enum EnumFwknopRcKey {

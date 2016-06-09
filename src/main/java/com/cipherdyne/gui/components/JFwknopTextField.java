@@ -1,5 +1,6 @@
-package com.cipherdyne.jfwknop;
+package com.cipherdyne.gui.components;
 
+import com.cipherdyne.jfwknop.IFwknopVariable;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;

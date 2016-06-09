@@ -2,7 +2,7 @@ package com.cipherdyne.model;
 
 import com.cipherdyne.gui.MainWindowView;
 import com.cipherdyne.jfwknop.EnumFwknopConfigKey;
-import com.cipherdyne.jfwknop.JFwknopConfig;
+import com.cipherdyne.gui.components.JFwknopConfig;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

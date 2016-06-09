@@ -5,8 +5,8 @@
  */
 package com.cipherdyne.gui.gpg;
 
-import com.cipherdyne.jfwknop.InternationalizationHelper;
-import com.cipherdyne.jfwknop.JFwknopTextField;
+import com.cipherdyne.utils.InternationalizationHelper;
+import com.cipherdyne.gui.components.JFwknopTextField;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;

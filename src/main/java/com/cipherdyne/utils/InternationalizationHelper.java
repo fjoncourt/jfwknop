@@ -1,4 +1,4 @@
-package com.cipherdyne.jfwknop;
+package com.cipherdyne.utils;
 
 import java.util.Locale;
 import java.util.MissingResourceException;

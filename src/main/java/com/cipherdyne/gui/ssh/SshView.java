@@ -6,9 +6,9 @@
 package com.cipherdyne.gui.ssh;
 
 import com.cipherdyne.jfwknop.IFwknopVariable;
-import com.cipherdyne.jfwknop.InternationalizationHelper;
-import com.cipherdyne.jfwknop.JFwknopLabel;
-import com.cipherdyne.jfwknop.JFwknopTextField;
+import com.cipherdyne.utils.InternationalizationHelper;
+import com.cipherdyne.gui.components.JFwknopLabel;
+import com.cipherdyne.gui.components.JFwknopTextField;
 import java.awt.Component;
 import java.util.HashMap;
 import java.util.Map;

@@ -7,8 +7,8 @@ package com.cipherdyne.gui;
 
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
 import com.cipherdyne.jfwknop.IFwknopVariable;
-import com.cipherdyne.jfwknop.InternationalizationHelper;
-import com.cipherdyne.jfwknop.JFwknopComboBox;
+import com.cipherdyne.utils.InternationalizationHelper;
+import com.cipherdyne.gui.components.JFwknopComboBox;
 import java.awt.Font;
 import java.util.Map;
 import javax.swing.ImageIcon;
