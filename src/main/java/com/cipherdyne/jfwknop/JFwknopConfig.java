@@ -5,8 +5,6 @@
  */
 package com.cipherdyne.jfwknop;
 
-import com.cipherdyne.jfwknop.EnumFwknopConfigKey;
-import com.cipherdyne.jfwknop.RecentFiles;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -51,29 +49,11 @@ public class JFwknopConfig {
             this.configProperties.load(new FileInputStream(CONFIG_PROPERTIES));
         } catch (final IOException e) {
             logMgr.error("Unable to load configuration file (" + CONFIG_PROPERTIES + ") : " + e.getMessage());
+            logMgr.error("A default configuration file is created");
+            createDefaultConfig(CONFIG_PROPERTIES);
         }
 
-        // Build fwknoprc recent file list
-        int ix = MAX_RECENT_FILES;
-        do {
-            final String filename = this.configProperties.getProperty(CONFIG_RECENT_FILE_PREFIX + ix);
-            if (filename != null) {
-                this.recentFiles.add(filename);
-            }
-            ix--;
-        } while (ix != 0);
-
-        // Read fwknop client settings
-        this.configKeyMap.put(EnumFwknopConfigKey.LANGUAGE, this.configProperties.getProperty(EnumFwknopConfigKey.LANGUAGE.getKey()));
-        this.configKeyMap.put(EnumFwknopConfigKey.FWKNOP_VERBOSE, this.configProperties.getProperty(EnumFwknopConfigKey.FWKNOP_VERBOSE.getKey()));
-        this.configKeyMap.put(EnumFwknopConfigKey.FWKNOP_FILEPATH, this.configProperties.getProperty(EnumFwknopConfigKey.FWKNOP_FILEPATH.getKey()));
-        this.configKeyMap.put(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS, this.configProperties.getProperty(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS.getKey()));
-
-        // Read the key settings
-        this.configKeyMap.put(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH, this.configProperties.getProperty(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH.getKey()));
-        this.configKeyMap.put(EnumFwknopConfigKey.KEY_HMAC_LENGTH, this.configProperties.getProperty(EnumFwknopConfigKey.KEY_HMAC_LENGTH.getKey()));
-        this.configKeyMap.put(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH, this.configProperties.getProperty(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH.getKey()));
-        this.configKeyMap.put(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH, this.configProperties.getProperty(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH.getKey()));
+        readConfig();
     }
 
     public static JFwknopConfig getInstance() {
@@ -116,6 +96,22 @@ public class JFwknopConfig {
         return this.configKeyMap;
     }
 
+    private void createDefaultConfig(String filename) {
+        // Set default fwknop client settings
+        this.configKeyMap.put(EnumFwknopConfigKey.LANGUAGE, "en_EN");
+        this.configKeyMap.put(EnumFwknopConfigKey.FWKNOP_VERBOSE, "1");
+        this.configKeyMap.put(EnumFwknopConfigKey.FWKNOP_FILEPATH, "/usr/bin/fwknop");
+        this.configKeyMap.put(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS, "");
+
+        // Set default key settings
+        this.configKeyMap.put(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH, "16");
+        this.configKeyMap.put(EnumFwknopConfigKey.KEY_HMAC_LENGTH, "16");
+        this.configKeyMap.put(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH, "32");
+        this.configKeyMap.put(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH, "64");
+
+        saveConfig();
+    }
+
     /**
      * Save current configuration to the properties file
      */
@@ -127,22 +123,65 @@ public class JFwknopConfig {
         }
 
         // Update the fwknop client settings in the properties file context
-        this.configProperties.setProperty(EnumFwknopConfigKey.LANGUAGE.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.LANGUAGE));
-        this.configProperties.setProperty(EnumFwknopConfigKey.FWKNOP_VERBOSE.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.FWKNOP_VERBOSE));
-        this.configProperties.setProperty(EnumFwknopConfigKey.FWKNOP_FILEPATH.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.FWKNOP_FILEPATH));
-        this.configProperties.setProperty(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS));
+        this.configProperties.setProperty(EnumFwknopConfigKey.LANGUAGE.getKey(), 
+            this.configKeyMap.get(EnumFwknopConfigKey.LANGUAGE));
+        this.configProperties.setProperty(EnumFwknopConfigKey.FWKNOP_VERBOSE.getKey(), 
+            this.configKeyMap.get(EnumFwknopConfigKey.FWKNOP_VERBOSE));
+        this.configProperties.setProperty(EnumFwknopConfigKey.FWKNOP_FILEPATH.getKey(), 
+            this.configKeyMap.get(EnumFwknopConfigKey.FWKNOP_FILEPATH));
+        this.configProperties.setProperty(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS.getKey(), 
+            this.configKeyMap.get(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS));
 
-        this.configProperties.setProperty(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH));
-        this.configProperties.setProperty(EnumFwknopConfigKey.KEY_HMAC_LENGTH.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.KEY_HMAC_LENGTH));
-        this.configProperties.setProperty(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH));
-        this.configProperties.setProperty(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH.getKey(), this.configKeyMap.get(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH));       
-        
+        this.configProperties.setProperty(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH.getKey(), 
+            this.configKeyMap.get(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH));
+        this.configProperties.setProperty(EnumFwknopConfigKey.KEY_HMAC_LENGTH.getKey(), 
+            this.configKeyMap.get(EnumFwknopConfigKey.KEY_HMAC_LENGTH));
+        this.configProperties.setProperty(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH.getKey(), 
+            this.configKeyMap.get(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH));
+        this.configProperties.setProperty(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH.getKey(), 
+            this.configKeyMap.get(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH));
+
         // Store settings
         try {
             this.configProperties.store(new FileOutputStream(CONFIG_PROPERTIES), null);
         } catch (IOException ex) {
             logMgr.error("Unable to save jfwknop configuration file (" + CONFIG_PROPERTIES + ") : " + ex.getMessage());
         }
+    }
+
+    /**
+     * Read config from the configuration file previously opened
+     */
+    private void readConfig() {
+        // Build fwknoprc recent file list
+        int ix = MAX_RECENT_FILES;
+        do {
+            final String filename = this.configProperties.getProperty(CONFIG_RECENT_FILE_PREFIX + ix);
+            if (filename != null) {
+                this.recentFiles.add(filename);
+            }
+            ix--;
+        } while (ix != 0);
+
+        // Read fwknop client settings
+        this.configKeyMap.put(EnumFwknopConfigKey.LANGUAGE,
+            this.configProperties.getProperty(EnumFwknopConfigKey.LANGUAGE.getKey()));
+        this.configKeyMap.put(EnumFwknopConfigKey.FWKNOP_VERBOSE,
+            this.configProperties.getProperty(EnumFwknopConfigKey.FWKNOP_VERBOSE.getKey()));
+        this.configKeyMap.put(EnumFwknopConfigKey.FWKNOP_FILEPATH,
+            this.configProperties.getProperty(EnumFwknopConfigKey.FWKNOP_FILEPATH.getKey()));
+        this.configKeyMap.put(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS,
+            this.configProperties.getProperty(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS.getKey()));
+
+        // Read the key settings
+        this.configKeyMap.put(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH,
+            this.configProperties.getProperty(EnumFwknopConfigKey.KEY_RIJNDAEL_LENGTH.getKey()));
+        this.configKeyMap.put(EnumFwknopConfigKey.KEY_HMAC_LENGTH,
+            this.configProperties.getProperty(EnumFwknopConfigKey.KEY_HMAC_LENGTH.getKey()));
+        this.configKeyMap.put(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH,
+            this.configProperties.getProperty(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH.getKey()));
+        this.configKeyMap.put(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH,
+            this.configProperties.getProperty(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH.getKey()));
     }
 
     class SortedProperties extends Properties {
