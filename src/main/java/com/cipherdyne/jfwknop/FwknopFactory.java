@@ -6,17 +6,12 @@
 package com.cipherdyne.jfwknop;
 
 import static com.cipherdyne.jfwknop.EnumFwknopRcType.*;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.util.List;
 import java.util.Map;
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
-import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 import net.miginfocom.swing.MigLayout;
 
@@ -27,7 +22,7 @@ import net.miginfocom.swing.MigLayout;
 public class FwknopFactory {
 
     private static final String[] YES_NO_LABELS = new String[]{"<Default>", "Y", "N"};
-    private static final String[] DIGEST_ALGO_LABELS = new String[]{"SHA256", "MD5", "SHA1", "SHA384", "SHA512"};
+    private static final String[] DIGEST_ALGO_LABELS = new String[]{"SHA256", "MD5", "SHA1", "SHA384", "SHA512", "SHA3_256", "SHA3_512"};
     private static final String[] PROTOCOL_LABELS = new String[]{"udp", "tcp", "http", "udpraw", "tcpraw", "icmp"};
 
     static IFwknopVariable createComponent(final EnumFwknopRcKey key) {

@@ -41,8 +41,10 @@ public enum EnumFwknopRcKey {
     
     SPA_SOURCE_PORT(SINGLE_PORT, "i18n.spa.client.sourceport"),
     FW_TIMEOUT(SECONDS, "i18n.misc.timeout"),
-    RESOLVE_IP_HTTP(Y_N, "i18n.resolve.ip.http"),
+    RESOLVE_IP_HTTPS(Y_N, "i18n.resolve.ip.https"),
+    RESOLVE_HTTP_ONLY(Y_N, "i18n.resolve.ip.http.only"),
     RESOLVE_URL(URL, "i18n.spa.client.resolveurl"),
+    SERVER_RESOLVE_IPV4(Y_N, "i18n.spa.server.resolve.ipv4"),
     TIME_OFFSET(TIME, "i18n.misc.timeoffset");
 
     final private EnumFwknopRcType type;
