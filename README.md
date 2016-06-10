@@ -66,17 +66,10 @@ $ mvn clean install
 [INFO] Final Memory: 20M/156M
 [INFO] ------------------------------------------------------------------------
 ```
-Then copy the configuration file to the target directory
-
-```
-cp config.properties target/
-```
-
 Go to the target directory. You will find:
 
 * The application: com.cipherdyne.jfwknop-x.y.z.jar
 * all its dependencies in the lib directory
-* the application configuration file: config.properties .
 
 
 # Run
