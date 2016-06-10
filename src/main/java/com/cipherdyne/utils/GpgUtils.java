@@ -116,7 +116,18 @@ public class GpgUtils {
         }
     }
 
-    static public void exportKey(String gpgHomeDirectory, String keyId) throws FileNotFoundException, IOException, PGPException {
+    /**
+     * Export a GPG key (armored) from a GPG home directory to a filename
+     * 
+     * @param gpgHomeDirectory GPG home directory where to look up the GPG key
+     * @param keyId GPG key to look up
+     * @param filename Filename to save the GPG key to
+     * 
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws PGPException 
+     */
+    static public void exportKey(String gpgHomeDirectory, String keyId, String filename) throws FileNotFoundException, IOException, PGPException {
         FileInputStream in = new FileInputStream(gpgHomeDirectory + "/pubring.gpg");
         Security.addProvider(new BouncyCastleProvider());
         PGPPublicKeyRingCollection pubRings = new PGPPublicKeyRingCollection(in, new JcaKeyFingerprintCalculator());
@@ -147,7 +158,7 @@ public class GpgUtils {
                             armorOut.write(pgpKey.getEncoded());
                             armorOut.flush();
                         }
-                        try (FileOutputStream out = new FileOutputStream(new File(keyId + ".asc"))) {
+                        try (FileOutputStream out = new FileOutputStream(new File(filename))) {
                             out.write(encOut.toByteArray());
                             out.flush();
                         }

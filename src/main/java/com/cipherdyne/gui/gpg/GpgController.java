@@ -12,6 +12,7 @@ import com.cipherdyne.utils.InternationalizationHelper;
 import com.cipherdyne.jfwknop.MainWindowController;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +39,7 @@ public class GpgController {
 
     /**
      * Create a GPG controller that handled the GPG view
-     * 
+     *
      * @param frame parent window
      * @param fwknopKey GPG_SIGNER or GPG_RECIPIENT fwknop key to update when the key is selected
      * @param gpgHomeDirectory GPG home directory to use to display GPG settings
@@ -74,19 +75,27 @@ public class GpgController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedKeyId = GpgController.this.view.getSelectKeyId();
-                try {
-                    GpgUtils.exportKey(GpgController.this.gpgHomeDirectory, selectedKeyId);
-                    JOptionPane.showMessageDialog(GpgController.this.parentWindow,
-                        InternationalizationHelper.getMessage("i18n.export.key.success") + ": " + selectedKeyId,
-                        InternationalizationHelper.getMessage("i18n.information"),
-                        JOptionPane.INFORMATION_MESSAGE);
-                } catch (IOException | PGPException ex) {
-                    JOptionPane.showMessageDialog(GpgController.this.parentWindow,
-                        InternationalizationHelper.getMessage("i18n.unable.to.export.key") + ": " + selectedKeyId + "\n" + ex.getMessage(),
-                        InternationalizationHelper.getMessage("i18n.gpg.error"),
-                        JOptionPane.ERROR_MESSAGE);
-                    Logger.getLogger(GpgController.class.getName()).log(Level.SEVERE, null, ex);
+                final JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle(InternationalizationHelper.getMessage(InternationalizationHelper.getMessage("i18n.save.as")));
+                fileChooser.setSelectedFile(new File(selectedKeyId + ".asc"));
+                final int result = fileChooser.showSaveDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    String filename = fileChooser.getSelectedFile().getAbsolutePath();
+                    try {
+                        GpgUtils.exportKey(GpgController.this.gpgHomeDirectory, selectedKeyId, filename);
+                        JOptionPane.showMessageDialog(GpgController.this.parentWindow,
+                            InternationalizationHelper.getMessage("i18n.export.key.success") + ": " + selectedKeyId,
+                            InternationalizationHelper.getMessage("i18n.information"),
+                            JOptionPane.INFORMATION_MESSAGE);
+                    } catch (IOException | PGPException ex) {
+                        JOptionPane.showMessageDialog(GpgController.this.parentWindow,
+                            InternationalizationHelper.getMessage("i18n.unable.to.export.key") + ": " + selectedKeyId + "\n" + ex.getMessage(),
+                            InternationalizationHelper.getMessage("i18n.gpg.error"),
+                            JOptionPane.ERROR_MESSAGE);
+                        Logger.getLogger(GpgController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
+
             }
         });
         this.view.getBtnImport().addActionListener(new ActionListener() {

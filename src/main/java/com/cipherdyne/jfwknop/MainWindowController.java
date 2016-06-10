@@ -361,7 +361,7 @@ public class MainWindowController {
      */
     private void saveAs() {
         final JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Save as");
+        fileChooser.setDialogTitle(InternationalizationHelper.getMessage("i18n.save.as"));
         final int result = fileChooser.showSaveDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
             final String filename = fileChooser.getSelectedFile().getAbsolutePath();
