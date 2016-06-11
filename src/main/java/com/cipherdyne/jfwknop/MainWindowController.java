@@ -346,6 +346,21 @@ public class MainWindowController {
             new SshController(this.view);
         });
 
+        // Set up action listener to generate access.conf file for fwknop server
+        this.view.getGenerateAccessMenuItem().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                final JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle(InternationalizationHelper.getMessage(InternationalizationHelper.getMessage("i18n.save.as")));
+                fileChooser.setSelectedFile(new File("access.conf"));
+                final int result = fileChooser.showSaveDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    AccessFile accessFile = new AccessFile(fileChooser.getSelectedFile().getAbsolutePath());
+                    accessFile.generate(convertViewToConfig(MainWindowController.this.view.getVariables()));
+                }
+            }
+        });
+
         populateRecentFiles();
 
         // FIXME: Not very nice

@@ -20,11 +20,9 @@ import org.apache.log4j.Logger;
 public class RcFile {
 
     private String filepath;
-    static final Logger logger = LogManager.getLogger(MainWindowController.class.getName());
+    static final Logger LOGGER = LogManager.getLogger(RcFile.class.getName());
 
-    // @Getter
-    // @Setter
-    private Map<EnumFwknopRcKey, String> config = new HashMap<EnumFwknopRcKey, String>();
+    private Map<EnumFwknopRcKey, String> config = new HashMap<>();
 
     public RcFile(final String filepath) {
         this.filepath = filepath;
@@ -44,7 +42,7 @@ public class RcFile {
                     try {
                         key = EnumFwknopRcKey.valueOf(matcher.group(1).trim());
                     } catch (final java.lang.IllegalArgumentException e) {
-                        logger.warn("Unsupported variable: " + e.getMessage());
+                        LOGGER.warn("Unsupported variable: " + e.getMessage());
                         continue;
                     }
                     this.config.put(key, matcher.group(2).trim());
@@ -53,7 +51,7 @@ public class RcFile {
             reader.close();
 
         } catch (final IOException e) {
-            logger.error("Unable to open rc file : " + e.getMessage());
+            LOGGER.error("Unable to open rc file : " + e.getMessage());
         }
 
         return true;
@@ -83,7 +81,7 @@ public class RcFile {
                 }
             }
         } catch (final IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Unable to save rc file " + this.filepath, e);
         }
 
         fixPermissions();

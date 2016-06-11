@@ -14,8 +14,8 @@ public enum EnumFwknopRcKey {
     USE_GPG_AGENT(Y_N, "i18n.gpg.use.agent"),
     GPG_SIGNING_PW(PASSPHRASE, "i18n.gpg.signing.password"),
     GPG_SIGNING_PW_BASE64(BASE64_PASSPHRASE, "i18n.gpg.signing.password.base64"),
-    GPG_SIGNER(GPG_KEY_ID, "i18n.gpg.signer"),
-    GPG_RECIPIENT(GPG_KEY_ID, "i18n.gpg.recipient"),
+    GPG_SIGNER(GPG_KEY_ID, "i18n.gpg.signer", EnumFwknopdRcKey.GPG_REMOTE_ID),
+    GPG_RECIPIENT(GPG_KEY_ID, "i18n.gpg.recipient", EnumFwknopdRcKey.GPG_DECRYPT_ID),
     GPG_HOMEDIR(DIRECTORY_PATH, "i18n.gpg.homedir"),
     
     SPOOF_USER(STRING, "i18n.spa.spoof.user"),
@@ -32,12 +32,12 @@ public enum EnumFwknopRcKey {
     SPA_SERVER(IP_ADDRESS, "i18n.spa.server.ip"),
     SPA_SERVER_PORT(SINGLE_PORT, "i18n.spa.server.port"),
     SPA_SERVER_PROTO(PROTOCOL, "i18n.spa.client.proto"),
-    KEY(PASSPHRASE, "i18n.rijndael.key"),
-    KEY_BASE64(BASE64_PASSPHRASE, "i18n.rijndael.keybase64"),
+    KEY(PASSPHRASE, "i18n.rijndael.key", EnumFwknopdRcKey.KEY),
+    KEY_BASE64(BASE64_PASSPHRASE, "i18n.rijndael.keybase64", EnumFwknopdRcKey.KEY_BASE64),
     
     USE_HMAC(Y_N, "i18n.hmac.use"),
-    HMAC_KEY(PASSPHRASE, "i18n.hmac.key"),
-    HMAC_KEY_BASE64(BASE64_PASSPHRASE, "i18n.hmac.key.base64"),
+    HMAC_KEY(PASSPHRASE, "i18n.hmac.key", EnumFwknopdRcKey.HMAC_KEY),
+    HMAC_KEY_BASE64(BASE64_PASSPHRASE, "i18n.hmac.key.base64", EnumFwknopdRcKey.HMAC_KEY_BASE64),
     HMAC_DIGEST_TYPE(DIGEST_ALGORITHM, "i18n.hmac.digest.type"),
     
     SPA_SOURCE_PORT(SINGLE_PORT, "i18n.spa.client.sourceport"),
@@ -50,11 +50,19 @@ public enum EnumFwknopRcKey {
 
     final private EnumFwknopRcType type;
     final private String i18Label;
+    final private EnumFwknopdRcKey remoteKey;
     
     private EnumFwknopRcKey(EnumFwknopRcType type, String i18label) {
         this.type = type;
         this.i18Label = i18label;
+        this.remoteKey = null;
     }
+    
+    private EnumFwknopRcKey(EnumFwknopRcType type, String i18label, EnumFwknopdRcKey remoteKey) {
+        this.type = type;
+        this.i18Label = i18label;
+        this.remoteKey = remoteKey;        
+    }    
     
     public EnumFwknopRcType getType() {
         return this.type;
@@ -62,5 +70,9 @@ public enum EnumFwknopRcKey {
     
     public String getLabel() {
         return InternationalizationHelper.getMessage(this.i18Label);
+    }
+    
+    public EnumFwknopdRcKey getRemoteKey() {
+        return this.remoteKey;
     }
 }

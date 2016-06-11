@@ -41,6 +41,7 @@ public class MainWindowView extends JFrame implements IConsole {
     private JMenuItem openTerminalMenuItem;
     private JMenuItem openRcFileMenuItem;
     private JMenuItem exportFileMenuItem;
+    private JMenuItem generateAccessMenuItem;
     private JMenuItem aboutMenuItem;
 
     private final Map<EnumFwknopRcKey, IFwknopVariable> varMap;
@@ -129,10 +130,13 @@ public class MainWindowView extends JFrame implements IConsole {
             new ImageIcon(this.getClass().getResource("/edit16.png")));
         menu.add(this.openRcFileMenuItem);
 
+        this.generateAccessMenuItem = new JMenuItem(InternationalizationHelper.getMessage("i18n.window.menu.tools.generate.access"));
+        menu.add(this.generateAccessMenuItem);
+
         this.exportFileMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.tools.exportfile"),
             new ImageIcon(this.getClass().getResource("/export16.png")));
-        menu.add(this.exportFileMenuItem);        
-        
+        menu.add(this.exportFileMenuItem);
+
         return menu;
     }
 
@@ -287,12 +291,19 @@ public class MainWindowView extends JFrame implements IConsole {
     public JMenuItem getOpenRcFileMenuItem() {
         return this.openRcFileMenuItem;
     }
-    
+
     /**
      * @return the menu item used to send file through sssh copy
      */
     public JMenuItem getExportFileMenuItem() {
         return this.exportFileMenuItem;
+    }
+
+    /**
+     * @return the menu item used to generate access.conf file
+     */
+    public JMenuItem getGenerateAccessMenuItem() {
+        return this.generateAccessMenuItem;
     }
 
     @Override
@@ -466,7 +477,7 @@ public class MainWindowView extends JFrame implements IConsole {
             this.consolePanel.cbConfigList.addItem(config);
         }
     }
-    
+
     public JFwknopComboBox getCbConfigList() {
         return this.consolePanel.cbConfigList;
     }

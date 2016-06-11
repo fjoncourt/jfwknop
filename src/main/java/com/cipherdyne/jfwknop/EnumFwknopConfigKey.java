@@ -18,7 +18,7 @@ public enum EnumFwknopConfigKey {
     private EnumFwknopConfigKey(final String key) {
         this.key = key;
     }
-
+        
     public String getKey() {
         return this.key;
     }
