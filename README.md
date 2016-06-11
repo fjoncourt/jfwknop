@@ -93,3 +93,4 @@ Once built, you can deploy the application wherever you want by copying the jar 
 * Ssh export to remote server
 * Quick access to last configurations
 * Internationalization support - English and French available - More can be easily added
+* Fwknopd access.conf generation
