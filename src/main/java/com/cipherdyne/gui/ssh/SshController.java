@@ -66,7 +66,7 @@ public class SshController {
      * Set up action listener for all available buttons from the SshView
      */
     private void populateBtn() {
-        this.view.getBtnBrowse().addActionListener(new ActionListener() {
+        this.view.getBtnBrowse1().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 final JFileChooser fileChooser = new JFileChooser();
@@ -75,7 +75,21 @@ public class SshController {
                 final int result = fileChooser.showOpenDialog(null);
                 if (result == JFileChooser.APPROVE_OPTION) {
                     final String filename = fileChooser.getSelectedFile().getAbsolutePath();
-                    SshController.this.view.getSettings().get(EnumSshSettings.FILEPATH).setText(filename);
+                    SshController.this.view.getSettings().get(EnumSshSettings.FILEPATH1).setText(filename);
+                }
+            }
+        });
+
+        this.view.getBtnBrowse2().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                final JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle(InternationalizationHelper.getMessage("i18n.browse.file"));
+                fileChooser.setFileHidingEnabled(false);
+                final int result = fileChooser.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    final String filename = fileChooser.getSelectedFile().getAbsolutePath();
+                    SshController.this.view.getSettings().get(EnumSshSettings.FILEPATH2).setText(filename);
                 }
             }
         });
@@ -85,16 +99,31 @@ public class SshController {
             public void actionPerformed(ActionEvent e) {
 
                 try {
-                    SshUtils.scpFile(SshController.this.view.getSettings().get(EnumSshSettings.REMOTEHOST).getText(),
-                        Integer.parseInt(SshController.this.view.getSettings().get(EnumSshSettings.REMOTEPORT).getText()),
-                        SshController.this.view.getSettings().get(EnumSshSettings.USERNAME).getText(),
-                        SshController.this.view.getSettings().get(EnumSshSettings.PASSWORD).getText(),
-                        SshController.this.view.getSettings().get(EnumSshSettings.FILEPATH).getText());
+                    boolean performed = false;
+                    if (!SshController.this.view.getSettings().get(EnumSshSettings.FILEPATH1).isDefault()) {
+                        SshUtils.scpFile(SshController.this.view.getSettings().get(EnumSshSettings.REMOTEHOST).getText(),
+                            Integer.parseInt(SshController.this.view.getSettings().get(EnumSshSettings.REMOTEPORT).getText()),
+                            SshController.this.view.getSettings().get(EnumSshSettings.USERNAME).getText(),
+                            SshController.this.view.getSettings().get(EnumSshSettings.PASSWORD).getText(),
+                            SshController.this.view.getSettings().get(EnumSshSettings.FILEPATH1).getText());
+                        performed = true;
+                    }
 
-                    JOptionPane.showMessageDialog(SshController.this.view,
-                        InternationalizationHelper.getMessage("i18n.successful"),
-                        InternationalizationHelper.getMessage("i18n.information"),
-                        JOptionPane.INFORMATION_MESSAGE);
+                    if (!SshController.this.view.getSettings().get(EnumSshSettings.FILEPATH2).isDefault()) {
+                        SshUtils.scpFile(SshController.this.view.getSettings().get(EnumSshSettings.REMOTEHOST).getText(),
+                            Integer.parseInt(SshController.this.view.getSettings().get(EnumSshSettings.REMOTEPORT).getText()),
+                            SshController.this.view.getSettings().get(EnumSshSettings.USERNAME).getText(),
+                            SshController.this.view.getSettings().get(EnumSshSettings.PASSWORD).getText(),
+                            SshController.this.view.getSettings().get(EnumSshSettings.FILEPATH2).getText());
+                        performed = true;
+                    }
+
+                    if (performed) {
+                        JOptionPane.showMessageDialog(SshController.this.view,
+                            InternationalizationHelper.getMessage("i18n.success"),
+                            InternationalizationHelper.getMessage("i18n.information"),
+                            JOptionPane.INFORMATION_MESSAGE);
+                    }
                 } catch (IOException | JSchException ex) {
                     LOGGER.error(ex.getMessage(), ex);
                     JOptionPane.showMessageDialog(SshController.this.view, ex.getMessage(),
