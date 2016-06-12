@@ -48,7 +48,7 @@ import org.apache.log4j.Logger;
 
 public class MainWindowController {
 
-    static final Logger logger = LogManager.getLogger(MainWindowController.class.getName());
+    static final Logger LOGGER = LogManager.getLogger(MainWindowController.class.getName());
 
     private final MainWindowView view;
     private final RcFileModel rcFileModel;

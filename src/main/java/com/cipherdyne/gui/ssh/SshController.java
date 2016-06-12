@@ -22,15 +22,23 @@ import com.cipherdyne.gui.ssh.SshView.EnumSshSettings;
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
 import com.cipherdyne.utils.InternationalizationHelper;
 import com.cipherdyne.utils.SshUtils;
+import com.jcraft.jsch.JSchException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author franck
  */
 public class SshController {
+
+    // Logger
+    static final Logger LOGGER = LogManager.getLogger(SshController.class.getName());
 
     // View used to display Ssh settings
     final private SshView view;
@@ -55,7 +63,7 @@ public class SshController {
     }
 
     /**
-     * Set up action listenr for all available buttons from the SshView
+     * Set up action listener for all available buttons from the SshView
      */
     private void populateBtn() {
         this.view.getBtnBrowse().addActionListener(new ActionListener() {
@@ -75,11 +83,25 @@ public class SshController {
         this.view.getBtnExport().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SshUtils.scpFile(SshController.this.view.getSettings().get(EnumSshSettings.REMOTEHOST).getText(),
-                    Integer.parseInt(SshController.this.view.getSettings().get(EnumSshSettings.REMOTEPORT).getText()),
-                    SshController.this.view.getSettings().get(EnumSshSettings.USERNAME).getText(), 
-                    SshController.this.view.getSettings().get(EnumSshSettings.PASSWORD).getText(), 
-                    SshController.this.view.getSettings().get(EnumSshSettings.FILEPATH).getText());
+
+                try {
+                    SshUtils.scpFile(SshController.this.view.getSettings().get(EnumSshSettings.REMOTEHOST).getText(),
+                        Integer.parseInt(SshController.this.view.getSettings().get(EnumSshSettings.REMOTEPORT).getText()),
+                        SshController.this.view.getSettings().get(EnumSshSettings.USERNAME).getText(),
+                        SshController.this.view.getSettings().get(EnumSshSettings.PASSWORD).getText(),
+                        SshController.this.view.getSettings().get(EnumSshSettings.FILEPATH).getText());
+
+                    JOptionPane.showMessageDialog(SshController.this.view,
+                        InternationalizationHelper.getMessage("i18n.successful"),
+                        InternationalizationHelper.getMessage("i18n.information"),
+                        JOptionPane.INFORMATION_MESSAGE);
+                } catch (IOException | JSchException ex) {
+                    LOGGER.error(ex.getMessage(), ex);
+                    JOptionPane.showMessageDialog(SshController.this.view, ex.getMessage(),
+                        InternationalizationHelper.getMessage("i18n.error"),
+                        JOptionPane.ERROR_MESSAGE);
+                }
+
             }
         });
     }
