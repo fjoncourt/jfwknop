@@ -66,31 +66,30 @@ public class SshController {
      * Set up action listener for all available buttons from the SshView
      */
     private void populateBtn() {
-        this.view.getBtnBrowse1().addActionListener(new ActionListener() {
+        this.view.getBtnAddFile().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 final JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setDialogTitle(InternationalizationHelper.getMessage("i18n.browse.file"));
                 fileChooser.setFileHidingEnabled(false);
                 final int result = fileChooser.showOpenDialog(null);
+                SshFileTableModel tableModel = (SshFileTableModel) (SshController.this.view.getFileTable().getModel());
                 if (result == JFileChooser.APPROVE_OPTION) {
                     final String filename = fileChooser.getSelectedFile().getAbsolutePath();
-                    SshController.this.view.getSettings().get(EnumSshSettings.FILEPATH1).setText(filename);
+                    tableModel.add(filename);
+                    tableModel.reload();
                 }
             }
         });
 
-        this.view.getBtnBrowse2().addActionListener(new ActionListener() {
+        this.view.getBtnRemoveFile().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                final JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle(InternationalizationHelper.getMessage("i18n.browse.file"));
-                fileChooser.setFileHidingEnabled(false);
-                final int result = fileChooser.showOpenDialog(null);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    final String filename = fileChooser.getSelectedFile().getAbsolutePath();
-                    SshController.this.view.getSettings().get(EnumSshSettings.FILEPATH2).setText(filename);
-                }
+                int selectedRow = SshController.this.view.getFileTable().getSelectedRow();
+                SshFileTableModel tableModel = (SshFileTableModel) (SshController.this.view.getFileTable().getModel());
+                String selectedFilename = (String)(tableModel.getValueAt(selectedRow, SshFileTableModel.FILENAME_COL_ID));
+                tableModel.remove(selectedFilename);
+                tableModel.reload();
             }
         });
 

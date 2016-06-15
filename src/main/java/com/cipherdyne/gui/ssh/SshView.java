@@ -21,6 +21,7 @@ import com.cipherdyne.jfwknop.IFwknopVariable;
 import com.cipherdyne.utils.InternationalizationHelper;
 import com.cipherdyne.gui.components.JFwknopLabel;
 import com.cipherdyne.gui.components.JFwknopTextField;
+import com.cipherdyne.gui.gpg.GpgTableModel;
 import java.awt.Component;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,9 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -38,14 +42,16 @@ import net.miginfocom.swing.MigLayout;
  */
 public class SshView extends JDialog {
 
+    private JTable sshFileTable = null;
+
     // SSH settings map that contains username, password as IFwknopVariable
     private final Map<EnumSshSettings, IFwknopVariable> settingsMap = new HashMap<>();
 
     // Browse button to look for the file to send
-    private final JButton btnBrowse1;
+    private final JButton btnAddFile;
 
     // Browse button to look for the file to send
-    private final JButton btnBrowse2;
+    private final JButton btnRemoveFile;
 
     // Button used to perform the export action
     private final JButton btnExport;
@@ -59,33 +65,33 @@ public class SshView extends JDialog {
     public SshView(JFrame frame) {
         super(frame, InternationalizationHelper.getMessage("i18n.ssh.export.title"), true);
 
-        ImageIcon plusImg = new ImageIcon(this.getClass().getResource("/plus16.png"));
-        ImageIcon removeImg = new ImageIcon(this.getClass().getResource("/remove16.png"));
+        // Create file table
+        sshFileTable = new JTable(new SshFileTableModel());
+        sshFileTable.setFillsViewportHeight(true);
+        sshFileTable.setAutoCreateRowSorter(true);
+        sshFileTable.getColumnModel().getColumn(SshFileTableModel.FILENAME_COL_ID).setMinWidth(300);
 
         // Create components
         this.settingsMap.put(EnumSshSettings.USERNAME, new JFwknopTextField("<username>"));
         this.settingsMap.put(EnumSshSettings.PASSWORD, new JFwknopTextField("<password>"));
         this.settingsMap.put(EnumSshSettings.REMOTEHOST, new JFwknopTextField("<remote host>"));
         this.settingsMap.put(EnumSshSettings.REMOTEPORT, new JFwknopTextField("22"));
-        this.settingsMap.put(EnumSshSettings.FILEPATH1, new JFwknopTextField("<filepath>"));
-        this.settingsMap.put(EnumSshSettings.FILEPATH2, new JFwknopTextField("<filepath>"));
 
         // Create buttons
-        this.btnBrowse1 = new JButton(plusImg);
-        this.btnBrowse2 = new JButton(plusImg);
+        this.btnAddFile = new JButton(new ImageIcon(this.getClass().getResource("/plus16.png")));
+        this.btnRemoveFile = new JButton(new ImageIcon(this.getClass().getResource("/remove16.png")));
         this.btnExport = new JButton(InternationalizationHelper.getMessage("i18n.export.file"));
 
         // Add components to the panel
         this.setLayout(new MigLayout("inset 20, gap 0, flowx", "[200!]0![300!]0![]", ""));
 
-        this.add(new JFwknopLabel(InternationalizationHelper.getMessage("i18n.ssh.filepath")), "growx");
-        this.add((Component) this.settingsMap.get(EnumSshSettings.FILEPATH1), "growx");
-        this.add(this.btnBrowse1, "growx, wrap");
-
-        this.add(new JFwknopLabel(InternationalizationHelper.getMessage("i18n.ssh.filepath")), "growx");
-        this.add((Component) this.settingsMap.get(EnumSshSettings.FILEPATH2), "growx");
-        this.add(this.btnBrowse2, "growx, wrap");
+        JPanel btnPanel = new JPanel(new MigLayout("inset 0, gap 0, flowx", "", ""));
+        btnPanel.add(btnAddFile);
+        btnPanel.add(btnRemoveFile);
+        this.add(btnPanel, "wrap");
         
+        this.add(new JScrollPane(sshFileTable), "growx, span 3, wrap");
+
         this.add(new JLabel(" "), "growx, span 3, wrap");
 
         this.add(new JFwknopLabel(InternationalizationHelper.getMessage("i18n.ssh.user")), "growx");
@@ -117,19 +123,25 @@ public class SshView extends JDialog {
     }
 
     /**
-     * @return the browse button used to look for the local file to send to remote SSH server
+     * @return the button that adds a file to the file table
      */
-    public JButton getBtnBrowse1() {
-        return this.btnBrowse1;
+    public JButton getBtnAddFile() {
+        return this.btnAddFile;
     }
 
     /**
-     * @return the browse button used to look for the local file to send to remote SSH server
+     * @return the button that remove a file from the file table
      */
-    public JButton getBtnBrowse2() {
-        return this.btnBrowse2;
+    public JButton getBtnRemoveFile() {
+        return this.btnRemoveFile;
     }
 
+    /**
+     * @return the tazble that contains file to export to remote host
+     */
+    public JTable getFileTable() {
+        return this.sshFileTable;
+    }
     /**
      * Enum used to access all available variables in the view
      */
