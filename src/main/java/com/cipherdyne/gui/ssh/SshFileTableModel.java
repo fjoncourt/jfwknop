@@ -29,6 +29,9 @@ import javax.swing.table.AbstractTableModel;
  */
 public class SshFileTableModel extends AbstractTableModel {
 
+    // Defaut transfer status
+    static public final String EXCHANGE_FILE_STATUS_INIT = "-----";
+    
     // filename is column 0 of the table model
     static public final int FILENAME_COL_ID = 0;
 
@@ -38,10 +41,10 @@ public class SshFileTableModel extends AbstractTableModel {
     // Name of the available columns in the table model
     final private String[] columnNames = {
         InternationalizationHelper.getMessage("i18n.filename"),
-        InternationalizationHelper.getMessage("i18n.status")};
+        InternationalizationHelper.getMessage("i18n.transfer.status")};
 
     // List of files that are displayed in the jtable
-    private Set<FileExchange> fileExchangeData;
+    private final Set<FileExchange> fileExchangeData;
 
     /**
      * Create the SSH file table model.
@@ -49,7 +52,6 @@ public class SshFileTableModel extends AbstractTableModel {
     public SshFileTableModel() {
         super();
         fileExchangeData = new HashSet<>();
-        fileExchangeData.add(new FileExchange("test"));
     }
 
     @Override
@@ -81,15 +83,27 @@ public class SshFileTableModel extends AbstractTableModel {
                 value = file.getStatus();
                 break;
             default:
-                value = "unknown";
+                value = "xxxx";
         }
         return value;
     }
 
     /**
+     * Update the status of the file transfer
+     *
+     * @param filename file to update the status
+     * @param status status to set for the transfer
+     */
+    public void updateStatus(String filename, String status) {
+        fileExchangeData.stream().filter((next) -> (filename.equals(next.getFilename()))).forEach((next) -> {
+            next.updateStatus(status);
+        });
+    }
+
+    /**
      * Add a file to the table model
-     * 
-     * @param filename  filename to add to the table
+     *
+     * @param filename filename to add to the table
      */
     public void add(String filename) {
         fileExchangeData.add(new FileExchange(filename));
@@ -97,13 +111,13 @@ public class SshFileTableModel extends AbstractTableModel {
 
     /**
      * Remove one file from the table model
-     * 
+     *
      * @param filename filename to remove from the table
      */
     public void remove(String filename) {
         fileExchangeData.remove(new FileExchange(filename));
-    }    
-    
+    }
+
     /**
      * Reload the SshFile table model
      */
@@ -119,7 +133,7 @@ public class SshFileTableModel extends AbstractTableModel {
         // Filename
         final private String filename;
         // Transfer status
-        final private String status;
+        private String status;
 
         /**
          * Create a simple FileExchange object
@@ -129,7 +143,7 @@ public class SshFileTableModel extends AbstractTableModel {
          */
         public FileExchange(String filename) {
             this.filename = filename;
-            this.status = "Unknown";
+            this.status = EXCHANGE_FILE_STATUS_INIT;
         }
 
         // Return the filename
@@ -154,6 +168,15 @@ public class SshFileTableModel extends AbstractTableModel {
         @Override
         public int hashCode() {
             return this.filename.hashCode();
+        }
+
+        /**
+         * Update the status of the file transfer
+         *
+         * @param status status to set for the transfer
+         */
+        private void updateStatus(String status) {
+            this.status = status;
         }
     }
 }

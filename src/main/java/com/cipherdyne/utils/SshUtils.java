@@ -50,12 +50,10 @@ public class SshUtils {
      * @param password Password to use to authenticate to remote SSH server
      * @param filename Full path to the file to copy
      *
-     * @return -1 if an error occured, 0 otherwise
-     *
      * @throws java.io.IOException
      * @throws com.jcraft.jsch.JSchException
      */
-    static public int scpFile(String hostname, int port, String username, String password, String filename) throws IOException, JSchException {
+    static public void scpFile(String hostname, int port, String username, String password, String filename) throws IOException, JSchException {
 
         String sourceFile = filename;
         String destFile = sourceFile
@@ -85,7 +83,8 @@ public class SshUtils {
 
         // Ensure file integrity
         if (checkAck(in) != 0) {
-            System.exit(0);
+            LOGGER.error("File integrity error");
+            throw new IOException("File integrity error");
         }
 
         final File _lfile = new File(sourceFile);
@@ -105,7 +104,7 @@ public class SshUtils {
         out.flush();
         if (checkAck(in) != 0) {
             LOGGER.error("File integrity error");
-            return -1;
+            throw new IOException("File integrity error");
         }
 
         // send content of sourceFile
@@ -125,7 +124,7 @@ public class SshUtils {
         out.flush();
         if (checkAck(in) != 0) {
             LOGGER.error("File integrity error");
-            return -1;
+            throw new IOException("File integrity error");
         }
 
         // Disconnect the remote terminal
@@ -133,8 +132,6 @@ public class SshUtils {
 
         // Close the remote session
         session.disconnect();
-
-        return 0;
     }
 
     /**

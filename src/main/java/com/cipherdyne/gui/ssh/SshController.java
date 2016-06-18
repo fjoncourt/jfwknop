@@ -27,13 +27,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 /**
- *
- * @author franck
+ * Controller used to manage fil export to a remote host using SSH capabilities
  */
 public class SshController {
 
@@ -66,6 +64,8 @@ public class SshController {
      * Set up action listener for all available buttons from the SshView
      */
     private void populateBtn() {
+
+        // Set up action listener to add a file to the file table that contains file to export to remote host
         this.view.getBtnAddFile().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -82,55 +82,65 @@ public class SshController {
             }
         });
 
+        // Set up action listener to remove a file from the file table that contains file to export to remote host
         this.view.getBtnRemoveFile().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = SshController.this.view.getFileTable().getSelectedRow();
                 SshFileTableModel tableModel = (SshFileTableModel) (SshController.this.view.getFileTable().getModel());
-                String selectedFilename = (String)(tableModel.getValueAt(selectedRow, SshFileTableModel.FILENAME_COL_ID));
+                String selectedFilename = (String) (tableModel.getValueAt(selectedRow, SshFileTableModel.FILENAME_COL_ID));
                 tableModel.remove(selectedFilename);
                 tableModel.reload();
             }
         });
 
+        // Perform an export action - copy all files from the table to remote host using scp
         this.view.getBtnExport().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                try {
-                    boolean performed = false;
-                    if (!SshController.this.view.getSettings().get(EnumSshSettings.FILEPATH1).isDefault()) {
+                initializeExport();
+                    
+                // Get table model to access all files to export
+                SshFileTableModel tableModel = (SshFileTableModel) (SshController.this.view.getFileTable().getModel());
+
+                // Iterate over the list of file to export, and scp each of them
+                for (int loop = 0; loop < tableModel.getRowCount(); loop++) {
+                    String filename = (String) (tableModel.getValueAt(loop, SshFileTableModel.FILENAME_COL_ID));
+                    String status = "Success";
+
+                    try {
                         SshUtils.scpFile(SshController.this.view.getSettings().get(EnumSshSettings.REMOTEHOST).getText(),
                             Integer.parseInt(SshController.this.view.getSettings().get(EnumSshSettings.REMOTEPORT).getText()),
                             SshController.this.view.getSettings().get(EnumSshSettings.USERNAME).getText(),
                             SshController.this.view.getSettings().get(EnumSshSettings.PASSWORD).getText(),
-                            SshController.this.view.getSettings().get(EnumSshSettings.FILEPATH1).getText());
-                        performed = true;
+                            filename);
+                    } catch (IOException | JSchException ex) {
+                        SshController.LOGGER.error("Unable to ssh copy file " + filename, ex);
+                        status = "Failed";
                     }
 
-                    if (!SshController.this.view.getSettings().get(EnumSshSettings.FILEPATH2).isDefault()) {
-                        SshUtils.scpFile(SshController.this.view.getSettings().get(EnumSshSettings.REMOTEHOST).getText(),
-                            Integer.parseInt(SshController.this.view.getSettings().get(EnumSshSettings.REMOTEPORT).getText()),
-                            SshController.this.view.getSettings().get(EnumSshSettings.USERNAME).getText(),
-                            SshController.this.view.getSettings().get(EnumSshSettings.PASSWORD).getText(),
-                            SshController.this.view.getSettings().get(EnumSshSettings.FILEPATH2).getText());
-                        performed = true;
-                    }
-
-                    if (performed) {
-                        JOptionPane.showMessageDialog(SshController.this.view,
-                            InternationalizationHelper.getMessage("i18n.success"),
-                            InternationalizationHelper.getMessage("i18n.information"),
-                            JOptionPane.INFORMATION_MESSAGE);
-                    }
-                } catch (IOException | JSchException ex) {
-                    LOGGER.error(ex.getMessage(), ex);
-                    JOptionPane.showMessageDialog(SshController.this.view, ex.getMessage(),
-                        InternationalizationHelper.getMessage("i18n.error"),
-                        JOptionPane.ERROR_MESSAGE);
+                    // Update the file table with the transfer status
+                    tableModel.updateStatus(filename, status);
+                    tableModel.reload();
                 }
-
             }
         });
+    }
+
+    /**
+     * Initialize export. This method reset the transfer status for each file
+     */
+    private void initializeExport() {
+        // Get table model to access all files to export
+        SshFileTableModel tableModel = (SshFileTableModel) (SshController.this.view.getFileTable().getModel());
+
+        // Iterate over the list of file to initialize their status
+        for (int loop = 0; loop < tableModel.getRowCount(); loop++) {
+            // Update the file table with the transfer status
+            tableModel.updateStatus((String) (tableModel.getValueAt(loop, SshFileTableModel.FILENAME_COL_ID)),
+                SshFileTableModel.EXCHANGE_FILE_STATUS_INIT);
+            tableModel.reload();
+        }
     }
 }
