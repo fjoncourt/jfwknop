@@ -22,6 +22,7 @@ import com.cipherdyne.jfwknop.EnumFwknopRcKey;
 import com.cipherdyne.jfwknop.IFwknopVariable;
 import com.cipherdyne.utils.InternationalizationHelper;
 import com.cipherdyne.gui.components.JFwknopArgs;
+import com.cipherdyne.gui.components.JFwknopCheckBox;
 import com.cipherdyne.gui.components.JFwknopComboBox;
 import com.cipherdyne.gui.components.JFwknopTextField;
 import java.awt.Toolkit;
@@ -497,5 +498,17 @@ public class MainWindowView extends JFrame implements IConsole {
 
     public JFwknopComboBox getCbConfigList() {
         return this.consolePanel.cbConfigList;
+    }
+
+    public JFwknopCheckBox  getPeriodicExecution() {
+        return this.consolePanel.periodicExecution;
+    }
+    
+    public JButton getBtnStop() {
+        return this.consolePanel.btnStop;
+    }
+    
+    public JFwknopTextField getFwknopPeriod() {
+        return this.consolePanel.varPeriod;
     }
 }

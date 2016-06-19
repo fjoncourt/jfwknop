@@ -1,3 +1,14 @@
+# Features
+* Easy access to gnupg directories and ability to import, export, remove and even create GPG keys
+* Random password generation
+* Base64 encoding from clear passwords
+* Fwknop client binary selection
+* Ssh export to remote server
+* Quick access to last configurations
+* Internationalization support - English and French available - More can be easily added
+* Fwknopd access.conf generation
+* Periodic knocks
+
 ## Build
 
 The application is a JAVA program and is built around maven that provides the ability to download dependencies from a central repository without the need to install them on the target system manually.
@@ -83,14 +94,3 @@ java -jar com.cipherdyne.jfwknop-1.0.0.jar
 The application, can be run on windows, Linux or any other OS. The only requirements is to have JRE 1.8 isntalled on the target computer.
 
 Once built, you can deploy the application wherever you want by copying the jar file, its configuration file and the lib directory.
-
-
-# Features
-* Easy access to gnupg directories and ability to import, export, remove and even create GPG keys
-* Random password generation
-* Base64 encoding from clear passwords
-* Fwknop client binary selection
-* Ssh export to remote server
-* Quick access to last configurations
-* Internationalization support - English and French available - More can be easily added
-* Fwknopd access.conf generation

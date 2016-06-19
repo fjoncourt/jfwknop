@@ -97,10 +97,20 @@ public class MainWindowController {
             }
         });
 
-        // Add action listener to execute fwknop binary
+        // Add action listener to run fwknop binary
         this.view.getBtnExecute().addActionListener(e -> {
+            long period = 0;
+            boolean stopEnabled = false;
+            
             updateFwknopModel();
-            MainWindowController.this.fwknopClientModel.execute();
+            
+            if (MainWindowController.this.view.getPeriodicExecution().isSelected()) {
+                period = Long.parseLong(MainWindowController.this.view.getFwknopPeriod().getText());
+                stopEnabled = true;
+            }
+            
+            MainWindowController.this.view.getBtnStop().setEnabled(stopEnabled);
+            MainWindowController.this.fwknopClientModel.start(period);
         });
 
         // Add action listener to clear the console
@@ -269,6 +279,14 @@ public class MainWindowController {
                 updateNewRcFile(filename);
             }
         });
+        
+        this.view.getBtnStop().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MainWindowController.this.fwknopClientModel.stop();
+                MainWindowController.this.view.getBtnStop().setEnabled(false);
+            }
+        });
     }
 
     /**
@@ -332,8 +350,9 @@ public class MainWindowController {
 
         // Set up action listener to open a terminal
         this.view.getOpenTerminalMenuItem().addActionListener(e -> {
-            ExternalCommand extCmd = new ExternalCommand("x-terminal-emulator");
-            extCmd.execute();
+            ExternalCommand command = new ExternalCommand("x-terminal-emulator".split(" "), null);
+            Thread thread = new Thread(command);
+            thread.start();
         });
 
         // Set up action listener to edit rc file with the default text editor
@@ -351,7 +370,7 @@ public class MainWindowController {
                 try {
                     Desktop.getDesktop().open(new File(filename));
                     //ExternalCommand extCmd = new ExternalCommand("xdg-open " + filename);
-                    //extCmd.execute();
+                    //extCmd.run();
                 } catch (IOException ex) {
                     java.util.logging.Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 }

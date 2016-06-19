@@ -19,6 +19,7 @@ package com.cipherdyne.model;
 
 import com.cipherdyne.gui.MainWindowView;
 import com.cipherdyne.jfwknop.EnumFwknopConfigKey;
+import com.cipherdyne.jfwknop.ExternalCommand;
 import com.cipherdyne.jfwknop.JFwknopConfig;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,17 +34,21 @@ import org.apache.log4j.Logger;
 
 public class FwknopClientModel {
 
-    static final Logger logger = LogManager.getLogger(FwknopClientModel.class.getName());
+    static final Logger LOGGER = LogManager.getLogger(FwknopClientModel.class.getName());
 
     private final MainWindowView view;
     private final Map<EnumFwknopConfigKey, String> fwknopConfig = new HashMap<>();
+    private ExternalCommand command;
 
     public FwknopClientModel(final MainWindowView view) {
         this.view = view;
-        this.fwknopConfig.put(EnumFwknopConfigKey.FWKNOP_FILEPATH, JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.FWKNOP_FILEPATH));
+        this.fwknopConfig.put(EnumFwknopConfigKey.FWKNOP_FILEPATH, 
+            JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.FWKNOP_FILEPATH));
         this.fwknopConfig.put(EnumFwknopConfigKey.FWKNOP_ARGS, "");
-        this.fwknopConfig.put(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS, JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS));
-        this.fwknopConfig.put(EnumFwknopConfigKey.FWKNOP_VERBOSE, JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.FWKNOP_VERBOSE));
+        this.fwknopConfig.put(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS, 
+            JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS));
+        this.fwknopConfig.put(EnumFwknopConfigKey.FWKNOP_VERBOSE, 
+            JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.FWKNOP_VERBOSE));
         updateListeners();
     }
 
@@ -81,38 +86,30 @@ public class FwknopClientModel {
         // Save the Jwknop settings
         JFwknopConfig.getInstance().saveConfig();
     }
-
-    public void execute() {
-        System.out.println("Binary: " + this.fwknopConfig.get(EnumFwknopConfigKey.FWKNOP_FILEPATH));
-        System.out.println("Args: " + this.fwknopConfig.get(EnumFwknopConfigKey.FWKNOP_ARGS));
-        System.out.println("Extra args: " + this.fwknopConfig.get(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS));
-
-        this.view.appendToConsole("[*] Executing : " + this.fwknopConfig.get(EnumFwknopConfigKey.FWKNOP_FILEPATH)
-                + " " + this.fwknopConfig.get(EnumFwknopConfigKey.FWKNOP_ARGS)
-                + " " + this.fwknopConfig.get(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS));
-        runExternalCommand(buildArgs());
+    
+    /**
+     * Start a fwknop command
+     * 
+     * @param period period between to knock. Set to 0 to knowk only once
+     */
+    public void start(final long period) {                
+        command = new ExternalCommand(buildArgs(), period, this.view);
+        Thread thread = new Thread(command);
+        thread.start();
     }
 
+    /**
+     * Stop the current knock
+     */
+    public void stop() {
+        if (this.command != null) {
+            this.command.stop();
+            this.command = null;
+        }
+    }
+    
     public void refresh() {
         updateListeners();
-    }
-
-    private void runExternalCommand(final String[] args) {
-
-        try {
-            ProcessBuilder pb = new ProcessBuilder(args);
-            pb = pb.redirectErrorStream(true);
-            Process p = pb.start();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-            String line;
-            while ((line = br.readLine()) != null) {
-                this.view.appendToConsole(line);
-            }
-        } catch (IOException e) {
-            this.view.appendToConsole("Unable to execute command: " + e.getMessage());
-        }
     }
 
     /**
@@ -123,7 +120,7 @@ public class FwknopClientModel {
      */
     private String[] buildArgs() {
 
-        List<String> args = new ArrayList<String>();
+        List<String> args = new ArrayList<>();
         args.add(this.fwknopConfig.get(EnumFwknopConfigKey.FWKNOP_FILEPATH));
         args.addAll(Arrays.asList(this.fwknopConfig.get(EnumFwknopConfigKey.FWKNOP_ARGS).split(" ")));
         args.addAll(Arrays.asList(this.fwknopConfig.get(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS).split(" ")));

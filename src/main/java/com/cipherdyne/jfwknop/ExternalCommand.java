@@ -17,44 +17,114 @@
  */
 package com.cipherdyne.jfwknop;
 
+import com.cipherdyne.gui.IConsole;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
- *
- * @author franck
+ * This class intends to provide an interface to run external commands periodically or only once.
  */
-public class ExternalCommand {
+public class ExternalCommand implements Runnable {
 
-    private final String commandLine;
+    // Logger
+    static final Logger LOGGER = LogManager.getLogger(ExternalCommand.class.getName());
 
-    public ExternalCommand(String commandLine) {
-        this.commandLine = commandLine;
+    // Command line to execute - can be more than one arguments - space separated list
+    private final String[] args;
+
+    // Timeout before two executions - Set to 0 to run the only command once
+    private final long period;
+
+    // Set to false when a periodic command has to be stoppped
+    private boolean isRunning;
+
+    // IConsole interface used to log external command output
+    private final IConsole console;
+
+    /**
+     * External command constructor that is executed only once
+     * 
+     * @param args List of argument to use to build the process
+     * @param console IConsole appender to log command output
+     */
+    public ExternalCommand(final String[] args, IConsole console) {
+        this.args = args;
+        this.period = 0;
+        this.console = console;
+        this.isRunning = false;
     }
 
-    public void executeRuntime() {
-        Runtime rt = Runtime.getRuntime();
-        try {
-            Process proc = rt.exec(this.commandLine);
-        } catch (IOException ex) {
-            Logger.getLogger(ExternalCommand.class.getName()).log(Level.SEVERE, null, ex);
+    /**
+     * External command constructor that runs a command periodically.
+     * 
+     * @param args List of argument to use to build the process
+     * @param period Period between two command executions
+     * @param console IConsole appender to log command output
+     */
+    public ExternalCommand(final String[] args, long period, IConsole console) {
+        this.args = args;
+        this.period = period;
+        this.console = console;
+        this.isRunning = false;
+    }
+
+    /**
+     * Append a message to the specified console to trace changes if configured
+     *
+     * @param msg Message to log to the console
+     */
+    private void appendToConsole(final String msg) {
+        if (this.console != null) {
+            this.console.appendToConsole(msg);
         }
     }
 
-    public void execute() {
-        try {
-            List<String> args = new ArrayList<String>();
-            args.addAll(Arrays.asList(this.commandLine.split(" ")));
+    @Override
+    public void run() {
 
-            ProcessBuilder pb = new ProcessBuilder(args);
-            pb.inheritIO();
-            Process p = pb.start();
-        } catch (IOException e) {
-            e.printStackTrace();
+        this.isRunning = true;
+
+        try {
+            while (this.isRunning) {
+
+                appendToConsole("[*] Executing : " + Arrays.toString(this.args));
+                
+                // Build the process and run it
+                ProcessBuilder pb = new ProcessBuilder(args);
+                pb = pb.redirectErrorStream(true);
+                Process p = pb.start();
+                BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+                // For each line, send the message to the console appender
+                String line;
+                while ((line = br.readLine()) != null) {
+                    appendToConsole(line);
+                }
+
+                // Check if we run only once or if we wait a bit before running the command again
+                // TODO: can be achieve with a timer
+                if (period == 0) {
+                    isRunning = false;
+                } else {
+                    Thread.sleep(this.period * 1000);
+                }
+            }
+
+        } catch (IOException | InterruptedException e) {
+            LOGGER.error("[*] Unable to execute : " + Arrays.toString(this.args), e);
+            appendToConsole("[*] Unable to execute : " + Arrays.toString(this.args) + "\n" + e.getMessage());
         }
+    }
+
+    /**
+     * Stop the curent command. This method has to be executed when the command is run periodically
+     * to be able to stop the process
+     */
+    public void stop() {
+        this.isRunning = false;
     }
 }

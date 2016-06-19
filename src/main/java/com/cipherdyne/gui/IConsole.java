@@ -18,10 +18,11 @@
 package com.cipherdyne.gui;
 
 /**
- *
- * @author franck
+ * This interface provides the default methods expected for a console object
+ * 
+ * @author Franck Joncourt <franck.joncourt@gmail.com>
  */
-interface IConsole {
+public interface IConsole {
     /**
      * Append a message to a console
      * 
