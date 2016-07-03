@@ -87,6 +87,7 @@ public class GpgView extends JDialog {
         btnImport = new JButton(InternationalizationHelper.getMessage("i18n.key.import"));
         btnRemove = new JButton(InternationalizationHelper.getMessage("i18n.key.remove"));
         btnCreate = new JButton(InternationalizationHelper.getMessage("i18n.key.create"));
+        btnCreate.setEnabled(false);
         btnSelect = new JButton(InternationalizationHelper.getMessage("i18n.key.select"));
         btnCancel = new JButton(InternationalizationHelper.getMessage("i18n.key.cancel"));
 
