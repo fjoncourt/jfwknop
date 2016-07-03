@@ -23,7 +23,7 @@ import static com.cipherdyne.jfwknop.EnumFwknopRcType.*;
 public enum EnumFwknopRcKey {
 
     ACCESS(PROTOCOL_PLUS_PORT, "i18n.spa.access"),
-    ALLOW_IP(IP_ADDRESS, "i18n.spa.client.allowip"),
+    ALLOW_IP(IP_ADDRESS, "i18n.spa.client.allowip", EnumFwknopdRcKey.SOURCE),
     ENCRYPTION_MODE(ENCRYPT_MODE, ""),
     DIGEST_TYPE(DIGEST_ALGORITHM, ""),
     

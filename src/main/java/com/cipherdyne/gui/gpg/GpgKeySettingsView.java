@@ -57,7 +57,7 @@ public class GpgKeySettingsView extends JDialog {
     }
     
     public JFwknopTextField getPassphrase() {
-        return this.userId;
+        return this.passphrase;
     }    
     
     public JButton getBtnSubmit() {

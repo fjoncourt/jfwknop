@@ -19,8 +19,14 @@ package com.cipherdyne.jfwknop;
 
 public enum EnumFwknopdRcKey {
     
+    SOURCE,
+    
     GPG_REMOTE_ID,
     GPG_DECRYPT_ID,
+    GPG_DECRYPT_PW,
+    GPG_HOME_DIR,
+    GPG_REQUIRE_SIG,
+    GPG_IGNORE_SIG_VERIFY_ERROR,
    
     KEY,
     KEY_BASE64,

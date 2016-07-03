@@ -31,26 +31,34 @@ import org.apache.log4j.Logger;
  * Class that helps to manage and create a fwknopd access file.
  */
 public class AccessFile {
-    
+
     static final Logger LOGGER = LogManager.getLogger(AccessFile.class.getName());
     private final String filename;
-        
+
     public AccessFile(String filename) {
-      this.filename = filename;
+        this.filename = filename;
     }
-    
+
     public void generate(Map<EnumFwknopRcKey, String> fwknopConfig) {
-               final Path fileP = Paths.get(this.filename);
+        final Path fileP = Paths.get(this.filename);
         final Charset charset = Charset.forName("utf-8");
 
         try (BufferedWriter writer = Files.newBufferedWriter(fileP, charset)) {
             for (final Map.Entry<EnumFwknopRcKey, String> entry : fwknopConfig.entrySet()) {
                 if (!entry.getValue().isEmpty() && (entry.getKey().getRemoteKey() != null)) {
-                    writer.write(entry.getKey().getRemoteKey().toString() + "\t\t" + entry.getValue() + "\n");
+                    EnumFwknopdRcKey fwknopdKey = entry.getKey().getRemoteKey();
+                    writer.write(fwknopdKey.toString() + "\t\t" + entry.getValue() + "\n");
+                    if (fwknopdKey.equals(EnumFwknopdRcKey.GPG_DECRYPT_ID)) {
+                        writer.write(EnumFwknopdRcKey.GPG_DECRYPT_PW.toString() + "\t\t" + "__CHANGEME__" + "\n");
+                        writer.write(EnumFwknopdRcKey.GPG_HOME_DIR.toString() + "\t\t" + "__CHANGEME__" + "\n");
+                    } else if (fwknopdKey.equals(EnumFwknopdRcKey.GPG_REMOTE_ID)) {
+                        writer.write(EnumFwknopdRcKey.GPG_REQUIRE_SIG.toString() + "\t\t" + "Y" + "\n");
+                        writer.write(EnumFwknopdRcKey.GPG_IGNORE_SIG_VERIFY_ERROR.toString() + "\t" + "N" + "\n");
+                    }
                 }
             }
         } catch (final IOException e) {
             LOGGER.error("Unable to create access file: " + this.filename, e);
-        }   
+        }
     }
 }
