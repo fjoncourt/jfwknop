@@ -500,14 +500,14 @@ public class MainWindowView extends JFrame implements IConsole {
         return this.consolePanel.cbConfigList;
     }
 
-    public JFwknopCheckBox  getPeriodicExecution() {
+    public JFwknopCheckBox getPeriodicExecution() {
         return this.consolePanel.periodicExecution;
     }
-    
+
     public JButton getBtnStop() {
         return this.consolePanel.btnStop;
     }
-    
+
     public JFwknopTextField getFwknopPeriod() {
         return this.consolePanel.varPeriod;
     }

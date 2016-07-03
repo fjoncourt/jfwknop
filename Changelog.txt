@@ -2,6 +2,7 @@ JFwknop - 1.0.1 - UNRELEASED
 
     [Franck Joncourt]
     * Enabled back GPG key creation.
+    * Closed #1: Fwknop configuration combo box not updated when loading file
 
 JFwknop - 1.0.0 - 06/03/2016
 

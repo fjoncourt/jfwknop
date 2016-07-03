@@ -101,14 +101,14 @@ public class MainWindowController {
         this.view.getBtnExecute().addActionListener(e -> {
             long period = 0;
             boolean stopEnabled = false;
-            
+
             updateFwknopModel();
-            
+
             if (MainWindowController.this.view.getPeriodicExecution().isSelected()) {
                 period = Long.parseLong(MainWindowController.this.view.getFwknopPeriod().getText());
                 stopEnabled = true;
             }
-            
+
             MainWindowController.this.view.getBtnStop().setEnabled(stopEnabled);
             MainWindowController.this.fwknopClientModel.start(period);
         });
@@ -275,11 +275,13 @@ public class MainWindowController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String filename = ((JFwknopComboBox) e.getSource()).getText();
-                MainWindowController.this.rcFileModel.loadRcFile(filename);
-                updateNewRcFile(filename);
+                if (filename != null) {
+                    MainWindowController.this.rcFileModel.loadRcFile(filename);
+                    updateNewRcFile(filename);
+                }
             }
         });
-        
+
         this.view.getBtnStop().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
