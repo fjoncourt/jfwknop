@@ -1,3 +1,5 @@
+To run the application, download the target directory and run java -jar com.cipherdyne.jfwknop-x.y.z.jar. There is no need to build the application to launch the user interface unless you did somes changes to the source code.
+
 # Features
 * Easy access to gnupg directories and ability to import, export, remove and even create GPG keys
 * Random password generation
@@ -9,7 +11,7 @@
 * Fwknopd access.conf generation
 * Periodic knocks
 
-## Build
+# Build
 
 The application is a JAVA program and is built around maven that provides the ability to download dependencies from a central repository without the need to install them on the target system manually.
 
