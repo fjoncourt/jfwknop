@@ -41,33 +41,33 @@ public class GeneralTab extends JPanel {
     private void initialize(Map<EnumFwknopRcKey, IFwknopVariable> varMap) {
 
         List<EnumFwknopRcKey> list = Arrays.asList(
-                EnumFwknopRcKey.ALLOW_IP,
-                EnumFwknopRcKey.RESOLVE_IP_HTTPS,
-                EnumFwknopRcKey.RESOLVE_HTTP_ONLY,
-                EnumFwknopRcKey.RESOLVE_URL,
-                EnumFwknopRcKey.ACCESS,
-                EnumFwknopRcKey.SPA_SOURCE_PORT,
-                EnumFwknopRcKey.RAND_PORT,
-                EnumFwknopRcKey.SPA_SERVER_PROTO,
-                EnumFwknopRcKey.SPOOF_USER,
-                EnumFwknopRcKey.SPOOF_SOURCE_IP);
+            EnumFwknopRcKey.ALLOW_IP,
+            EnumFwknopRcKey.RESOLVE_IP_HTTPS,
+            EnumFwknopRcKey.RESOLVE_HTTP_ONLY,
+            EnumFwknopRcKey.RESOLVE_URL,
+            EnumFwknopRcKey.ACCESS,
+            EnumFwknopRcKey.SPA_SOURCE_PORT,
+            EnumFwknopRcKey.RAND_PORT,
+            EnumFwknopRcKey.SPA_SERVER_PROTO,
+            EnumFwknopRcKey.SPOOF_USER,
+            EnumFwknopRcKey.SPOOF_SOURCE_IP);
 
-        this.add(FwknopFactory.createPanel(new MigLayout("insets 1, wrap 2, gapy 1!", "[150]0![200]", ""), 
-                InternationalizationHelper.getMessage("i18n.spa.client"), varMap, list), "growy, aligny top");
-
-        list = Arrays.asList(
-                EnumFwknopRcKey.SPA_SERVER,
-                EnumFwknopRcKey.SPA_SERVER_PORT,
-                EnumFwknopRcKey.SERVER_RESOLVE_IPV4);
-
-        this.add(FwknopFactory.createPanel(new MigLayout("insets 1, wrap 2, gapy 1!", "[120]0![200]", ""), 
-                InternationalizationHelper.getMessage("i18n.spa.server"), varMap, list), "growy, aligny top");
+        this.add(FwknopFactory.createPanel(new MigLayout("insets 1, wrap 2, gapy 1!", "[150]0![200]", ""),
+            InternationalizationHelper.getMessage("i18n.spa.client"), varMap, list), "growy, aligny top");
 
         list = Arrays.asList(
-                EnumFwknopRcKey.FW_TIMEOUT,
-                EnumFwknopRcKey.TIME_OFFSET);
+            EnumFwknopRcKey.SPA_SERVER,
+            EnumFwknopRcKey.SPA_SERVER_PORT,
+            EnumFwknopRcKey.SERVER_RESOLVE_IPV4);
 
-        this.add(FwknopFactory.createPanel(new MigLayout("insets 1, wrap 2, gapy 1!", "[120]0![200]", ""), 
-                InternationalizationHelper.getMessage("i18n.misc"), varMap, list), "growy, aligny top");
+        this.add(FwknopFactory.createPanel(new MigLayout("insets 1, wrap 2, gapy 1!", "[120]0![200]", ""),
+            InternationalizationHelper.getMessage("i18n.spa.server"), varMap, list), "growy, aligny top");
+
+        list = Arrays.asList(
+            EnumFwknopRcKey.FW_TIMEOUT,
+            EnumFwknopRcKey.TIME_OFFSET);
+
+        this.add(FwknopFactory.createPanel(new MigLayout("insets 1, wrap 2, gapy 1!", "[120]0![200]", ""),
+            InternationalizationHelper.getMessage("i18n.misc"), varMap, list), "growy, aligny top");
     }
 }

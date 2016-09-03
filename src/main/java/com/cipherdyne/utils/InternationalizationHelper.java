@@ -20,6 +20,7 @@ package com.cipherdyne.utils;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import org.apache.commons.lang3.StringUtils;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -58,6 +59,23 @@ public class InternationalizationHelper {
         return translation;
     }
 
+    public static String getMessageOrNull(final String i18nKey) {
+
+        String translation = null;
+
+        if (instance == null) {
+            instance = new InternationalizationHelper("en", "EN");
+        }
+
+        try {
+            translation = messages.getString(i18nKey);
+        } catch (final MissingResourceException e) {
+            
+        }
+
+        return translation;
+    }    
+    
     public static void configure(final String locale) {
         String[] localeArray = locale.split("_");
         instance = new InternationalizationHelper(localeArray[0], localeArray[1]);

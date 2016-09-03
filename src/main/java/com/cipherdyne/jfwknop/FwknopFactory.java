@@ -29,7 +29,9 @@ import java.util.Map;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.MouseInputListener;
 import net.miginfocom.swing.MigLayout;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -85,6 +87,9 @@ public class FwknopFactory {
             case IP_ADDRESS:
                 component = new JFwknopTextField("<Ip address>");
                 break;
+            case LOCAL_IP_ADDRESS:
+                component = new JFwknopTextField("source");
+                break;
             case GPG_KEY_ID:
                 component = new JFwknopTextField("<Key id>");
                 break;
@@ -121,7 +126,11 @@ public class FwknopFactory {
 
     static private void addVarToPanel(Map<EnumFwknopRcKey, IFwknopVariable> varMap, final JPanel panel, final EnumFwknopRcKey rcKey) {
         varMap.put(rcKey, FwknopFactory.createComponent(rcKey));
-        panel.add(new JFwknopLabel(rcKey.getLabel()), "growx");
+        JFwknopLabel label = new JFwknopLabel(rcKey.getLabel());
+        if(rcKey.getTooltip() != null) {
+            label.setToolTipText(rcKey.getTooltip());
+        }
+        panel.add(label, "growx");
         panel.add((JComponent)(varMap.get(rcKey)), "growx");
     }
 }

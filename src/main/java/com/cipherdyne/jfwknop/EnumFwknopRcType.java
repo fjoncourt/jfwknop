@@ -25,6 +25,7 @@ public enum EnumFwknopRcType {
     
     PORT_LIST,
     IP_ADDRESS,
+    LOCAL_IP_ADDRESS,
     Y_N,
     DIGEST_ALGORITHM,
     ENCRYPT_MODE,
