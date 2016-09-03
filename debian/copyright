@@ -1,0 +1,17 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Fwknop User Interface
+Source: https://github.com/fjoncourt/jfwknop
+
+Files: *
+Copyright: 2016, Franck Joncourt
+License: GPL-2
+
+Files: debian/*
+Copyright: 2016, Franck Joncourt <franck@debian.or>
+License: GPL-2
+
+License: GPL-2
+ On Debian systems, the full text of the GPL-2 license
+ can be found in the file '/usr/share/common-licenses/GPL-2'
+
+

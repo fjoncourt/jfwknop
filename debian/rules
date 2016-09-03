@@ -1,0 +1,17 @@
+#!/usr/bin/make -f
+export DH_VERBOSE=1
+
+version := $(shell dpkg-parsechangelog -S Version | cut -d- -f1)
+mainver := 1.0.1-rc1
+mvnrepo := debian/jfwknop/usr/share/maven-repo
+
+%:
+	dh $@ --buildsystem=maven
+
+override_dh_auto_install:
+	dh_auto_install --buildsystem=maven
+	# workarounds for maven-debian-helper being ...weird
+	mv $(mvnrepo)/com/cipherdyne/jfwknop/com.cipherdyne.jfwknop/$(mainver)/com.cipherdyne.jfwknop-$(mainver).jar debian/jfwknop/usr/share/jfwknop/jfwknop.jar
+	rm $(mvnrepo)/com/cipherdyne/jfwknop/com.cipherdyne.jfwknop/$(mainver)/com.cipherdyne.jfwknop-$(mainver).pom
+	#rm -r $(mvnrepo)
+	chmod +x debian/jfwknop/usr/share/jfwknop/jfwknop.jar

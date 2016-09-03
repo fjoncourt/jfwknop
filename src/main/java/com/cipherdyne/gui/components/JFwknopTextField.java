@@ -41,25 +41,25 @@ public class JFwknopTextField extends JTextField implements IFwknopVariable {
 
             @Override
             public void focusLost(FocusEvent e) {
-                if (((JFwknopTextField)e.getSource()).getText().equals(StringUtils.EMPTY)) {
+                if (((JFwknopTextField) e.getSource()).getText().equals(StringUtils.EMPTY)) {
                     setDefaultValue();
                 }
             }
         });
     }
-    
+
     @Override
     public void setDefaultValue() {
         this.setText(this.defaultVal);
     }
-    
+
     @Override
     public boolean isDefault() {
         boolean def = false;
         if (this.defaultVal.equals(this.getText())) {
             def = true;
         }
-        
+
         return def;
-    }    
+    }
 }

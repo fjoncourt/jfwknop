@@ -34,7 +34,7 @@ public class JFwknopTextArea extends JTextArea implements IFwknopVariable {
 
     public JFwknopTextArea(final String val) {
         super(4, 30);
-        this.setLineWrap (true);
+        this.setLineWrap(true);
         this.setWrapStyleWord(true);
         this.setText(val);
         this.defaultVal = val;
@@ -58,14 +58,14 @@ public class JFwknopTextArea extends JTextArea implements IFwknopVariable {
     public void setDefaultValue() {
         this.setText(this.defaultVal);
     }
-    
+
     @Override
     public boolean isDefault() {
         boolean def = false;
         if (this.defaultVal.equals(this.getText())) {
             def = true;
         }
-        
+
         return def;
-    }        
+    }
 }

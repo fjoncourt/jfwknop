@@ -1,0 +1,31 @@
+--- a/pom.xml
++++ b/pom.xml
+@@ -36,7 +36,6 @@
+                     <archive>
+                         <manifest>
+                             <addClasspath>true</addClasspath>
+-                            <classpathPrefix>lib/</classpathPrefix>
+                             <mainClass>${project.build.mainClass}</mainClass>
+                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                         </manifest>
+@@ -44,20 +43,6 @@
+                 </configuration>
+             </plugin>
+                                                                 
+-            <plugin>
+-                <artifactId>maven-dependency-plugin</artifactId>
+-                <executions>
+-                    <execution>
+-                        <phase>install</phase>
+-                        <goals>
+-                            <goal>copy-dependencies</goal>
+-                        </goals>
+-                        <configuration>
+-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+-                        </configuration>
+-                    </execution>
+-                </executions>
+-            </plugin>
+         </plugins>
+     </build>
+ 

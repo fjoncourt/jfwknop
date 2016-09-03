@@ -22,7 +22,7 @@ import java.awt.Color;
 
 import javax.swing.JComboBox;
 
-public class JFwknopComboBox extends JComboBox<String>implements IFwknopVariable {
+public class JFwknopComboBox extends JComboBox<String> implements IFwknopVariable {
     static final long        serialVersionUID   = 1L;
     private static final int DEFAULT_ITEM_INDEX = 0;
 

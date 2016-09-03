@@ -1,0 +1,5 @@
+com.cipherdyne.jfwknop jar * * *
+com.cipherdyne.jfwknop jar s/.*/debian/ * *
+com.miglayout s/miglayout/miglayout-swing/ * s/.*/debian/ * *
+log4j log4j * s/.*/1\.2\.x/ * *
+org.bouncycastle s/bcpg-jdk15on/bcpg/ * s/.*/debian/ * *

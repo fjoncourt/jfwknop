@@ -1,0 +1,4 @@
+version=3
+opts=filenamemangle=s/.+\/(\d\S*)\.tar\.gz/jfwknop-$1\.tar\.gz/ \
+  https://github.com/fjoncourt/jfwknop/tags .*/(\d\S*)\.tar\.gz
+

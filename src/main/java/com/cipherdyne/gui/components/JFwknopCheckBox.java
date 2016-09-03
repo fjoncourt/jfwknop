@@ -57,5 +57,4 @@ public class JFwknopCheckBox extends JCheckBox implements IFwknopVariable {
 
         return isDefault;
     }
-
 }
