@@ -1,4 +1,4 @@
-To run the application, download the target directory and run java -jar com.cipherdyne.jfwknop-x.y.z.jar. There is no need to build the application to launch the user interface unless you did somes changes to the source code.
+__To run the application, download the target directory and run java -jar com.cipherdyne.jfwknop-x.y.z.jar. There is no need to build the application to launch the user interface unless you did somes changes to the source code.__
 
 # Features
 * Easy access to gnupg directories and ability to import, export, remove and even create GPG keys
