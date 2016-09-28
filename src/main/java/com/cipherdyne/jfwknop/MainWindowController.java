@@ -17,7 +17,6 @@
  */
 package com.cipherdyne.jfwknop;
 
-import com.cipherdyne.gui.GeneralTab;
 import com.cipherdyne.utils.InternationalizationHelper;
 import com.cipherdyne.gui.components.JFwknopComboBox;
 import com.cipherdyne.model.RcFileModel;
@@ -31,13 +30,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -108,6 +102,7 @@ public class MainWindowController {
             long period = 0;
             boolean stopEnabled = false;
 
+            save();
             updateFwknopModel();
 
             if (MainWindowController.this.view.getPeriodicExecution().isSelected()) {
@@ -144,6 +139,7 @@ public class MainWindowController {
         this.view.getBtnSaveFwknopSettings().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                save();
                 updateFwknopModel();
                 MainWindowController.this.fwknopClientModel.save();
             }
@@ -413,6 +409,20 @@ public class MainWindowController {
         configs.add(InternationalizationHelper.getMessage("i18n.default"));
         configs.addAll(1, this.jfwknopConfig.getRecentFileList());
         this.view.setCbConfigList(configs.toArray(new String[0]));
+    }
+
+    /**
+     * Save current fwknop configuration.
+     *
+     * If the fwknoprc file does not exist, the user is prompted to select where to save the
+     * configuration
+     */
+    private void save() {
+        if (MainWindowController.this.rcFileModel.exists()) {
+            MainWindowController.this.rcFileModel.saveRcFile(convertViewToConfig(this.view.getVariables()));
+        } else {
+            saveAs();
+        }
     }
 
     /**
