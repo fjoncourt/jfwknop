@@ -102,16 +102,18 @@ public class MainWindowController {
             long period = 0;
             boolean stopEnabled = false;
 
-            save();
-            updateFwknopModel();
+            // Try to save the current settings before executing the fwknop client
+            if (save() == 0) {
+                updateFwknopModel();
 
-            if (MainWindowController.this.view.getPeriodicExecution().isSelected()) {
-                period = Long.parseLong(MainWindowController.this.view.getFwknopPeriod().getText());
-                stopEnabled = true;
+                if (MainWindowController.this.view.getPeriodicExecution().isSelected()) {
+                    period = Long.parseLong(MainWindowController.this.view.getFwknopPeriod().getText());
+                    stopEnabled = true;
+                }
+
+                MainWindowController.this.view.getBtnStop().setEnabled(stopEnabled);
+                MainWindowController.this.fwknopClientModel.start(period);
             }
-
-            MainWindowController.this.view.getBtnStop().setEnabled(stopEnabled);
-            MainWindowController.this.fwknopClientModel.start(period);
         });
 
         // Add action listener to clear the console
@@ -416,19 +418,27 @@ public class MainWindowController {
      *
      * If the fwknoprc file does not exist, the user is prompted to select where to save the
      * configuration
+     * 
+     * @return 0 if successful, > 0 if an error occured
      */
-    private void save() {
+    private int save() {
+        int error = 0;
         if (MainWindowController.this.rcFileModel.exists()) {
             MainWindowController.this.rcFileModel.saveRcFile(convertViewToConfig(this.view.getVariables()));
         } else {
-            saveAs();
+            error = saveAs();
         }
+        
+        return error;
     }
 
     /**
      * Open browser to allow user to select the filename to save the current configuration to
+     * 
+     * @return 0 if successful, > 0 if an error occured
      */
-    private void saveAs() {
+    private int saveAs() {
+        int error = 0;
         final JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle(InternationalizationHelper.getMessage("i18n.save.as"));
         final int result = fileChooser.showSaveDialog(null);
@@ -439,6 +449,11 @@ public class MainWindowController {
             updateNewRcFile(filename);
             updateConfigurationList();
         }
+        else {
+            error = 1;
+        }
+            
+        return error;
     }
 
     /**
