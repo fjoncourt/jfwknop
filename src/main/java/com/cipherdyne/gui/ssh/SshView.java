@@ -21,7 +21,6 @@ import com.cipherdyne.jfwknop.IFwknopVariable;
 import com.cipherdyne.utils.InternationalizationHelper;
 import com.cipherdyne.gui.components.JFwknopLabel;
 import com.cipherdyne.gui.components.JFwknopTextField;
-import com.cipherdyne.gui.gpg.GpgTableModel;
 import java.awt.Component;
 import java.util.HashMap;
 import java.util.Map;

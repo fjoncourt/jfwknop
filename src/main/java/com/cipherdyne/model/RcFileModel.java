@@ -39,7 +39,10 @@ public class RcFileModel {
         this.view = view;
     }
 
-    private void updateListeners() {
+    /**
+     * Refresh all listeners
+     */
+    public void updateListeners() {
         this.view.onRcFileChange(this.context);
     }
 
@@ -51,12 +54,14 @@ public class RcFileModel {
         }
     }
 
+    // FIXME: do not set context directly but prefer setContext method
     public void saveRcFile(final Map<EnumFwknopRcKey, String> context) {
         this.rcFile.setConfig(context);
         logger.info("Save config");
         this.rcFile.save();
     }
 
+    // FIXME: do not set context directly but prefer setContext method
     public void saveAsRcFile(final Map<EnumFwknopRcKey, String> newContext, final String filename) {
         this.context = newContext;
         if (!this.exists()) {
@@ -85,5 +90,9 @@ public class RcFileModel {
         }
 
         return filename;
+    }
+    
+    public void setContext(Map<EnumFwknopRcKey, String> context) {
+        this.context = context;
     }
 }

@@ -60,6 +60,7 @@ public class MainWindowView extends JFrame implements IConsole {
     private JMenuItem openRcFileMenuItem;
     private JMenuItem exportFileMenuItem;
     private JMenuItem generateAccessMenuItem;
+    private JMenuItem easySetupMenuItem;
     private JMenuItem aboutMenuItem;
 
     private final Map<EnumFwknopRcKey, IFwknopVariable> varMap;
@@ -132,6 +133,7 @@ public class MainWindowView extends JFrame implements IConsole {
 
         menubar.add(createFileMenu());
         menubar.add(createToolMenu());
+        menubar.add(createWizardMenu());
         menubar.add(createHelpMenu());
 
         setJMenuBar(menubar);
@@ -158,6 +160,17 @@ public class MainWindowView extends JFrame implements IConsole {
         return menu;
     }
 
+    private JMenu createWizardMenu() {
+        final JMenu menu = new JMenu(InternationalizationHelper.getMessage("i18n.window.menu.wizard"));
+        menu.setMnemonic(KeyEvent.VK_W);
+
+        this.easySetupMenuItem = new JMenuItem(InternationalizationHelper.getMessage("i18n.window.menu.wizard.easysetup"),
+            new ImageIcon(this.getClass().getResource("/wizard16.png")));
+        menu.add(this.easySetupMenuItem);
+
+        return menu;
+    }    
+    
     private JMenu createHelpMenu() {
         final JMenu menu = new JMenu(InternationalizationHelper.getMessage("window.menu.help"));
         menu.setMnemonic(KeyEvent.VK_H);
@@ -292,6 +305,10 @@ public class MainWindowView extends JFrame implements IConsole {
         return this.saveAsMenuItem;
     }
 
+    public JMenuItem getEasySetupMenuItem() {
+        return this.easySetupMenuItem;
+    }
+    
     public List<JMenuItem> getVarRecentRcFiles() {
         return this.varRecentRcFiles;
     }
@@ -323,7 +340,7 @@ public class MainWindowView extends JFrame implements IConsole {
     public JMenuItem getGenerateAccessMenuItem() {
         return this.generateAccessMenuItem;
     }
-
+    
     @Override
     public void appendToConsole(String msg) {
         SwingUtilities.invokeLater(() -> {

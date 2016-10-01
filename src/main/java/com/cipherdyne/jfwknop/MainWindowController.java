@@ -24,10 +24,10 @@ import com.cipherdyne.model.FwknopClientModel;
 import com.cipherdyne.gui.gpg.GpgController;
 import com.cipherdyne.gui.MainWindowView;
 import com.cipherdyne.gui.ssh.SshController;
+import com.cipherdyne.gui.wizard.WizardController;
 import com.cipherdyne.model.KeyModel;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -122,176 +122,120 @@ public class MainWindowController {
         });
 
         // Add action listner to enable/disable verbose mode
-        this.view.getBtnFwknopVerbose().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                MainWindowController.this.view.getVarFwknopArgs().setVerbose(((JCheckBox) e.getSource()).isSelected());
-            }
+        this.view.getBtnFwknopVerbose().addActionListener((ActionEvent e) -> {
+            MainWindowController.this.view.getVarFwknopArgs().setVerbose(((JCheckBox) e.getSource()).isSelected());
         });
 
         // Add action listener to enable/disable test mode
-        this.view.getBtnFwknopTest().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                MainWindowController.this.view.getVarFwknopArgs().setTest(((JCheckBox) e.getSource()).isSelected());
-            }
+        this.view.getBtnFwknopTest().addActionListener((ActionEvent e) -> {
+            MainWindowController.this.view.getVarFwknopArgs().setTest(((JCheckBox) e.getSource()).isSelected());
         });
 
         // Add action listener to save fwknop settings
-        this.view.getBtnSaveFwknopSettings().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                save();
-                updateFwknopModel();
-                MainWindowController.this.fwknopClientModel.save();
-            }
+        this.view.getBtnSaveFwknopSettings().addActionListener((ActionEvent e) -> {
+            save();
+            updateFwknopModel();
+            MainWindowController.this.fwknopClientModel.save();
         });
 
         // Add action listener to generate/remove rijndael key
-        this.view.getBtnGenerateRijndaelKey().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY).setText(
-                    MainWindowController.this.keyModel.getRandomRijndaelKey());
-            }
+        this.view.getBtnGenerateRijndaelKey().addActionListener((ActionEvent e) -> {
+            MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY).setText(
+                MainWindowController.this.keyModel.getRandomRijndaelKey());
         });
 
-        this.view.getBtnRemoveRijndaelKey().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY).setDefaultValue();
-            }
+        this.view.getBtnRemoveRijndaelKey().addActionListener((ActionEvent e) -> {
+            MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY).setDefaultValue();
         });
 
         // Add action listener to generate/remove rijndael base64 key
-        this.view.getBtnGenerateBase64Rijndael().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY_BASE64).setText(
-                    MainWindowController.this.keyModel.getRandomBase64Rijndael());
-            }
+        this.view.getBtnGenerateBase64Rijndael().addActionListener((ActionEvent e) -> {
+            MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY_BASE64).setText(
+                MainWindowController.this.keyModel.getRandomBase64Rijndael());
         });
 
-        this.view.getBtnRemoveBase64Rijndael().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ((IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY_BASE64)).setDefaultValue();
-            }
+        this.view.getBtnRemoveBase64Rijndael().addActionListener((ActionEvent e) -> {
+            ((IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY_BASE64)).setDefaultValue();
         });
 
         // Add action listener to generate/remove rijndael key
-        this.view.getBtnGenerateHmacKey().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY).setText(
-                    MainWindowController.this.keyModel.getRandomHmacKey());
-                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("Y");
-            }
+        this.view.getBtnGenerateHmacKey().addActionListener((ActionEvent e) -> {
+            MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY).setText(
+                MainWindowController.this.keyModel.getRandomHmacKey());
+            MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("Y");
         });
 
-        this.view.getBtnRemoveHmacKey().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY).setDefaultValue();
-                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("N");
-            }
+        this.view.getBtnRemoveHmacKey().addActionListener((ActionEvent e) -> {
+            MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY).setDefaultValue();
+            MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("N");
         });
 
         // Add action listener to generate/remove HMAC base64 key
-        this.view.getBtnGenerateBase64Hmac().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY_BASE64).setText(
-                    MainWindowController.this.keyModel.getRandomBase64Hmac());
-                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("Y");
-            }
+        this.view.getBtnGenerateBase64Hmac().addActionListener((ActionEvent e) -> {
+            MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY_BASE64).setText(
+                MainWindowController.this.keyModel.getRandomBase64Hmac());
+            MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("Y");
         });
 
-        this.view.getBtnRemoveBase64Hmac().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY_BASE64).setDefaultValue();
-                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("N");
-            }
+        this.view.getBtnRemoveBase64Hmac().addActionListener((ActionEvent e) -> {
+            MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY_BASE64).setDefaultValue();
+            MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("N");
         });
 
         // Add action listener to select a GPG key and its home directory
-        this.view.getBtnRecipientGpgId().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                javax.swing.SwingUtilities.invokeLater(() -> new GpgController(MainWindowController.this.view,
-                    EnumFwknopRcKey.GPG_RECIPIENT,
-                    MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).getText()));
+        this.view.getBtnRecipientGpgId().addActionListener((ActionEvent e) -> {
+            javax.swing.SwingUtilities.invokeLater(() -> new GpgController(MainWindowController.this.view,
+                EnumFwknopRcKey.GPG_RECIPIENT,
+                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).getText()));
+        });
+
+        this.view.getBtnSignerGpgId().addActionListener((ActionEvent e) -> {
+            javax.swing.SwingUtilities.invokeLater(() -> new GpgController(MainWindowController.this.view,
+                EnumFwknopRcKey.GPG_SIGNER,
+                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).getText()));
+        });
+
+        this.view.getBtnGpgHomedir().addActionListener((ActionEvent e) -> {
+            final JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            fileChooser.setFileHidingEnabled(false);
+            fileChooser.setDialogTitle(InternationalizationHelper.getMessage("i18n.browse"));
+            final int result = fileChooser.showOpenDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).setText(fileChooser.getSelectedFile().getAbsolutePath());
             }
         });
 
-        this.view.getBtnSignerGpgId().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                javax.swing.SwingUtilities.invokeLater(() -> new GpgController(MainWindowController.this.view,
-                    EnumFwknopRcKey.GPG_SIGNER,
-                    MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).getText()));
-            }
-        });
-
-        this.view.getBtnGpgHomedir().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                final JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                fileChooser.setFileHidingEnabled(false);
-                fileChooser.setDialogTitle(InternationalizationHelper.getMessage("i18n.browse"));
-                final int result = fileChooser.showOpenDialog(null);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).setText(fileChooser.getSelectedFile().getAbsolutePath());
-                }
-
-            }
-        });
-
-        this.view.getBtnEncodeGpgPassphrase().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                IFwknopVariable gpgSigningPw = (IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_SIGNING_PW);
-                if (gpgSigningPw.isDefault()) {
-                    JOptionPane.showMessageDialog(MainWindowController.this.view,
-                        InternationalizationHelper.getMessage("i18n.please.fill.in.passphrase"),
-                        InternationalizationHelper.getMessage("i18n.error"),
-                        JOptionPane.ERROR_MESSAGE);
-                } else {
-                    IFwknopVariable gpgSigningPwBase64 = (IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_SIGNING_PW_BASE64);
-                    gpgSigningPwBase64.setText(KeyModel.encodeToBase64(gpgSigningPw.getText().getBytes()));
-                }
+        this.view.getBtnEncodeGpgPassphrase().addActionListener((ActionEvent e) -> {
+            IFwknopVariable gpgSigningPw = (IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_SIGNING_PW);
+            if (gpgSigningPw.isDefault()) {
+                JOptionPane.showMessageDialog(MainWindowController.this.view,
+                    InternationalizationHelper.getMessage("i18n.please.fill.in.passphrase"),
+                    InternationalizationHelper.getMessage("i18n.error"),
+                    JOptionPane.ERROR_MESSAGE);
+            } else {
+                IFwknopVariable gpgSigningPwBase64 = (IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_SIGNING_PW_BASE64);
+                gpgSigningPwBase64.setText(KeyModel.encodeToBase64(gpgSigningPw.getText().getBytes()));
             }
         });
 
         // Add action listener to save key settings
-        this.view.getBtnSaveKeySettings().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateKeyModel();
-                MainWindowController.this.keyModel.save();
+        this.view.getBtnSaveKeySettings().addActionListener((ActionEvent e) -> {
+            updateKeyModel();
+            MainWindowController.this.keyModel.save();
+        });
+
+        this.view.getCbConfigList().addActionListener((ActionEvent e) -> {
+            String filename = ((JFwknopComboBox) e.getSource()).getText();
+            if (filename != null) {
+                MainWindowController.this.rcFileModel.loadRcFile(filename);
+                updateNewRcFile(filename);
             }
         });
 
-        this.view.getCbConfigList().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String filename = ((JFwknopComboBox) e.getSource()).getText();
-                if (filename != null) {
-                    MainWindowController.this.rcFileModel.loadRcFile(filename);
-                    updateNewRcFile(filename);
-                }
-            }
-        });
-
-        this.view.getBtnStop().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                MainWindowController.this.fwknopClientModel.stop();
-                MainWindowController.this.view.getBtnStop().setEnabled(false);
-            }
+        this.view.getBtnStop().addActionListener((ActionEvent e) -> {
+            MainWindowController.this.fwknopClientModel.stop();
+            MainWindowController.this.view.getBtnStop().setEnabled(false);
         });
     }
 
@@ -383,24 +327,25 @@ public class MainWindowController {
             }
         });
 
-        // Set up action listener to ssh fil to remote server
+        // Set up action listener to scp files to remote server
         this.view.getExportFileMenuItem().addActionListener(e -> {
             new SshController(this.view);
         });
 
         // Set up action listener to generate access.conf file for fwknop server
-        this.view.getGenerateAccessMenuItem().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                final JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle(InternationalizationHelper.getMessage(InternationalizationHelper.getMessage("i18n.save.as")));
-                fileChooser.setSelectedFile(new File("access.conf"));
-                final int result = fileChooser.showSaveDialog(null);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    AccessFile accessFile = new AccessFile(fileChooser.getSelectedFile().getAbsolutePath());
-                    accessFile.generate(convertViewToConfig(MainWindowController.this.view.getVariables()));
-                }
+        this.view.getGenerateAccessMenuItem().addActionListener((ActionEvent e) -> {
+            final JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle(InternationalizationHelper.getMessage(InternationalizationHelper.getMessage("i18n.save.as")));
+            fileChooser.setSelectedFile(new File("access.conf"));
+            final int result = fileChooser.showSaveDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                AccessFile accessFile = new AccessFile(fileChooser.getSelectedFile().getAbsolutePath());
+                accessFile.generate(convertViewToConfig(MainWindowController.this.view.getVariables()));
             }
+        });
+        
+        this.view.getEasySetupMenuItem().addActionListener(e -> {
+            new WizardController(this, this.view);
         });
 
         populateRecentFiles();
@@ -518,5 +463,9 @@ public class MainWindowController {
         }
 
         return valid;
+    }
+    
+    public RcFileModel getRcFileModel() {
+        return this.rcFileModel;
     }
 }
