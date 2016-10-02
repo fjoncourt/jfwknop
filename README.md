@@ -3,6 +3,7 @@ __To run the application, download the target directory and run java -jar com.ci
 # Features
 * Easy access to gnupg directories and ability to import, export, remove and even create GPG keys
 * Random password generation
+* Use of native fwknoprc file
 * Base64 encoding from clear passwords
 * Fwknop client binary selection
 * Ssh export to remote server
@@ -10,6 +11,7 @@ __To run the application, download the target directory and run java -jar com.ci
 * Internationalization support - English and French available - More can be easily added
 * Fwknopd access.conf generation
 * Periodic knocks
+* Wizard for basic setup
 
 # Build
 
