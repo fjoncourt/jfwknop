@@ -27,8 +27,8 @@ import com.cipherdyne.gui.components.JFwknopComboBox;
 import com.cipherdyne.gui.components.JFwknopTextField;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -163,8 +163,8 @@ public class MainWindowView extends DefaultFrame implements IConsole {
         menu.add(this.easySetupMenuItem);
 
         return menu;
-    }    
-    
+    }
+
     private JMenu createHelpMenu() {
         final JMenu menu = new JMenu(InternationalizationHelper.getMessage("window.menu.help"));
         menu.setMnemonic(KeyEvent.VK_H);
@@ -302,7 +302,7 @@ public class MainWindowView extends DefaultFrame implements IConsole {
     public JMenuItem getEasySetupMenuItem() {
         return this.easySetupMenuItem;
     }
-    
+
     public List<JMenuItem> getVarRecentRcFiles() {
         return this.varRecentRcFiles;
     }
@@ -334,11 +334,12 @@ public class MainWindowView extends DefaultFrame implements IConsole {
     public JMenuItem getGenerateAccessMenuItem() {
         return this.generateAccessMenuItem;
     }
-    
+
     @Override
     public void appendToConsole(String msg) {
         SwingUtilities.invokeLater(() -> {
-            MainWindowView.this.consolePanel.varConsole.append(msg + "\n");
+            String now = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(new Date());
+            MainWindowView.this.consolePanel.varConsole.append("[" + now + "] " + msg + "\n");
         });
     }
 
@@ -438,7 +439,7 @@ public class MainWindowView extends DefaultFrame implements IConsole {
     public JFwknopTextField getFwknopPeriod() {
         return this.consolePanel.varPeriod;
     }
-    
+
     public JButton getButton(EnumButton buttonId) {
         return this.btnMap.get(buttonId);
     }
