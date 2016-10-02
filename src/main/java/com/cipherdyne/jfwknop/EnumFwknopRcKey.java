@@ -55,7 +55,7 @@ public enum EnumFwknopRcKey {
     USE_HMAC(Y_N, "i18n.hmac.use"),
     HMAC_KEY(PASSPHRASE, "i18n.hmac.key", EnumFwknopdRcKey.HMAC_KEY),
     HMAC_KEY_BASE64(BASE64_PASSPHRASE, "i18n.hmac.key.base64", EnumFwknopdRcKey.HMAC_KEY_BASE64),
-    HMAC_DIGEST_TYPE(DIGEST_ALGORITHM, "i18n.hmac.digest.type"),
+    HMAC_DIGEST_TYPE(DIGEST_ALGORITHM, "i18n.hmac.digest.type", EnumFwknopdRcKey.HMAC_DIGEST_TYPE),
     
     SPA_SOURCE_PORT(SINGLE_PORT, "i18n.spa.client.sourceport"),
     FW_TIMEOUT(SECONDS, "i18n.misc.timeout"),

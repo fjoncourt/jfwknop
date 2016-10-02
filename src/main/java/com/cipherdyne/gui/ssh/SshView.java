@@ -105,6 +105,8 @@ public class SshView extends JDialog {
         this.add(this.btnExport, "gaptop 20, growx, span 3");
 
         this.pack();
+        
+        this.setLocationRelativeTo(frame);        
     }
 
     /**

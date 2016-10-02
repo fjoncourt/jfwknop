@@ -344,7 +344,7 @@ public class MainWindowController {
                 accessFile.generate(convertViewToConfig(MainWindowController.this.view.getVariables()));
             }
         });
-        
+
         this.view.getEasySetupMenuItem().addActionListener(e -> {
             new WizardController(this, this.view);
         });
@@ -364,7 +364,7 @@ public class MainWindowController {
      *
      * If the fwknoprc file does not exist, the user is prompted to select where to save the
      * configuration
-     * 
+     *
      * @return 0 if successful, > 0 if an error occured
      */
     private int save() {
@@ -374,13 +374,13 @@ public class MainWindowController {
         } else {
             error = saveAs();
         }
-        
+
         return error;
     }
 
     /**
      * Open browser to allow user to select the filename to save the current configuration to
-     * 
+     *
      * @return 0 if successful, > 0 if an error occured
      */
     private int saveAs() {
@@ -394,11 +394,10 @@ public class MainWindowController {
                 filename);
             updateNewRcFile(filename);
             updateConfigurationList();
-        }
-        else {
+        } else {
             error = 1;
         }
-            
+
         return error;
     }
 
@@ -465,7 +464,7 @@ public class MainWindowController {
 
         return valid;
     }
-    
+
     public RcFileModel getRcFileModel() {
         return this.rcFileModel;
     }

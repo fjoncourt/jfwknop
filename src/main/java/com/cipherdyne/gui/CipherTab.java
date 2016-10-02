@@ -29,25 +29,11 @@ import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * @author franck
+ * 
+ * @author Franck Joncourt <franck.joncourt@gmail.com>
  */
 public class CipherTab extends JPanel {
 
-    /*
-    public JButton generateRijndaelKey;
-    public JButton removeRijndaelKey;
-    public JButton generateBase64RijndaelKey;
-    public JButton removeBase64RijndaelKey;
-    public JButton generateHmacKey;
-    public JButton removeHmacKey;
-    public JButton generateBase64HmacKey;
-    public JButton removeBase64HmacKey;
-
-    public JButton btnGenerateBase64GpgPassphrase;
-
-    public JButton selectSignerGpgId;
-    public JButton selectRecipientGpgId;
-    public JButton browseforGpgHomedir;*/
     public CipherTab(Map<EnumFwknopRcKey, IFwknopVariable> varMap, Map<EnumButton, JButton> btnMap) {
         super(new MigLayout("fill", "[left][center][right]", ""));
         createComponents(varMap, btnMap);
@@ -95,17 +81,17 @@ public class CipherTab extends JPanel {
         JButton generateHmacKey = new JButton(plusImg);
         generateHmacKey.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.key"));
         btnMap.put(EnumButton.CIPHER_GENERATE_HMAC_KEY, generateHmacKey);
-        
+
         JButton removeHmacKey = new JButton(removeImg);
-        removeHmacKey.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.key"));    
+        removeHmacKey.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.key"));
         btnMap.put(EnumButton.CIPHER_REMOVE_HMAC_KEY, removeHmacKey);
-        
+
         JButton generateBase64HmacKey = new JButton(plusImg);
         generateBase64HmacKey.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.base64.key"));
         btnMap.put(EnumButton.CIPHER_GENERATE_BASE64_HMAC_KEY, generateBase64HmacKey);
-        
+
         JButton removeBase64HmacKey = new JButton(removeImg);
-        removeBase64HmacKey.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.base64.key"));       
+        removeBase64HmacKey.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.base64.key"));
         btnMap.put(EnumButton.CIPHER_REMOVE_BASE64_HMAC_KEY, removeBase64HmacKey);
     }
 

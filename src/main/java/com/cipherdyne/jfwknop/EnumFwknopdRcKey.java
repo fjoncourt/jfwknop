@@ -33,5 +33,6 @@ public enum EnumFwknopdRcKey {
     
     USE_HMAC,
     HMAC_KEY,
-    HMAC_KEY_BASE64;
+    HMAC_KEY_BASE64,
+    HMAC_DIGEST_TYPE;
 }

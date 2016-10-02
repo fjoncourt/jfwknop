@@ -53,7 +53,7 @@ public class GpgView extends JDialog {
 
     // Button used to remove a key
     final private JButton btnRemove;
-    
+
     // Button used to create a new key (public and private)
     final private JButton btnCreate;
 
@@ -82,7 +82,6 @@ public class GpgView extends JDialog {
         keyTable.getColumnModel().getColumn(GpgTableModel.KEY_ID_COL).setMinWidth(140);
 
         // Build the action buttons
-        
         btnExport = new JButton(InternationalizationHelper.getMessage("i18n.key.export"));
         btnImport = new JButton(InternationalizationHelper.getMessage("i18n.key.import"));
         btnRemove = new JButton(InternationalizationHelper.getMessage("i18n.key.remove"));
@@ -93,7 +92,7 @@ public class GpgView extends JDialog {
         // Add components to the ui
         JScrollPane scrollPane = new JScrollPane(keyTable);
         this.getContentPane().add(scrollPane, "span 2, growx, wrap");
-        
+
         JPanel operationPanel = new JPanel(new MigLayout("fill, flowx, gap 0, insets 1", "[][][]", ""));
         operationPanel.setBorder(new TitledBorder(null, "Operations", TitledBorder.LEADING, TitledBorder.TOP, new Font(Font.SANS_SERIF, Font.ITALIC + Font.BOLD, 10)));
         operationPanel.add(btnExport, "growx");
@@ -101,11 +100,13 @@ public class GpgView extends JDialog {
         operationPanel.add(btnRemove, "growx");
         operationPanel.add(btnCreate, "growx");
         this.add(operationPanel, "span 2, growx, wrap");
-        
+
         this.add(btnSelect, "growx");
         this.add(btnCancel, "growx");
 
         this.pack();
+
+        this.setLocationRelativeTo(frame);
     }
 
     /**
@@ -149,7 +150,7 @@ public class GpgView extends JDialog {
     public JButton getBtnCreate() {
         return this.btnCreate;
     }
-    
+
     /**
      * @return the GPG key table
      */
