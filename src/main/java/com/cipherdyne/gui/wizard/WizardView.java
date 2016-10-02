@@ -71,6 +71,8 @@ public class WizardView extends DefaultView<EnumWizardVariable, EnumWizardButton
         this.add(mainPanel);
 
         this.pack();
+        
+        this.setLocationRelativeTo(frame);
     }
 
     /**
