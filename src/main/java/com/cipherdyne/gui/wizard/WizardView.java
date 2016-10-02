@@ -34,7 +34,7 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Franck Joncourt <franck.joncourt@gmail.com>
  */
-public class WizardView extends DefaultView<EnumWizardVariable, EnumWizardButton> {
+public class WizardView extends DefaultDialog<EnumWizardVariable, EnumWizardButton> {
 
     /**
      * Wizard view

@@ -46,7 +46,7 @@ import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 
-public class MainWindowView extends JFrame implements IConsole {
+public class MainWindowView extends DefaultFrame implements IConsole {
 
     private static final long serialVersionUID = 7003086413693874319L;
     private static final String JFWKNOP_TITLE = "JFwknop - ";
@@ -63,9 +63,6 @@ public class MainWindowView extends JFrame implements IConsole {
     private JMenuItem easySetupMenuItem;
     private JMenuItem aboutMenuItem;
 
-    private final Map<EnumFwknopRcKey, IFwknopVariable> varMap;
-    private final List<JMenuItem> varRecentRcFiles;
-
     private final SettingsTab settingsTab;
     private final CipherTab cipherTab;
 
@@ -77,18 +74,15 @@ public class MainWindowView extends JFrame implements IConsole {
         setLayout(new MigLayout("inset 0, gap 0, flowy", "[grow]", "[][fill]"));
         setIconImage(new ImageIcon(this.getClass().getResource("/cipherdyne.png")).getImage());
 
-        varMap = new HashMap<>();
-        varRecentRcFiles = new ArrayList<>();
-
         createMenuBar();
 
         final JTabbedPane mainPane = new JTabbedPane(JTabbedPane.TOP);
         this.add(mainPane, "growx, height 366!");
 
         final JTabbedPane rcConfigPane = new JTabbedPane(JTabbedPane.TOP);
-        rcConfigPane.addTab("General", null, new GeneralTab(varMap), "General");
-        rcConfigPane.addTab("Network", null, new NetworkTab(varMap), "Network");
-        this.cipherTab = new CipherTab(varMap);
+        rcConfigPane.addTab("General", null, new GeneralTab(varMap, btnMap), "General");
+        rcConfigPane.addTab("Network", null, new NetworkTab(varMap, btnMap), "Network");
+        this.cipherTab = new CipherTab(varMap, btnMap);
         rcConfigPane.addTab("Cipher", null, this.cipherTab, "Cipher");
         mainPane.addTab("Configuration", null, rcConfigPane, "Configuration");
         this.settingsTab = new SettingsTab(varMap);
@@ -412,93 +406,9 @@ public class MainWindowView extends JFrame implements IConsole {
         return this.settingsTab.varBase64RijndaelBytes;
     }
 
-    /**
-     * @return the button used to remove Rijndael key
-     */
-    public JButton getBtnRemoveRijndaelKey() {
-        return this.cipherTab.removeRijndaelKey;
-    }
-
-    /**
-     * @return the button used to remove the base64 rijndael key
-     */
-    public JButton getBtnRemoveBase64Rijndael() {
-        return this.cipherTab.removeBase64RijndaelKey;
-    }
-
-    /**
-     * @return the button used to generate random Rijndael key
-     */
-    public JButton getBtnGenerateRijndaelKey() {
-        return this.cipherTab.generateRijndaelKey;
-    }
-
-    /**
-     * @return the button used to generate random base64 rijndael key
-     */
-    public JButton getBtnGenerateBase64Rijndael() {
-        return this.cipherTab.generateBase64RijndaelKey;
-    }
-
-    /**
-     * @return the button used to generate random HMAC key
-     */
-    public JButton getBtnGenerateHmacKey() {
-        return this.cipherTab.generateHmacKey;
-    }
-
-    /**
-     * @return the button used to remove HMAC key
-     */
-    public JButton getBtnRemoveHmacKey() {
-        return this.cipherTab.removeHmacKey;
-    }
-
-    /**
-     * @return the button used to remove HMAC base64 key
-     */
-    public JButton getBtnRemoveBase64Hmac() {
-        return this.cipherTab.removeBase64HmacKey;
-    }
-
-    /**
-     * @return the button used to generate radom base64 HMAC key
-     */
-    public JButton getBtnGenerateBase64Hmac() {
-        return this.cipherTab.generateBase64HmacKey;
-    }
-
     @Override
     public void setTitle(String title) {
         super.setTitle(JFWKNOP_TITLE + title);
-    }
-
-    /**
-     * @return the button used to select the recipient GPG id
-     */
-    public JButton getBtnRecipientGpgId() {
-        return this.cipherTab.selectRecipientGpgId;
-    }
-
-    /**
-     * @return the button used to select the signer GPG id
-     */
-    public JButton getBtnSignerGpgId() {
-        return this.cipherTab.selectSignerGpgId;
-    }
-
-    /**
-     * @return the button used to browse for the GPG home directory
-     */
-    public JButton getBtnGpgHomedir() {
-        return this.cipherTab.browseforGpgHomedir;
-    }
-
-    /**
-     * @return the button used to encode the GPG passphrase to base64
-     */
-    public JButton getBtnEncodeGpgPassphrase() {
-        return this.cipherTab.btnGenerateBase64GpgPassphrase;
     }
 
     /**
@@ -527,5 +437,9 @@ public class MainWindowView extends JFrame implements IConsole {
 
     public JFwknopTextField getFwknopPeriod() {
         return this.consolePanel.varPeriod;
+    }
+    
+    public JButton getButton(EnumButton buttonId) {
+        return this.btnMap.get(buttonId);
     }
 }

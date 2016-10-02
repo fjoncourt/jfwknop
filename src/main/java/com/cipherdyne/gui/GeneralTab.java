@@ -24,6 +24,7 @@ import com.cipherdyne.utils.InternationalizationHelper;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 
@@ -33,12 +34,12 @@ import net.miginfocom.swing.MigLayout;
  */
 public class GeneralTab extends JPanel {
 
-    public GeneralTab(Map<EnumFwknopRcKey, IFwknopVariable> varMap) {
+    public GeneralTab(Map<EnumFwknopRcKey, IFwknopVariable> varMap, Map<EnumButton, JButton> btnMap) {
         super(new MigLayout("fill", "[left][center][right]", ""));
-        initialize(varMap);
+        initializeVariables(varMap);
     }
 
-    private void initialize(Map<EnumFwknopRcKey, IFwknopVariable> varMap) {
+    private void initializeVariables(Map<EnumFwknopRcKey, IFwknopVariable> varMap) {
 
         List<EnumFwknopRcKey> list = Arrays.asList(
             EnumFwknopRcKey.ALLOW_IP,

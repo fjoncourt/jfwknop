@@ -17,6 +17,7 @@
  */
 package com.cipherdyne.jfwknop;
 
+import com.cipherdyne.gui.EnumButton;
 import com.cipherdyne.utils.InternationalizationHelper;
 import com.cipherdyne.gui.components.JFwknopComboBox;
 import com.cipherdyne.model.RcFileModel;
@@ -139,63 +140,63 @@ public class MainWindowController {
         });
 
         // Add action listener to generate/remove rijndael key
-        this.view.getBtnGenerateRijndaelKey().addActionListener((ActionEvent e) -> {
+        this.view.getButton(EnumButton.CIPHER_GENERATE_RIJNDAEL_KEY).addActionListener((ActionEvent e) -> {
             MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY).setText(
                 MainWindowController.this.keyModel.getRandomRijndaelKey());
         });
 
-        this.view.getBtnRemoveRijndaelKey().addActionListener((ActionEvent e) -> {
+        this.view.getButton(EnumButton.CIPHER_REMOVE_RIJNDAEL_KEY).addActionListener((ActionEvent e) -> {
             MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY).setDefaultValue();
         });
 
         // Add action listener to generate/remove rijndael base64 key
-        this.view.getBtnGenerateBase64Rijndael().addActionListener((ActionEvent e) -> {
+        this.view.getButton(EnumButton.CIPHER_GENERATE_BASE64_RIJNDAEL_KEY).addActionListener((ActionEvent e) -> {
             MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY_BASE64).setText(
                 MainWindowController.this.keyModel.getRandomBase64Rijndael());
         });
 
-        this.view.getBtnRemoveBase64Rijndael().addActionListener((ActionEvent e) -> {
+        this.view.getButton(EnumButton.CIPHER_REMOVE_BASE64_RIJNDAEL_KEY).addActionListener((ActionEvent e) -> {
             ((IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY_BASE64)).setDefaultValue();
         });
 
         // Add action listener to generate/remove rijndael key
-        this.view.getBtnGenerateHmacKey().addActionListener((ActionEvent e) -> {
+        this.view.getButton(EnumButton.CIPHER_GENERATE_HMAC_KEY).addActionListener((ActionEvent e) -> {
             MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY).setText(
                 MainWindowController.this.keyModel.getRandomHmacKey());
             MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("Y");
         });
 
-        this.view.getBtnRemoveHmacKey().addActionListener((ActionEvent e) -> {
+        this.view.getButton(EnumButton.CIPHER_REMOVE_HMAC_KEY).addActionListener((ActionEvent e) -> {
             MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY).setDefaultValue();
             MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("N");
         });
 
         // Add action listener to generate/remove HMAC base64 key
-        this.view.getBtnGenerateBase64Hmac().addActionListener((ActionEvent e) -> {
+        this.view.getButton(EnumButton.CIPHER_GENERATE_BASE64_HMAC_KEY).addActionListener((ActionEvent e) -> {
             MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY_BASE64).setText(
                 MainWindowController.this.keyModel.getRandomBase64Hmac());
             MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("Y");
         });
 
-        this.view.getBtnRemoveBase64Hmac().addActionListener((ActionEvent e) -> {
+        this.view.getButton(EnumButton.CIPHER_REMOVE_BASE64_HMAC_KEY).addActionListener((ActionEvent e) -> {
             MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.HMAC_KEY_BASE64).setDefaultValue();
             MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.USE_HMAC).setText("N");
         });
 
         // Add action listener to select a GPG key and its home directory
-        this.view.getBtnRecipientGpgId().addActionListener((ActionEvent e) -> {
+        this.view.getButton(EnumButton.CIPHER_SELECT_RECIPIENT_GPG_ID).addActionListener((ActionEvent e) -> {
             javax.swing.SwingUtilities.invokeLater(() -> new GpgController(MainWindowController.this.view,
                 EnumFwknopRcKey.GPG_RECIPIENT,
                 MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).getText()));
         });
 
-        this.view.getBtnSignerGpgId().addActionListener((ActionEvent e) -> {
+        this.view.getButton(EnumButton.CIPHER_SELECT_SIGNER_GPG_ID).addActionListener((ActionEvent e) -> {
             javax.swing.SwingUtilities.invokeLater(() -> new GpgController(MainWindowController.this.view,
                 EnumFwknopRcKey.GPG_SIGNER,
                 MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).getText()));
         });
 
-        this.view.getBtnGpgHomedir().addActionListener((ActionEvent e) -> {
+        this.view.getButton(EnumButton.CIPHER_BROWSE_GPG_HOMEDIR).addActionListener((ActionEvent e) -> {
             final JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             fileChooser.setFileHidingEnabled(false);
@@ -206,7 +207,7 @@ public class MainWindowController {
             }
         });
 
-        this.view.getBtnEncodeGpgPassphrase().addActionListener((ActionEvent e) -> {
+        this.view.getButton(EnumButton.CIPHER_GENERATE_BASE64_GPG).addActionListener((ActionEvent e) -> {
             IFwknopVariable gpgSigningPw = (IFwknopVariable) MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.GPG_SIGNING_PW);
             if (gpgSigningPw.isDefault()) {
                 JOptionPane.showMessageDialog(MainWindowController.this.view,

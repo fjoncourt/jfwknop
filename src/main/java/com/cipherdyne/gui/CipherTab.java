@@ -33,6 +33,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public class CipherTab extends JPanel {
 
+    /*
     public JButton generateRijndaelKey;
     public JButton removeRijndaelKey;
     public JButton generateBase64RijndaelKey;
@@ -46,17 +47,69 @@ public class CipherTab extends JPanel {
 
     public JButton selectSignerGpgId;
     public JButton selectRecipientGpgId;
-    public JButton browseforGpgHomedir;
-
-    public CipherTab(Map<EnumFwknopRcKey, IFwknopVariable> varMap) {
+    public JButton browseforGpgHomedir;*/
+    public CipherTab(Map<EnumFwknopRcKey, IFwknopVariable> varMap, Map<EnumButton, JButton> btnMap) {
         super(new MigLayout("fill", "[left][center][right]", ""));
-        initialize(varMap);
+        createComponents(varMap, btnMap);
+        initialize(varMap, btnMap);
     }
 
-    private void initialize(Map<EnumFwknopRcKey, IFwknopVariable> varMap) {
-
+    private void createComponents(Map<EnumFwknopRcKey, IFwknopVariable> varMap, Map<EnumButton, JButton> btnMap) {
         ImageIcon plusImg = new ImageIcon(this.getClass().getResource("/plus16.png"));
         ImageIcon removeImg = new ImageIcon(this.getClass().getResource("/remove16.png"));
+        ImageIcon encodeImg = new ImageIcon(this.getClass().getResource("/encode16.png"));
+        ImageIcon browseImg = new ImageIcon(this.getClass().getResource("/browse16.png"));
+
+        JButton generateRijndaelKey = new JButton(plusImg);
+        generateRijndaelKey.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.key"));
+        btnMap.put(EnumButton.CIPHER_GENERATE_RIJNDAEL_KEY, generateRijndaelKey);
+
+        JButton removeRijndaelKey = new JButton(removeImg);
+        removeRijndaelKey.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.key"));
+        btnMap.put(EnumButton.CIPHER_REMOVE_RIJNDAEL_KEY, removeRijndaelKey);
+
+        JButton generateBase64RijndaelKey = new JButton(plusImg);
+        generateBase64RijndaelKey.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.base64.key"));
+        btnMap.put(EnumButton.CIPHER_GENERATE_BASE64_RIJNDAEL_KEY, generateBase64RijndaelKey);
+
+        JButton removeBase64RijndaelKey = new JButton(removeImg);
+        removeBase64RijndaelKey.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.base64.key"));
+        btnMap.put(EnumButton.CIPHER_REMOVE_BASE64_RIJNDAEL_KEY, removeBase64RijndaelKey);
+
+        JButton btnGenerateBase64GpgPassphrase = new JButton(encodeImg);
+        btnGenerateBase64GpgPassphrase.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.base64.passphrase"));
+        btnMap.put(EnumButton.CIPHER_GENERATE_BASE64_GPG, btnGenerateBase64GpgPassphrase);
+
+        JButton selectSignerGpgId = new JButton(browseImg);
+        selectSignerGpgId.setToolTipText(InternationalizationHelper.getMessage("i18n.browse"));
+        btnMap.put(EnumButton.CIPHER_SELECT_SIGNER_GPG_ID, selectSignerGpgId);
+
+        JButton selectRecipientGpgId = new JButton(browseImg);
+        selectRecipientGpgId.setToolTipText(InternationalizationHelper.getMessage("i18n.browse"));
+        btnMap.put(EnumButton.CIPHER_SELECT_RECIPIENT_GPG_ID, selectRecipientGpgId);
+
+        JButton browseforGpgHomedir = new JButton(browseImg);
+        browseforGpgHomedir.setToolTipText(InternationalizationHelper.getMessage("i18n.browse"));
+        btnMap.put(EnumButton.CIPHER_BROWSE_GPG_HOMEDIR, browseforGpgHomedir);
+
+        JButton generateHmacKey = new JButton(plusImg);
+        generateHmacKey.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.key"));
+        btnMap.put(EnumButton.CIPHER_GENERATE_HMAC_KEY, generateHmacKey);
+        
+        JButton removeHmacKey = new JButton(removeImg);
+        removeHmacKey.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.key"));    
+        btnMap.put(EnumButton.CIPHER_REMOVE_HMAC_KEY, removeHmacKey);
+        
+        JButton generateBase64HmacKey = new JButton(plusImg);
+        generateBase64HmacKey.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.base64.key"));
+        btnMap.put(EnumButton.CIPHER_GENERATE_BASE64_HMAC_KEY, generateBase64HmacKey);
+        
+        JButton removeBase64HmacKey = new JButton(removeImg);
+        removeBase64HmacKey.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.base64.key"));       
+        btnMap.put(EnumButton.CIPHER_REMOVE_BASE64_HMAC_KEY, removeBase64HmacKey);
+    }
+
+    private void initialize(Map<EnumFwknopRcKey, IFwknopVariable> varMap, Map<EnumButton, JButton> btnMap) {
 
         /**
          * Rijndael panel
@@ -67,21 +120,13 @@ public class CipherTab extends JPanel {
             EnumFwknopRcKey.KEY_BASE64));
 
         JPanel rijndaelActionPanel = new JPanel(new MigLayout("insets 0, flowx, gap 0", "", ""));
-        this.generateRijndaelKey = new JButton(plusImg);
-        this.generateRijndaelKey.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.key"));
-        rijndaelActionPanel.add(this.generateRijndaelKey);
-        this.removeRijndaelKey = new JButton(removeImg);
-        this.removeRijndaelKey.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.key"));
-        rijndaelActionPanel.add(this.removeRijndaelKey);
+        rijndaelActionPanel.add(btnMap.get(EnumButton.CIPHER_GENERATE_RIJNDAEL_KEY));
+        rijndaelActionPanel.add(btnMap.get(EnumButton.CIPHER_REMOVE_RIJNDAEL_KEY));
         rijndaelPanel.add(rijndaelActionPanel, "cell 2 0");
 
         JPanel rijndaelBase64ActionPanel = new JPanel(new MigLayout("insets 0, flowx, gap 0", "", ""));
-        this.generateBase64RijndaelKey = new JButton(plusImg);
-        this.generateBase64RijndaelKey.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.base64.key"));
-        rijndaelBase64ActionPanel.add(this.generateBase64RijndaelKey);
-        this.removeBase64RijndaelKey = new JButton(removeImg);
-        this.removeBase64RijndaelKey.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.base64.key"));
-        rijndaelBase64ActionPanel.add(this.removeBase64RijndaelKey);
+        rijndaelBase64ActionPanel.add(btnMap.get(EnumButton.CIPHER_GENERATE_BASE64_RIJNDAEL_KEY));
+        rijndaelBase64ActionPanel.add(btnMap.get(EnumButton.CIPHER_REMOVE_BASE64_RIJNDAEL_KEY));
         rijndaelPanel.add(rijndaelBase64ActionPanel, "cell 2 1, aligny top");
 
         this.add(rijndaelPanel, "growy, aligny top");
@@ -89,9 +134,6 @@ public class CipherTab extends JPanel {
         /**
          * GPG panel
          */
-        ImageIcon encodeImg = new ImageIcon(this.getClass().getResource("/encode16.png"));
-        ImageIcon browseImg = new ImageIcon(this.getClass().getResource("/browse16.png"));
-
         JPanel gpgPanel = (JPanel) FwknopFactory.createPanel(new MigLayout("insets 1, wrap 2, gapy 1!", "[100]0![180]0![16]", ""),
             InternationalizationHelper.getMessage("i18n.gpg"), varMap, Arrays.asList(
             EnumFwknopRcKey.USE_GPG,
@@ -102,18 +144,10 @@ public class CipherTab extends JPanel {
             EnumFwknopRcKey.GPG_RECIPIENT,
             EnumFwknopRcKey.GPG_HOMEDIR));
         this.add(gpgPanel, "growy, aligny top");
-        this.btnGenerateBase64GpgPassphrase = new JButton(encodeImg);
-        this.btnGenerateBase64GpgPassphrase.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.base64.passphrase"));
-        gpgPanel.add(this.btnGenerateBase64GpgPassphrase, "cell 2 3, top");
-        this.selectSignerGpgId = new JButton(browseImg);
-        this.selectSignerGpgId.setToolTipText(InternationalizationHelper.getMessage("i18n.browse"));
-        gpgPanel.add(this.selectSignerGpgId, "cell 2 4");
-        this.selectRecipientGpgId = new JButton(browseImg);
-        this.selectRecipientGpgId.setToolTipText(InternationalizationHelper.getMessage("i18n.browse"));
-        gpgPanel.add(this.selectRecipientGpgId, "cell 2 5");
-        this.browseforGpgHomedir = new JButton(browseImg);
-        this.browseforGpgHomedir.setToolTipText(InternationalizationHelper.getMessage("i18n.browse"));
-        gpgPanel.add(this.browseforGpgHomedir, "cell 2 6");
+        gpgPanel.add(btnMap.get(EnumButton.CIPHER_GENERATE_BASE64_GPG), "cell 2 3, top");
+        gpgPanel.add(btnMap.get(EnumButton.CIPHER_SELECT_SIGNER_GPG_ID), "cell 2 4");
+        gpgPanel.add(btnMap.get(EnumButton.CIPHER_SELECT_RECIPIENT_GPG_ID), "cell 2 5");
+        gpgPanel.add(btnMap.get(EnumButton.CIPHER_BROWSE_GPG_HOMEDIR), "cell 2 6");
 
         /**
          * Hmac panel
@@ -126,21 +160,13 @@ public class CipherTab extends JPanel {
             EnumFwknopRcKey.HMAC_DIGEST_TYPE));
 
         JPanel hmacActionPanel = new JPanel(new MigLayout("insets 0, flowx, gap 0", "", ""));
-        this.generateHmacKey = new JButton(plusImg);
-        this.generateHmacKey.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.key"));
-        hmacActionPanel.add(this.generateHmacKey);
-        this.removeHmacKey = new JButton(removeImg);
-        this.removeHmacKey.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.key"));
-        hmacActionPanel.add(this.removeHmacKey);
+        hmacActionPanel.add(btnMap.get(EnumButton.CIPHER_GENERATE_HMAC_KEY));
+        hmacActionPanel.add(btnMap.get(EnumButton.CIPHER_REMOVE_HMAC_KEY));
         hmacPanel.add(hmacActionPanel, "cell 2 1");
 
         JPanel hmacBase64ActionPanel = new JPanel(new MigLayout("insets 0, flowx, gap 0", "", ""));
-        this.generateBase64HmacKey = new JButton(plusImg);
-        this.generateBase64HmacKey.setToolTipText(InternationalizationHelper.getMessage("i18n.generate.base64.key"));
-        hmacBase64ActionPanel.add(this.generateBase64HmacKey);
-        this.removeBase64HmacKey = new JButton(removeImg);
-        this.removeBase64HmacKey.setToolTipText(InternationalizationHelper.getMessage("i18n.remove.base64.key"));
-        hmacBase64ActionPanel.add(this.removeBase64HmacKey);
+        hmacBase64ActionPanel.add(btnMap.get(EnumButton.CIPHER_GENERATE_BASE64_HMAC_KEY));
+        hmacBase64ActionPanel.add(btnMap.get(EnumButton.CIPHER_REMOVE_BASE64_HMAC_KEY));
         hmacPanel.add(hmacBase64ActionPanel, "cell 2 2, aligny top");
 
         this.add(hmacPanel, "growy, aligny top");

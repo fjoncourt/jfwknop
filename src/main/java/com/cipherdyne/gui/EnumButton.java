@@ -15,33 +15,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.cipherdyne.gui.wizard;
-
-import com.cipherdyne.jfwknop.IFwknopVariable;
-import java.util.HashMap;
-import java.util.Map;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
+package com.cipherdyne.gui;
 
 /**
  *
  * @author Franck Joncourt <franck.joncourt@gmail.com>
  */
-class DefaultView<A,B> extends JDialog {
-
-    protected final Map<A, IFwknopVariable> varMap = new HashMap<>();
-    protected final Map<B, JButton> btnMap = new HashMap<>();
-
-    public DefaultView(JFrame frame, String title) {
-        super(frame, title, true);
-    }
-    
-    public IFwknopVariable getVariable(A varId) {
-        return this.varMap.get(varId);
-    }
-    
-    public JButton getButton(B btnId) {
-        return this.btnMap.get(btnId);
-    }
+public enum EnumButton {
+    CIPHER_GENERATE_RIJNDAEL_KEY, CIPHER_REMOVE_RIJNDAEL_KEY, CIPHER_GENERATE_BASE64_RIJNDAEL_KEY, CIPHER_REMOVE_BASE64_RIJNDAEL_KEY, CIPHER_GENERATE_BASE64_GPG, CIPHER_SELECT_SIGNER_GPG_ID, CIPHER_SELECT_RECIPIENT_GPG_ID, CIPHER_BROWSE_GPG_HOMEDIR, CIPHER_GENERATE_HMAC_KEY, CIPHER_REMOVE_HMAC_KEY, CIPHER_GENERATE_BASE64_HMAC_KEY, CIPHER_REMOVE_BASE64_HMAC_KEY;
 }

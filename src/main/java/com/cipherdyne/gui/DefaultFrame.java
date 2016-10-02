@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2016 Franck Joncourt <franck.joncourt@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -18,35 +18,29 @@
 package com.cipherdyne.gui;
 
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
-import com.cipherdyne.jfwknop.FwknopFactory;
 import com.cipherdyne.jfwknop.IFwknopVariable;
-import com.cipherdyne.utils.InternationalizationHelper;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JButton;
-import javax.swing.JPanel;
-import net.miginfocom.swing.MigLayout;
+import javax.swing.JFrame;
+import javax.swing.JMenuItem;
 
 /**
  *
- * @author franck
+ * @author Franck Joncourt <franck.joncourt@gmail.com>
  */
-public class NetworkTab extends JPanel {
+class DefaultFrame extends JFrame {
 
-    public NetworkTab(Map<EnumFwknopRcKey, IFwknopVariable> varMap, Map<EnumButton, JButton> btnMap) {
-        super(new MigLayout("fill", "", ""));
-        initializeVariables(varMap);
-    }
+    protected final Map<EnumFwknopRcKey, IFwknopVariable> varMap;
+    protected final List<JMenuItem> varRecentRcFiles;
+    protected final Map<EnumButton, JButton> btnMap;
 
-    private void initializeVariables(Map<EnumFwknopRcKey, IFwknopVariable> varMap) {
-        List<EnumFwknopRcKey> list = Arrays.asList(
-            EnumFwknopRcKey.NAT_ACCESS,
-            EnumFwknopRcKey.NAT_LOCAL,
-            EnumFwknopRcKey.NAT_PORT,
-            EnumFwknopRcKey.NAT_RAND_PORT);
-
-        this.add(FwknopFactory.createPanel(new MigLayout("insets 1, wrap 2, gapy 1!", "[120]0![200]", ""),
-            InternationalizationHelper.getMessage("i18n.nat"), varMap, list), "growy, aligny top");
+    public DefaultFrame(String title) {
+        super(title);
+        varMap = new HashMap<>();
+        varRecentRcFiles = new ArrayList<>();
+        btnMap = new HashMap<>();
     }
 }
