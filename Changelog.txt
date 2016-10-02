@@ -1,11 +1,13 @@
-JFwknop - 1.1.0 - UNRELEASED
+JFwknop - 1.1.0 - 02/10/2016
 
     [Franck Joncourt]
     * Enabled back GPG key creation.
     * Closed #1: Fwknop configuration combo box not updated when loading file
-    * Closes #4: Add a wizard to provide an easy way to setup a baisc
-                 configuration
-    * Added tooltips
+    * Closes #3: Current config is not saved when play/execute button is hit
+    * Closes #4: Add a wizard to provide an easy way to setup a basic configuration
+    * Closes #9: Add date and time to console logs
+    * Closes #11: HMAC_DIGEST_TYPE not set in server access.conf file
+    * Added tooltips to help user understand the meaning of some variables
 
 JFwknop - 1.0.0 - 06/03/2016
 
