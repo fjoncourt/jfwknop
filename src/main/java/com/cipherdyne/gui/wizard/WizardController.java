@@ -18,14 +18,12 @@
 package com.cipherdyne.gui.wizard;
 
 import com.cipherdyne.gui.MainWindowView;
-import com.cipherdyne.jfwknop.EnumFwknopConfigKey;
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
 import com.cipherdyne.jfwknop.MainWindowController;
-import com.cipherdyne.model.FwknopClientModel;
 import com.cipherdyne.model.RcFileModel;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.JFileChooser;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -71,8 +69,18 @@ public class WizardController {
             // Create an empty context
             Map<EnumFwknopRcKey, String> context = new HashMap<EnumFwknopRcKey, String>();
 
+            // Handle default HMAC values
+            String useHmac = "N";
+            String hmacKey = this.view.getVariable(EnumWizardVariable.HMAC).getText();
+
+            if (!StringUtils.EMPTY.equals(hmacKey)) {
+                useHmac = "Y";
+            }
+
             // Add new ones from user input
-            context.put(EnumFwknopRcKey.KEY, this.view.getVariable(EnumWizardVariable.KEY).getText());
+            context.put(EnumFwknopRcKey.KEY, this.view.getVariable(EnumWizardVariable.KEY).getText());            
+            context.put(EnumFwknopRcKey.USE_HMAC, useHmac);
+            context.put(EnumFwknopRcKey.HMAC_KEY, hmacKey);
             context.put(EnumFwknopRcKey.SPA_SERVER, this.view.getVariable(EnumWizardVariable.REMOTE_HOST).getText());
             context.put(EnumFwknopRcKey.ACCESS, this.view.getVariable(EnumWizardVariable.ACCESS).getText());
 

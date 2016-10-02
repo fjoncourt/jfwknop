@@ -22,5 +22,5 @@ package com.cipherdyne.gui.wizard;
  * @author Franck Joncourt <franck.joncourt@gmail.com>
  */
 public enum EnumWizardVariable {
-    KEY, REMOTE_HOST, ACCESS;
+    KEY, HMAC, REMOTE_HOST, ACCESS;
 }

@@ -19,26 +19,34 @@ package com.cipherdyne.gui.wizard;
 
 import com.cipherdyne.gui.components.JFwknopTextField;
 import com.cipherdyne.utils.InternationalizationHelper;
+import java.awt.Color;
 import java.awt.Component;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import net.miginfocom.swing.MigLayout;
 
 /**
+ * Wizard view that displays basic Fwknop variables to set up in order to quickly run and SPA packet
  *
  * @author Franck Joncourt <franck.joncourt@gmail.com>
  */
 public class WizardView extends DefaultView<EnumWizardVariable, EnumWizardButton> {
 
+    /**
+     * Wizard view
+     *
+     * @param frame parent frame to inherit from
+     */
     public WizardView(JFrame frame) {
         super(frame, InternationalizationHelper.getMessage("i18n.wizard.title"));
 
         // Create variable components and add them to the map
         this.varMap.put(EnumWizardVariable.KEY, new JFwknopTextField(""));
+        this.varMap.put(EnumWizardVariable.HMAC, new JFwknopTextField(""));
         this.varMap.put(EnumWizardVariable.REMOTE_HOST, new JFwknopTextField(""));
         this.varMap.put(EnumWizardVariable.ACCESS, new JFwknopTextField("tcp/22"));
 
@@ -53,11 +61,11 @@ public class WizardView extends DefaultView<EnumWizardVariable, EnumWizardButton
         imagePanel.add(wizardLabel);
 
         // Add components to the panel
-        this.setLayout(new MigLayout("insets 10, gapy 50, flowx", "", ""));
+        this.setLayout(new MigLayout("fill, insets 10, flowx", "[256]0![500!]", "[]"));
 
-        JPanel mainPanel = new JPanel(new MigLayout("insets 10, gapy 50, flowy", "", ""));
-        mainPanel.add(createVarPanel());
-        mainPanel.add(createButtonPanel());
+        JPanel mainPanel = new JPanel(new MigLayout("debug, flowy", "", ""));
+        mainPanel.add(createVarPanel(), "growx");
+        mainPanel.add(createButtonPanel(), "growx");
 
         this.add(imagePanel);
         this.add(mainPanel);
@@ -77,19 +85,18 @@ public class WizardView extends DefaultView<EnumWizardVariable, EnumWizardButton
      * @return the panel that contains the description and the variable
      */
     private JPanel createItem(String longDescription, EnumWizardVariable var) {
-        JPanel panel = new JPanel(new MigLayout("insets 0, gapy 1, flowy", "", ""));
+        JPanel panel = new JPanel(new MigLayout("insets 0, gapy 1, flowy, fillx", "", ""));
 
-        // Create a texte area rather than a label since the description can long and may need to be wrapped on several lines 
-        JTextArea longDescriptionArea = new JTextArea(2, 50);
-        longDescriptionArea.setText(longDescription);
-        longDescriptionArea.setWrapStyleWord(true);
-        longDescriptionArea.setLineWrap(true);
-        //longDescriptionArea.setOpaque(false);
-        longDescriptionArea.setEditable(false);
-        longDescriptionArea.setFocusable(false);
+        // Create a transparent text area rather than a label since the description can long and may need to be wrapped on several lines
+        JEditorPane editorPane = new JEditorPane();
+        editorPane.setEditable(false);
+        editorPane.setOpaque(false);
+        editorPane.setBackground(new Color(10, 10, 10, 0));
+        editorPane.setContentType("text/html");
+        editorPane.setText(longDescription);
 
         // Add object to the newly created panel
-        panel.add(longDescriptionArea);
+        panel.add(editorPane, "growx");
         panel.add((Component) this.varMap.get(var), "growx");
 
         return panel;
@@ -102,11 +109,12 @@ public class WizardView extends DefaultView<EnumWizardVariable, EnumWizardButton
      * @return the panel
      */
     private JPanel createVarPanel() {
-        JPanel varPanel = new JPanel(new MigLayout("insets 0, gapy 20, flowy", "", ""));
+        JPanel varPanel = new JPanel(new MigLayout("insets 0, gapy 10, flowy", "", ""));
 
-        varPanel.add(createItem(InternationalizationHelper.getMessage("i18n.wizard.key.description"), EnumWizardVariable.KEY));
-        varPanel.add(createItem(InternationalizationHelper.getMessage("i18n.wizard.remotehost.description"), EnumWizardVariable.REMOTE_HOST));
-        varPanel.add(createItem(InternationalizationHelper.getMessage("i18n.wizard.access.description"), EnumWizardVariable.ACCESS));
+        varPanel.add(createItem(InternationalizationHelper.getMessage("i18n.wizard.key.description"), EnumWizardVariable.KEY), "growx");
+        varPanel.add(createItem(InternationalizationHelper.getMessage("i18n.wizard.hmac.description"), EnumWizardVariable.HMAC), "growx");
+        varPanel.add(createItem(InternationalizationHelper.getMessage("i18n.wizard.remotehost.description"), EnumWizardVariable.REMOTE_HOST), "growx");
+        varPanel.add(createItem(InternationalizationHelper.getMessage("i18n.wizard.access.description"), EnumWizardVariable.ACCESS), "growx");
 
         return varPanel;
     }
@@ -117,9 +125,9 @@ public class WizardView extends DefaultView<EnumWizardVariable, EnumWizardButton
      * @return the panel
      */
     private JPanel createButtonPanel() {
-        JPanel btnPanel = new JPanel(new MigLayout("flowx", "", ""));
-        btnPanel.add(this.btnMap.get(EnumWizardButton.CANCEL));
-        btnPanel.add(this.btnMap.get(EnumWizardButton.CREATE));
+        JPanel btnPanel = new JPanel(new MigLayout("insets 0, fillx, flowx", "", ""));
+        btnPanel.add(this.btnMap.get(EnumWizardButton.CANCEL), "align left");
+        btnPanel.add(this.btnMap.get(EnumWizardButton.CREATE), "align right");
         return btnPanel;
     }
 }
