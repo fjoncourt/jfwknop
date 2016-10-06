@@ -161,6 +161,7 @@ public class MainWindowController {
         this.view.getButton(EnumButton.CIPHER_BROWSE_GPG_HOMEDIR).addActionListener((ActionEvent e) -> {
             final JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            fileChooser.setAcceptAllFileFilterUsed(false);
             fileChooser.setFileHidingEnabled(false);
             fileChooser.setDialogTitle(InternationalizationHelper.getMessage("i18n.browse"));
             final int result = fileChooser.showOpenDialog(null);

@@ -113,10 +113,10 @@ public class ConsolePanel extends JPanel {
         
         topPanel.add(btnPanel);
 
-        JPanel settingsPanel = new JPanel(new MigLayout("insets 0, gap 5, flowx", "", ""));
-        settingsPanel.add(new JFwknopLabel(InternationalizationHelper.getMessage("i18n.period")));
+        JPanel settingsPanel = new JPanel(new MigLayout("insets 0, gap 5, flowx", "[70]0![][][]", ""));
+        settingsPanel.add(new JFwknopLabel(InternationalizationHelper.getMessage("i18n.period")), "growx");
         this.varPeriod = new JFwknopTextField("30");
-        settingsPanel.add(this.varPeriod, "width 50");
+        settingsPanel.add(this.varPeriod);
         this.periodicExecution = new JFwknopCheckBox(false);
         this.periodicExecution.setToolTipText(InternationalizationHelper.getMessage("i18n.enable.periodic.knock"));
         settingsPanel.add(periodicExecution);

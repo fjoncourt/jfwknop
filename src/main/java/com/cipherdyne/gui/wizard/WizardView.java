@@ -61,9 +61,9 @@ public class WizardView extends DefaultDialog<EnumWizardVariable, EnumWizardButt
         imagePanel.add(wizardLabel);
 
         // Add components to the panel
-        this.setLayout(new MigLayout("fill, insets 10, flowx", "[256]0![500!]", "[]"));
+        this.setLayout(new MigLayout("fill, insets 10, flowx", "[256]0![500!]", "[500]"));
 
-        JPanel mainPanel = new JPanel(new MigLayout("debug, flowy", "", ""));
+        JPanel mainPanel = new JPanel(new MigLayout("flowy", "", ""));
         mainPanel.add(createVarPanel(), "growx");
         mainPanel.add(createButtonPanel(), "growx");
 
@@ -73,6 +73,7 @@ public class WizardView extends DefaultDialog<EnumWizardVariable, EnumWizardButt
         this.pack();
         
         this.setLocationRelativeTo(frame);
+        this.setResizable(false);
     }
 
     /**

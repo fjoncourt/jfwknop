@@ -38,7 +38,6 @@ public class JFwknopTextArea extends JTextArea implements IFwknopVariable {
         this.setWrapStyleWord(true);
         this.setText(val);
         this.defaultVal = val;
-        setBackground(new Color(255, 255, 153));
         this.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {

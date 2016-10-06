@@ -33,7 +33,6 @@ public class JFwknopTextField extends JTextField implements IFwknopVariable {
     public JFwknopTextField(final String val) {
         super(val);
         this.defaultVal = val;
-        setBackground(new Color(255, 255, 153));
         this.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {

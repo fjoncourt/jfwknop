@@ -49,8 +49,8 @@ public class IpView extends JDialog {
         intfTable = new JTable(new IpTableModel());
         intfTable.setFillsViewportHeight(true);
         intfTable.setAutoCreateRowSorter(true);
-        intfTable.getColumnModel().getColumn(IpTableModel.NETWORK_IFACE_COL_ID).setMaxWidth(80);
-        intfTable.getColumnModel().getColumn(IpTableModel.IP_ADDRESS_COL_ID).setMinWidth(140);
+        intfTable.getColumnModel().getColumn(IpTableModel.NETWORK_IFACE_COL_ID).setMinWidth(100);
+        intfTable.getColumnModel().getColumn(IpTableModel.NETWORK_IFACE_COL_ID).setMaxWidth(100);
 
         // Build the action buttons
         btnCancel = new JButton(InternationalizationHelper.getMessage("i18n.key.cancel"));
