@@ -1,3 +1,10 @@
+JFwknop - 1.2.0
+
+    [Franck Joncourt]
+    * The user can browse for the current IP used by the host in order to fill
+      in the ALLOW_IP field - Useful if you send SPA packet on a local network
+      and you have more than one network interface.
+
 JFwknop - 1.1.0 - 02/10/2016
 
     [Franck Joncourt]

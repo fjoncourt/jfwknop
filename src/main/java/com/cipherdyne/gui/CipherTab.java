@@ -29,7 +29,6 @@ import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * 
  * @author Franck Joncourt <franck.joncourt@gmail.com>
  */
 public class CipherTab extends JPanel {

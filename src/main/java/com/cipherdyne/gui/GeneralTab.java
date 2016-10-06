@@ -24,6 +24,7 @@ import com.cipherdyne.utils.InternationalizationHelper;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
@@ -36,12 +37,26 @@ public class GeneralTab extends JPanel {
 
     public GeneralTab(Map<EnumFwknopRcKey, IFwknopVariable> varMap, Map<EnumButton, JButton> btnMap) {
         super(new MigLayout("fill", "[left][center][right]", ""));
-        initializeVariables(varMap);
+        
+        // Create a button to browse for IP
+        ImageIcon browseImg = new ImageIcon(this.getClass().getResource("/browse16.png"));
+        JButton browseForIp = new JButton(browseImg);
+        browseForIp.setToolTipText(InternationalizationHelper.getMessage("i18n.browse"));
+        btnMap.put(EnumButton.GENERAL_BROWSE_FOR_IP, browseForIp);
+        
+        // Build UI
+        initializeVariables(varMap, btnMap);
     }
 
-    private void initializeVariables(Map<EnumFwknopRcKey, IFwknopVariable> varMap) {
+    private void initializeVariables(Map<EnumFwknopRcKey, IFwknopVariable> varMap, Map<EnumButton, JButton> btnMap) {
 
-        List<EnumFwknopRcKey> list = Arrays.asList(
+        List<EnumFwknopRcKey> list;
+
+        /**
+         * Client panel
+         */
+        JPanel clientPanel = (JPanel) FwknopFactory.createPanel(new MigLayout("insets 1, wrap 2, gapy 1!", "[150]0![200]0![16]", ""),
+            InternationalizationHelper.getMessage("i18n.spa.client"), varMap, Arrays.asList(
             EnumFwknopRcKey.ALLOW_IP,
             EnumFwknopRcKey.RESOLVE_IP_HTTPS,
             EnumFwknopRcKey.RESOLVE_HTTP_ONLY,
@@ -51,11 +66,13 @@ public class GeneralTab extends JPanel {
             EnumFwknopRcKey.RAND_PORT,
             EnumFwknopRcKey.SPA_SERVER_PROTO,
             EnumFwknopRcKey.SPOOF_USER,
-            EnumFwknopRcKey.SPOOF_SOURCE_IP);
+            EnumFwknopRcKey.SPOOF_SOURCE_IP));
+        clientPanel.add(btnMap.get(EnumButton.GENERAL_BROWSE_FOR_IP), "cell 2 0, top");
+        this.add(clientPanel, "growy, aligny top");
 
-        this.add(FwknopFactory.createPanel(new MigLayout("insets 1, wrap 2, gapy 1!", "[150]0![200]", ""),
-            InternationalizationHelper.getMessage("i18n.spa.client"), varMap, list), "growy, aligny top");
-
+        /**
+         * Server panel
+         */
         list = Arrays.asList(
             EnumFwknopRcKey.SPA_SERVER,
             EnumFwknopRcKey.SPA_SERVER_PORT,
@@ -64,6 +81,9 @@ public class GeneralTab extends JPanel {
         this.add(FwknopFactory.createPanel(new MigLayout("insets 1, wrap 2, gapy 1!", "[120]0![200]", ""),
             InternationalizationHelper.getMessage("i18n.spa.server"), varMap, list), "growy, aligny top");
 
+        /**
+         * Misc panel
+         */
         list = Arrays.asList(
             EnumFwknopRcKey.FW_TIMEOUT,
             EnumFwknopRcKey.TIME_OFFSET);

@@ -24,6 +24,7 @@ import com.cipherdyne.model.RcFileModel;
 import com.cipherdyne.model.FwknopClientModel;
 import com.cipherdyne.gui.gpg.GpgController;
 import com.cipherdyne.gui.MainWindowView;
+import com.cipherdyne.gui.ip.IpController;
 import com.cipherdyne.gui.ssh.SshController;
 import com.cipherdyne.gui.wizard.WizardController;
 import com.cipherdyne.model.KeyModel;
@@ -84,61 +85,22 @@ public class MainWindowController {
     }
 
     /**
-     * Set up action listeners for all buttons in the view
+     * Set up action listeners for buttons from the general tab
      */
-    private void populateBtn() {
-
-        // Add action listener to browse for another fwknop file path
-        this.view.getBtnBrowseforFwknop().addActionListener(e -> {
-            final JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Browse");
-            final int result = fileChooser.showOpenDialog(null);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                MainWindowController.this.view.setFwknopFilePath(fileChooser.getSelectedFile().getAbsolutePath());
-            }
+    private void populateGeneralTabButton() {
+        
+        // Add action listener to browse for an IP in order to configure the ALLOW_IP field
+        this.view.getButton(EnumButton.GENERAL_BROWSE_FOR_IP).addActionListener((ActionEvent e) -> {
+            javax.swing.SwingUtilities.invokeLater(() -> new IpController(MainWindowController.this.view,
+                EnumFwknopRcKey.ALLOW_IP));
         });
+    }
 
-        // Add action listener to run fwknop binary
-        this.view.getBtnExecute().addActionListener(e -> {
-            long period = 0;
-            boolean stopEnabled = false;
-
-            // Try to save the current settings before executing the fwknop client
-            if (save() == 0) {
-                updateFwknopModel();
-
-                if (MainWindowController.this.view.getPeriodicExecution().isSelected()) {
-                    period = Long.parseLong(MainWindowController.this.view.getFwknopPeriod().getText());
-                    stopEnabled = true;
-                }
-
-                MainWindowController.this.view.getBtnStop().setEnabled(stopEnabled);
-                MainWindowController.this.fwknopClientModel.start(period);
-            }
-        });
-
-        // Add action listener to clear the console
-        this.view.getBtnClearConsole().addActionListener(e -> {
-            MainWindowController.this.view.clearConsole();
-        });
-
-        // Add action listner to enable/disable verbose mode
-        this.view.getBtnFwknopVerbose().addActionListener((ActionEvent e) -> {
-            MainWindowController.this.view.getVarFwknopArgs().setVerbose(((JCheckBox) e.getSource()).isSelected());
-        });
-
-        // Add action listener to enable/disable test mode
-        this.view.getBtnFwknopTest().addActionListener((ActionEvent e) -> {
-            MainWindowController.this.view.getVarFwknopArgs().setTest(((JCheckBox) e.getSource()).isSelected());
-        });
-
-        // Add action listener to save fwknop settings
-        this.view.getBtnSaveFwknopSettings().addActionListener((ActionEvent e) -> {
-            save();
-            updateFwknopModel();
-            MainWindowController.this.fwknopClientModel.save();
-        });
-
+    /**
+     * Set up action listeners for buttons from the cipher tab
+     */
+    private void populateCipherTabButton() {
+        
         // Add action listener to generate/remove rijndael key
         this.view.getButton(EnumButton.CIPHER_GENERATE_RIJNDAEL_KEY).addActionListener((ActionEvent e) -> {
             MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY).setText(
@@ -219,6 +181,66 @@ public class MainWindowController {
                 gpgSigningPwBase64.setText(KeyModel.encodeToBase64(gpgSigningPw.getText().getBytes()));
             }
         });
+    }
+
+    /**
+     * Set up action listeners for all buttons in the view
+     */
+    private void populateBtn() {
+
+        // Add action listener to browse for another fwknop file path
+        this.view.getBtnBrowseforFwknop().addActionListener(e -> {
+            final JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Browse");
+            final int result = fileChooser.showOpenDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                MainWindowController.this.view.setFwknopFilePath(fileChooser.getSelectedFile().getAbsolutePath());
+            }
+        });
+
+        // Add action listener to run fwknop binary
+        this.view.getBtnExecute().addActionListener(e -> {
+            long period = 0;
+            boolean stopEnabled = false;
+
+            // Try to save the current settings before executing the fwknop client
+            if (save() == 0) {
+                updateFwknopModel();
+
+                if (MainWindowController.this.view.getPeriodicExecution().isSelected()) {
+                    period = Long.parseLong(MainWindowController.this.view.getFwknopPeriod().getText());
+                    stopEnabled = true;
+                }
+
+                MainWindowController.this.view.getBtnStop().setEnabled(stopEnabled);
+                MainWindowController.this.fwknopClientModel.start(period);
+            }
+        });
+
+        // Add action listener to clear the console
+        this.view.getBtnClearConsole().addActionListener(e -> {
+            MainWindowController.this.view.clearConsole();
+        });
+
+        // Add action listner to enable/disable verbose mode
+        this.view.getBtnFwknopVerbose().addActionListener((ActionEvent e) -> {
+            MainWindowController.this.view.getVarFwknopArgs().setVerbose(((JCheckBox) e.getSource()).isSelected());
+        });
+
+        // Add action listener to enable/disable test mode
+        this.view.getBtnFwknopTest().addActionListener((ActionEvent e) -> {
+            MainWindowController.this.view.getVarFwknopArgs().setTest(((JCheckBox) e.getSource()).isSelected());
+        });
+
+        // Add action listener to save fwknop settings
+        this.view.getBtnSaveFwknopSettings().addActionListener((ActionEvent e) -> {
+            save();
+            updateFwknopModel();
+            MainWindowController.this.fwknopClientModel.save();
+        });
+
+        populateGeneralTabButton();
+        populateCipherTabButton();
 
         // Add action listener to save key settings
         this.view.getBtnSaveKeySettings().addActionListener((ActionEvent e) -> {
