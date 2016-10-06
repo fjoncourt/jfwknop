@@ -1,0 +1,20 @@
+Files: src/main/resources/wizard*.png
+Copyright: Copyright © 2016 fancyicons.com - http://www.fancyicons.com
+License: Free for commercial use
+Comment:
+ It has been resized to fit my needs
+
+Files: src/main/resources/*
+Copyright: Copyright © 2016 Iconfinder - https://www.iconfinder.com
+License: Free for commercial use
+Comment:
+ All of the icons are stated as "Free for commercial use" according
+ to icon finder. An explanation of what it means can be found at the
+ following URL:
+ http://support.iconfinder.com/694-legal/2527-license-overview
+ .
+ Their size have been modified to fit my needs.
+
+Files: *
+Copyright: Copyright © 2016 Franck Joncourt <franck.joncourt@gmail.com>
+License: GPL2+
