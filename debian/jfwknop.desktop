@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=JFwknop
+GenericName=jfwknop
+Comment=send spa packets
+Exec=jfwknop
+Icon=jfwknop
+Terminal=false
+Type=Application
+Categories=Network;

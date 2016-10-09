@@ -1,14 +1,15 @@
 --- a/pom.xml
 +++ b/pom.xml
-@@ -36,7 +36,6 @@
+@@ -35,8 +35,6 @@
+                     <finalName>${project.artifactId}-${project.version}</finalName>
                      <archive>
                          <manifest>
-                             <addClasspath>true</addClasspath>
+-                            <addClasspath>true</addClasspath>
 -                            <classpathPrefix>lib/</classpathPrefix>
                              <mainClass>${project.build.mainClass}</mainClass>
                              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                          </manifest>
-@@ -44,20 +43,6 @@
+@@ -44,20 +42,6 @@
                  </configuration>
              </plugin>
                                                                  

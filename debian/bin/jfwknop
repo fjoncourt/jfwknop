@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Include the wrappers utility script
+. /usr/lib/java-wrappers/java-wrappers.sh
+
+# We need a java5 runtime
+find_java_runtime java8
+
+# Define our classpath
+find_jars /usr/share/jfwknop/jfwknop.jar
+find_jars log4j-1.2 miglayout-swing miglayout-core commons-lang3 bcpg bcprov jsch
+
+run_java com.cipherdyne.jfwknop.MainClass "$@"

@@ -15,7 +15,7 @@ Homepage: https://github.com/fjoncourt/jfwknop
 
 Package: jfwknop
 Architecture: all
-Depends: ${misc:Depends}, ${maven:Depends}
+Depends: java-wrappers, ${misc:Depends}, ${maven:Depends}
 Suggests: ${maven:OptionalDepends}
 Description: Fwknop User Interface
  Lightweight fwknop client graphical user interface

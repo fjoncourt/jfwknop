@@ -1,0 +1,2 @@
+debian/bin/jfwknop /usr/bin/
+debian/jfwknop.desktop /usr/share/applications/
