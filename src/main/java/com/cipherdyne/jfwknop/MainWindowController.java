@@ -85,6 +85,13 @@ public class MainWindowController {
     }
 
     /**
+     * @return the key model that contains key settings
+     */
+    public KeyModel getKeyModel() {
+        return this.keyModel;
+    }
+    
+    /**
      * Set up action listeners for buttons from the general tab
      */
     private void populateGeneralTabButton() {

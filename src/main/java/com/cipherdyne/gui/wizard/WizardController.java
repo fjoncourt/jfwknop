@@ -55,6 +55,16 @@ public class WizardController {
 
     private void populateBtn() {
 
+        // Generate a random rijndael key
+        this.view.getButton(EnumWizardButton.GENERATE_RIJNDAEL_KEY).addActionListener(e -> {
+            this.view.varMap.get(EnumWizardVariable.KEY).setText(parentController.getKeyModel().getRandomRijndaelKey());
+        });        
+        
+        // Generate a random HMAC key
+        this.view.getButton(EnumWizardButton.GENERATE_HMAC_KEY).addActionListener(e -> {
+            this.view.varMap.get(EnumWizardVariable.HMAC).setText(parentController.getKeyModel().getRandomHmacKey());
+        });        
+        
         // When the user cancel the easy setup, we close the wizard window and go back to the main JFwknop view
         this.view.getButton(EnumWizardButton.CANCEL).addActionListener(e -> {
             this.view.dispose();

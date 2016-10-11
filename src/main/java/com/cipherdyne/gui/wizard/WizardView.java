@@ -51,14 +51,18 @@ public class WizardView extends DefaultDialog<EnumWizardVariable, EnumWizardButt
         this.varMap.put(EnumWizardVariable.ACCESS, new JFwknopTextField("tcp/22"));
 
         // Create button components and add them to the map
+        this.btnMap.put(EnumWizardButton.GENERATE_RIJNDAEL_KEY, new JButton(InternationalizationHelper.getMessage("i18n.wizard.generate.rijndael.key")));
+        this.btnMap.put(EnumWizardButton.GENERATE_HMAC_KEY, new JButton(InternationalizationHelper.getMessage("i18n.wizard.generate.hmac.key")));
         this.btnMap.put(EnumWizardButton.CANCEL, new JButton(InternationalizationHelper.getMessage("i18n.wizard.cancel")));
         this.btnMap.put(EnumWizardButton.CREATE, new JButton(InternationalizationHelper.getMessage("i18n.wizard.create")));
 
         // Create the wizard picture to be added on the view
-        JPanel imagePanel = new JPanel();
+        JPanel imagePanel = new JPanel(new MigLayout("flowy", "", ""));
         JLabel wizardLabel = new JLabel();
         wizardLabel.setIcon(new ImageIcon(this.getClass().getResource("/wizard256.png")));
         imagePanel.add(wizardLabel);
+        imagePanel.add(this.btnMap.get(EnumWizardButton.GENERATE_RIJNDAEL_KEY), "growx");
+        imagePanel.add(this.btnMap.get(EnumWizardButton.GENERATE_HMAC_KEY), "growx");
 
         // Add components to the panel
         this.setLayout(new MigLayout("fill, insets 10, flowx", "[256]0![500!]", "[500]"));

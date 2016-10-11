@@ -22,5 +22,5 @@ package com.cipherdyne.gui.wizard;
  * @author Franck Joncourt <franck.joncourt@gmail.com>
  */
 public enum EnumWizardButton {
-    CANCEL, CREATE;
+    CANCEL, CREATE, GENERATE_RIJNDAEL_KEY, GENERATE_HMAC_KEY;
 }

@@ -5,6 +5,7 @@ JFwknop - 1.2.0
       in the ALLOW_IP field - Useful if you send SPA packets on a local network
       and you have more than one network interface.
     * Change Look and Feel and use WebLaf - Closes #12
+    * Wizard - Add random key generation feature - Closes #15
 
 JFwknop - 1.1.0 - 02/10/2016
 
