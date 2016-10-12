@@ -93,8 +93,9 @@ public class WizardController {
             context.put(EnumFwknopRcKey.HMAC_KEY, hmacKey);
             context.put(EnumFwknopRcKey.SPA_SERVER, this.view.getVariable(EnumWizardVariable.REMOTE_HOST).getText());
             context.put(EnumFwknopRcKey.ACCESS, this.view.getVariable(EnumWizardVariable.ACCESS).getText());
+            context.put(EnumFwknopRcKey.ALLOW_IP, "resolve");
 
-            // Updazte context and refresh all listeners
+            // Update context and refresh all listeners
             rcFileModel.setContext(context);
             rcFileModel.updateListeners();
 
