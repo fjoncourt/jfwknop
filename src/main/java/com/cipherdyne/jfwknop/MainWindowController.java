@@ -77,11 +77,21 @@ public class MainWindowController {
         // Initialize the key model from the configuration
         this.keyModel = new KeyModel(this.view);
 
+        // Setup action listeners
         populateMenuBar();
         populateBtn();
 
-        this.view.display();
+        // Try to open ~/.fwknoprc
+        try {
+            String fwknoprc = System.getProperty("user.home") + System.getProperty("file.separator") + ".fwknoprc";
+            this.rcFileModel.loadRcFile(fwknoprc);
+            updateNewRcFile(fwknoprc);
+            updateConfigurationList();
+        } catch (IOException ex) {
+            // Nothing to do - The file does not exist
+        }
 
+        this.view.display();
     }
 
     /**
@@ -90,12 +100,12 @@ public class MainWindowController {
     public KeyModel getKeyModel() {
         return this.keyModel;
     }
-    
+
     /**
      * Set up action listeners for buttons from the general tab
      */
     private void populateGeneralTabButton() {
-        
+
         // Add action listener to browse for an IP in order to configure the ALLOW_IP field
         this.view.getButton(EnumButton.GENERAL_BROWSE_FOR_IP).addActionListener((ActionEvent e) -> {
             javax.swing.SwingUtilities.invokeLater(() -> new IpController(MainWindowController.this.view,
@@ -107,7 +117,7 @@ public class MainWindowController {
      * Set up action listeners for buttons from the cipher tab
      */
     private void populateCipherTabButton() {
-        
+
         // Add action listener to generate/remove rijndael key
         this.view.getButton(EnumButton.CIPHER_GENERATE_RIJNDAEL_KEY).addActionListener((ActionEvent e) -> {
             MainWindowController.this.view.getVariables().get(EnumFwknopRcKey.KEY).setText(
@@ -192,18 +202,13 @@ public class MainWindowController {
     }
 
     /**
-     * Set up action listeners for all buttons in the view
+     * Set up action listeners for buttons from console panel
      */
-    private void populateBtn() {
+    private void populateConsoleBtn() {
 
-        // Add action listener to browse for another fwknop file path
-        this.view.getBtnBrowseforFwknop().addActionListener(e -> {
-            final JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Browse");
-            final int result = fileChooser.showOpenDialog(null);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                MainWindowController.this.view.setFwknopFilePath(fileChooser.getSelectedFile().getAbsolutePath());
-            }
+        // Add action listener to clear the console
+        this.view.getBtnClearConsole().addActionListener(e -> {
+            MainWindowController.this.view.clearConsole();
         });
 
         // Add action listener to run fwknop binary
@@ -225,12 +230,40 @@ public class MainWindowController {
             }
         });
 
-        // Add action listener to clear the console
-        this.view.getBtnClearConsole().addActionListener(e -> {
-            MainWindowController.this.view.clearConsole();
+        this.view.getCbConfigList().addActionListener((ActionEvent e) -> {
+            String filename = ((JFwknopComboBox) e.getSource()).getText();
+            if (filename != null) {
+                try {
+                    MainWindowController.this.rcFileModel.loadRcFile(filename);
+                    updateNewRcFile(filename);
+                } catch (IOException ex) {
+                    MainWindowController.LOGGER.error("Unable to load rc file : " + filename);
+                }
+            }
         });
 
-        // Add action listner to enable/disable verbose mode
+        this.view.getBtnStop().addActionListener((ActionEvent e) -> {
+            MainWindowController.this.fwknopClientModel.stop();
+            MainWindowController.this.view.getBtnStop().setEnabled(false);
+        });
+    }
+
+    /**
+     * Set up action listeners for all buttons in the view
+     */
+    private void populateBtn() {
+
+        // Add action listener to browse for another fwknop file path
+        this.view.getBtnBrowseforFwknop().addActionListener(e -> {
+            final JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Browse");
+            final int result = fileChooser.showOpenDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                MainWindowController.this.view.setFwknopFilePath(fileChooser.getSelectedFile().getAbsolutePath());
+            }
+        });
+
+        // Add action listener to enable/disable verbose mode
         this.view.getBtnFwknopVerbose().addActionListener((ActionEvent e) -> {
             MainWindowController.this.view.getVarFwknopArgs().setVerbose(((JCheckBox) e.getSource()).isSelected());
         });
@@ -247,27 +280,15 @@ public class MainWindowController {
             MainWindowController.this.fwknopClientModel.save();
         });
 
-        populateGeneralTabButton();
-        populateCipherTabButton();
-
         // Add action listener to save key settings
         this.view.getBtnSaveKeySettings().addActionListener((ActionEvent e) -> {
             updateKeyModel();
             MainWindowController.this.keyModel.save();
         });
 
-        this.view.getCbConfigList().addActionListener((ActionEvent e) -> {
-            String filename = ((JFwknopComboBox) e.getSource()).getText();
-            if (filename != null) {
-                MainWindowController.this.rcFileModel.loadRcFile(filename);
-                updateNewRcFile(filename);
-            }
-        });
-
-        this.view.getBtnStop().addActionListener((ActionEvent e) -> {
-            MainWindowController.this.fwknopClientModel.stop();
-            MainWindowController.this.view.getBtnStop().setEnabled(false);
-        });
+        populateGeneralTabButton();
+        populateCipherTabButton();
+        populateConsoleBtn();
     }
 
     /**
@@ -307,10 +328,14 @@ public class MainWindowController {
             fileChooser.setFileHidingEnabled(false);
             final int result = fileChooser.showOpenDialog(null);
             if (result == JFileChooser.APPROVE_OPTION) {
-                final String filename = fileChooser.getSelectedFile().getAbsolutePath();
-                this.rcFileModel.loadRcFile(filename);
-                updateNewRcFile(filename);
-                updateConfigurationList();
+                String filename = fileChooser.getSelectedFile().getAbsolutePath();
+                try {
+                    this.rcFileModel.loadRcFile(filename);
+                    updateNewRcFile(filename);
+                    updateConfigurationList();
+                } catch (IOException ex) {
+                    this.LOGGER.error("Unable to load rc file : " + filename);
+                }
             }
         });
 
@@ -440,8 +465,12 @@ public class MainWindowController {
     private void populateRecentFiles() {
         for (final JMenuItem miFilename : this.view.getVarRecentRcFiles()) {
             miFilename.addActionListener(e -> {
-                MainWindowController.this.rcFileModel.loadRcFile(e.getActionCommand());
-                updateNewRcFile(e.getActionCommand());
+                try {
+                    MainWindowController.this.rcFileModel.loadRcFile(e.getActionCommand());
+                    updateNewRcFile(e.getActionCommand());
+                } catch (IOException ex) {
+                    this.LOGGER.error("Unable to load rc file : " + e.getActionCommand());
+                }
             });
         }
     }

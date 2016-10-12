@@ -20,6 +20,7 @@ package com.cipherdyne.model;
 import com.cipherdyne.gui.MainWindowView;
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
 import com.cipherdyne.jfwknop.RcFile;
+import java.io.IOException;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
@@ -46,12 +47,20 @@ public class RcFileModel {
         this.view.onRcFileChange(this.context);
     }
 
-    public void loadRcFile(final String filePath) {
+    /**
+     * Load a RC file.
+     *
+     * The RC file is parsed and if this one is valid, model listeners are updated with tits
+     * configuration
+     *
+     * @param filePath Absolute path the rc file.
+     * @throws IOException if the rc file does not exist
+     */
+    public void loadRcFile(final String filePath) throws IOException {
         this.rcFile = new RcFile(filePath);
-        if (this.rcFile.parse()) {
-            this.context = this.rcFile.getConfig();
-            updateListeners();
-        }
+        this.rcFile.parse();
+        this.context = this.rcFile.getConfig();
+        updateListeners();
     }
 
     // FIXME: do not set context directly but prefer setContext method
@@ -91,7 +100,7 @@ public class RcFileModel {
 
         return filename;
     }
-    
+
     public void setContext(Map<EnumFwknopRcKey, String> context) {
         this.context = context;
     }

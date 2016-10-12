@@ -45,8 +45,12 @@ public class RcFile {
         this.filepath = filepath;
     }
 
-    public boolean parse() {
-
+    /**
+     * Parse the rcfile and update the context with the key found
+     * @throws IOException if the rc file does not exist
+     */
+    public void parse() throws IOException {
+        
         try (BufferedReader reader = new BufferedReader(new FileReader(this.filepath))) {
 
             final Pattern pattern = Pattern.compile("^(?!#)(.*)\\s(.*)");
@@ -69,9 +73,8 @@ public class RcFile {
 
         } catch (final IOException e) {
             LOGGER.error("Unable to open rc file : " + e.getMessage());
+            throw(e);
         }
-
-        return true;
     }
 
     @Override
