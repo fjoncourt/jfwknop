@@ -17,21 +17,11 @@
  */
 package com.cipherdyne.jfwknop;
 
-import com.cipherdyne.gui.MainWindowView;
-
 /**
+ * Interface used to manage default controller.
  *
  * @author Franck Joncourt <franck.joncourt@gmail.com>
  */
-class SubController {
-    final protected MainWindowView parentView;
-    final protected MainWindowController parentController;
-
-    public SubController(MainWindowView view, MainWindowController parentController) {
-        this.parentView = view;
-        this.parentController = parentController;
-    }
-
-    public void initialize() {
-    }
+public interface IController {
+    public void initialize();
 }

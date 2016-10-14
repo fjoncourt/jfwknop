@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2016 Franck Joncourt <franck.joncourt@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -33,10 +33,10 @@ public class IpView extends JDialog {
 
     // Cancel button to close the window without selected any IP addresses
     private final JButton btnCancel;
-    
+
     // Select button to update the main window with the IP addresses currently highlighted
     private final JButton btnSelect;
-    
+
     // Table that displays all network interfaces
     private JTable intfTable = null;
 
@@ -49,8 +49,8 @@ public class IpView extends JDialog {
         intfTable = new JTable(new IpTableModel());
         intfTable.setFillsViewportHeight(true);
         intfTable.setAutoCreateRowSorter(true);
-        intfTable.getColumnModel().getColumn(IpTableModel.NETWORK_IFACE_COL_ID).setMinWidth(100);
-        intfTable.getColumnModel().getColumn(IpTableModel.NETWORK_IFACE_COL_ID).setMaxWidth(100);
+        intfTable.getColumnModel().getColumn(IpTableModel.NETWORK_IFACE_COL_ID).setMinWidth(140);
+        intfTable.getColumnModel().getColumn(IpTableModel.NETWORK_IFACE_COL_ID).setMaxWidth(140);
 
         // Build the action buttons
         btnCancel = new JButton(InternationalizationHelper.getMessage("i18n.key.cancel"));
@@ -67,7 +67,7 @@ public class IpView extends JDialog {
 
         this.setLocationRelativeTo(frame);
     }
-    
+
     /**
      * @return the cancel button
      */
@@ -80,8 +80,8 @@ public class IpView extends JDialog {
      */
     public JButton getBtnSelect() {
         return this.btnSelect;
-    }    
-    
+    }
+
     /**
      * @return the IP address currently selected
      */

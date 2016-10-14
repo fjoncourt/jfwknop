@@ -30,7 +30,7 @@ import javax.swing.JOptionPane;
  *
  * @author Franck Joncourt <franck.joncourt@gmail.com>
  */
-public class CipherTabController extends SubController {
+public class CipherTabController extends AbstractController {
 
     public CipherTabController(MainWindowView parentView, MainWindowController parentController) {
         super(parentView, parentController);
@@ -41,7 +41,6 @@ public class CipherTabController extends SubController {
      */
     @Override
     public void initialize() {
-        super.initialize();
 
         // Add action listener to generate/remove rijndael key
         this.parentView.getButton(EnumButton.CIPHER_GENERATE_RIJNDAEL_KEY).addActionListener((ActionEvent e) -> {

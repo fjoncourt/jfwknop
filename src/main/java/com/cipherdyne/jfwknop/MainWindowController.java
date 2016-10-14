@@ -29,7 +29,9 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -71,17 +73,16 @@ public class MainWindowController {
         // Initialize the key model from the configuration
         this.keyModel = new KeyModel(this.view);
 
-        CipherTabController cipherController = new CipherTabController(this.view, this);
-        cipherController.initialize();
+        // Setup sub controller
+        List<IController> controllerList = new ArrayList<IController>(Arrays.asList(
+            new CipherTabController(this.view, this),
+            new GeneralTabController(this.view, this),
+            new SettingsTabController(this.view, this),
+            new ConsoleController(this.view, this)));
 
-        GeneralTabController generalTabController = new GeneralTabController(this.view, this);
-        generalTabController.initialize();
-
-        SettingsTabController settingsTabController = new SettingsTabController(this.view, this);
-        settingsTabController.initialize();
-
-        ConsoleController consoleController = new ConsoleController(this.view, this);
-        consoleController.initialize();
+        for (IController controller : controllerList) {
+            controller.initialize();
+        }
 
         // Setup action listeners
         populateMenuBar();

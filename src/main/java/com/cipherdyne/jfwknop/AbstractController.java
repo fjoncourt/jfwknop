@@ -17,31 +17,19 @@
  */
 package com.cipherdyne.jfwknop;
 
-import com.cipherdyne.gui.EnumButton;
 import com.cipherdyne.gui.MainWindowView;
-import com.cipherdyne.gui.ip.IpController;
-import java.awt.event.ActionEvent;
 
 /**
  *
  * @author Franck Joncourt <franck.joncourt@gmail.com>
  */
-public class GeneralTabController extends AbstractController {
+abstract class AbstractController implements IController {
 
-    public GeneralTabController(MainWindowView parentView, MainWindowController parentController) {
-        super(parentView, parentController);
-    }
+    final protected MainWindowView parentView;
+    final protected MainWindowController parentController;
 
-    /**
-     * Set up action listeners for buttons
-     */
-    @Override
-    public void initialize() {
-
-        // Add action listener to browse for an IP in order to configure the ALLOW_IP field
-        this.parentView.getButton(EnumButton.GENERAL_BROWSE_FOR_IP).addActionListener((ActionEvent e) -> {
-            javax.swing.SwingUtilities.invokeLater(() -> new IpController(this.parentView,
-                EnumFwknopRcKey.ALLOW_IP));
-        });
+    public AbstractController(MainWindowView view, MainWindowController parentController) {
+        this.parentView = view;
+        this.parentController = parentController;
     }
 }

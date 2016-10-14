@@ -26,7 +26,7 @@ import javax.swing.JFileChooser;
  *
  * @author Franck Joncourt <franck.joncourt@gmail.com>
  */
-class SettingsTabController extends SubController {
+class SettingsTabController extends AbstractController {
 
     public SettingsTabController(MainWindowView parentView, MainWindowController parentController) {
         super(parentView, parentController);
@@ -34,6 +34,7 @@ class SettingsTabController extends SubController {
 
     @Override
     public void initialize() {
+
         // Add action listener to browse for another fwknop file path
         this.parentView.getBtnBrowseforFwknop().addActionListener(e -> {
             final JFileChooser fileChooser = new JFileChooser();

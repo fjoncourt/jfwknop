@@ -26,7 +26,7 @@ import java.io.IOException;
  *
  * @author Franck Joncourt <franck.joncourt@gmail.com>
  */
-public class ConsoleController extends SubController {
+public class ConsoleController extends AbstractController {
 
     public ConsoleController(MainWindowView parentView, MainWindowController parentController) {
         super(parentView, parentController);
