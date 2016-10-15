@@ -1,5 +1,6 @@
 /* 
- * Copyright (C) 2016 Franck Joncourt <franck.joncourt@gmail.com>
+ * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
+ * Copyright (C) 2016 JFwknop developers and contributors.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,7 +27,7 @@ public class RecentFiles extends LinkedList<String> {
 
     /**
      * Constructor
-     * 
+     *
      * @param maxFiles Number of files to save in the list
      */
     public RecentFiles(final int maxFiles) {

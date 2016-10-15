@@ -1,5 +1,6 @@
 /* 
- * Copyright (C) 2016 Franck Joncourt <franck.joncourt@gmail.com>
+ * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
+ * Copyright (C) 2016 JFwknop developers and contributors.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,10 +18,10 @@
  */
 package com.cipherdyne.jfwknop;
 
-import com.cipherdyne.gui.components.JFwknopTextField;
-import com.cipherdyne.gui.components.JFwknopLabel;
 import com.cipherdyne.gui.components.JFwknopComboBox;
+import com.cipherdyne.gui.components.JFwknopLabel;
 import com.cipherdyne.gui.components.JFwknopTextArea;
+import com.cipherdyne.gui.components.JFwknopTextField;
 import static com.cipherdyne.jfwknop.EnumFwknopRcType.*;
 import java.awt.Component;
 import java.awt.Font;
@@ -29,13 +30,11 @@ import java.util.Map;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.MouseInputListener;
 import net.miginfocom.swing.MigLayout;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  *
- * @author franck
+ * @author Franck Joncourt
  */
 public class FwknopFactory {
 
@@ -56,7 +55,7 @@ public class FwknopFactory {
                 break;
             case PROTOCOL_PLUS_PORT:
                 component = new JFwknopTextField("<proto/port>");
-                break;            
+                break;
             case IP_PLUS_PORT:
                 component = new JFwknopTextField("<ip/port>");
                 break;
@@ -127,10 +126,10 @@ public class FwknopFactory {
     static private void addVarToPanel(Map<EnumFwknopRcKey, IFwknopVariable> varMap, final JPanel panel, final EnumFwknopRcKey rcKey) {
         varMap.put(rcKey, FwknopFactory.createComponent(rcKey));
         JFwknopLabel label = new JFwknopLabel(rcKey.getLabel());
-        if(rcKey.getTooltip() != null) {
+        if (rcKey.getTooltip() != null) {
             label.setToolTipText(rcKey.getTooltip());
         }
         panel.add(label, "growx");
-        panel.add((JComponent)(varMap.get(rcKey)), "growx");
+        panel.add((JComponent) (varMap.get(rcKey)), "growx");
     }
 }

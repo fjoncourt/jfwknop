@@ -1,5 +1,6 @@
 /* 
- * Copyright (C) 2016 Franck Joncourt <franck.joncourt@gmail.com>
+ * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
+ * Copyright (C) 2016 JFwknop developers and contributors.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +21,6 @@ package com.cipherdyne.utils;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import org.apache.commons.lang3.StringUtils;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 public class InternationalizationHelper {
 
     static private ResourceBundle messages;
-    private static final Logger logger = LogManager.getLogger(InternationalizationHelper.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(InternationalizationHelper.class.getName());
     private static InternationalizationHelper instance = null;
 
     /**
@@ -53,7 +53,7 @@ public class InternationalizationHelper {
         try {
             translation = messages.getString(i18nKey);
         } catch (final MissingResourceException e) {
-            logger.warn("No translation found for key " + i18nKey);
+            LOGGER.warn("No translation found for key " + i18nKey);
         }
 
         return translation;
@@ -70,12 +70,12 @@ public class InternationalizationHelper {
         try {
             translation = messages.getString(i18nKey);
         } catch (final MissingResourceException e) {
-            
+
         }
 
         return translation;
-    }    
-    
+    }
+
     public static void configure(final String locale) {
         String[] localeArray = locale.split("_");
         instance = new InternationalizationHelper(localeArray[0], localeArray[1]);

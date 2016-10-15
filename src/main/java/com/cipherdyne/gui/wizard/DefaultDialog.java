@@ -1,5 +1,6 @@
-/*
- * Copyright (C) 2016 Franck Joncourt <franck.joncourt@gmail.com>
+/* 
+ * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
+ * Copyright (C) 2016 JFwknop developers and contributors.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,7 +27,7 @@ import javax.swing.JFrame;
 
 /**
  *
- * @author Franck Joncourt <franck.joncourt@gmail.com>
+ * @author Franck Joncourt
  */
 class DefaultDialog<A,B> extends JDialog {
 
@@ -36,11 +37,11 @@ class DefaultDialog<A,B> extends JDialog {
     public DefaultDialog(JFrame frame, String title) {
         super(frame, title, true);
     }
-    
+
     public IFwknopVariable getVariable(A varId) {
         return this.varMap.get(varId);
     }
-    
+
     public JButton getButton(B btnId) {
         return this.btnMap.get(btnId);
     }

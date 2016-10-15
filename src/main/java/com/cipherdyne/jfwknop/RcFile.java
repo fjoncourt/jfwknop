@@ -1,5 +1,6 @@
-/*
- * Copyright (C) 2016 Franck Joncourt <franck.joncourt@gmail.com>
+/* 
+ * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
+ * Copyright (C) 2016 JFwknop developers and contributors.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -49,6 +50,7 @@ public class RcFile {
 
     /**
      * Parse the rcfile and update the context with the key found
+     *
      * @throws IOException if the rc file does not exist
      */
     public void parse() throws IOException {
@@ -75,7 +77,7 @@ public class RcFile {
 
         } catch (final IOException e) {
             LOGGER.error("Unable to open rc file : " + e.getMessage());
-            throw(e);
+            throw (e);
         }
     }
 

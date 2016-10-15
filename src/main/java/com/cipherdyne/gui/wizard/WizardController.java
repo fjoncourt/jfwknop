@@ -1,5 +1,6 @@
 /* 
- * Copyright (C) 2016 Franck Joncourt <franck.joncourt@gmail.com>
+ * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
+ * Copyright (C) 2016 JFwknop developers and contributors.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -58,13 +59,13 @@ public class WizardController {
         // Generate a random rijndael key
         this.view.getButton(EnumWizardButton.GENERATE_RIJNDAEL_KEY).addActionListener(e -> {
             this.view.varMap.get(EnumWizardVariable.KEY).setText(parentController.getKeyModel().getRandomRijndaelKey());
-        });        
-        
+        });
+
         // Generate a random HMAC key
         this.view.getButton(EnumWizardButton.GENERATE_HMAC_KEY).addActionListener(e -> {
             this.view.varMap.get(EnumWizardVariable.HMAC).setText(parentController.getKeyModel().getRandomHmacKey());
-        });        
-        
+        });
+
         // When the user cancel the easy setup, we close the wizard window and go back to the main JFwknop view
         this.view.getButton(EnumWizardButton.CANCEL).addActionListener(e -> {
             this.view.dispose();
@@ -88,7 +89,7 @@ public class WizardController {
             }
 
             // Add new ones from user input
-            context.put(EnumFwknopRcKey.KEY, this.view.getVariable(EnumWizardVariable.KEY).getText());            
+            context.put(EnumFwknopRcKey.KEY, this.view.getVariable(EnumWizardVariable.KEY).getText());
             context.put(EnumFwknopRcKey.USE_HMAC, useHmac);
             context.put(EnumFwknopRcKey.HMAC_KEY, hmacKey);
             context.put(EnumFwknopRcKey.SPA_SERVER, this.view.getVariable(EnumWizardVariable.REMOTE_HOST).getText());

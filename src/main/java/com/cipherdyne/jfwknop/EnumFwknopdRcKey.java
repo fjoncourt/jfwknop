@@ -1,5 +1,6 @@
 /* 
- * Copyright (C) 2016 Franck Joncourt <franck.joncourt@gmail.com>
+ * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
+ * Copyright (C) 2016 JFwknop developers and contributors.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,19 +19,19 @@
 package com.cipherdyne.jfwknop;
 
 public enum EnumFwknopdRcKey {
-    
+
     SOURCE,
-    
+
     GPG_REMOTE_ID,
     GPG_DECRYPT_ID,
     GPG_DECRYPT_PW,
     GPG_HOME_DIR,
     GPG_REQUIRE_SIG,
     GPG_IGNORE_SIG_VERIFY_ERROR,
-   
+
     KEY,
     KEY_BASE64,
-    
+
     USE_HMAC,
     HMAC_KEY,
     HMAC_KEY_BASE64,

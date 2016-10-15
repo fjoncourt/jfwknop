@@ -1,5 +1,6 @@
 /* 
- * Copyright (C) 2016 Franck Joncourt <franck.joncourt@gmail.com>
+ * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
+ * Copyright (C) 2016 JFwknop developers and contributors.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -118,11 +119,11 @@ public class KeyModel {
         byte[] byteArray = new byte[Integer.parseInt(this.context.get(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH))];
         new Random().nextBytes(byteArray);
         return encodeToBase64(byteArray);
-    }    
-    
+    }
+
     /**
      * Encode a byte array to a base64 string;
-     * 
+     *
      * @param key byte array to compute
      * @return base64 string representation of the byte array key
      */

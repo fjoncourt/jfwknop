@@ -1,5 +1,6 @@
-/*
- * Copyright (C) 2016 Franck Joncourt <franck.joncourt@gmail.com>
+/* 
+ * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
+ * Copyright (C) 2016 JFwknop developers and contributors.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,7 +25,7 @@ import java.io.IOException;
 
 /**
  *
- * @author Franck Joncourt <franck.joncourt@gmail.com>
+ * @author Franck Joncourt
  */
 public class ConsoleController extends AbstractController {
 

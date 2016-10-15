@@ -1,5 +1,6 @@
 /* 
- * Copyright (C) 2016 Franck Joncourt <franck.joncourt@gmail.com>
+ * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
+ * Copyright (C) 2016 JFwknop developers and contributors.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -58,7 +59,7 @@ import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyEncryptorBuilder;
 /**
  * Utility class that provides GPG helpers
  *
- * @author franck
+ * @author Franck Joncourt
  */
 public class GpgUtils {
 
@@ -130,14 +131,14 @@ public class GpgUtils {
 
     /**
      * Export a GPG key (armored) from a GPG home directory to a filename
-     * 
+     *
      * @param gpgHomeDirectory GPG home directory where to look up the GPG key
      * @param keyId GPG key to look up
      * @param filename Filename to save the GPG key to
-     * 
+     *
      * @throws FileNotFoundException
      * @throws IOException
-     * @throws PGPException 
+     * @throws PGPException
      */
     static public void exportKey(String gpgHomeDirectory, String keyId, String filename) throws FileNotFoundException, IOException, PGPException {
         FileInputStream in = new FileInputStream(gpgHomeDirectory + "/pubring.gpg");
@@ -220,7 +221,7 @@ public class GpgUtils {
 
             GpgUtils.addPublicKeyToKeyring(gpgHomeDirectory, "public.asc");
             GpgUtils.addPrivateKeyToKeyring(gpgHomeDirectory, "private.asc");
-            
+
         } catch (NoSuchAlgorithmException | IOException | PGPException | NoSuchProviderException ex) {
             Logger.getLogger(GpgUtils.class.getName()).log(Level.SEVERE, null, ex);
         }

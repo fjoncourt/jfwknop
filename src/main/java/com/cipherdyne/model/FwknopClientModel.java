@@ -1,5 +1,6 @@
 /* 
- * Copyright (C) 2016 Franck Joncourt <franck.joncourt@gmail.com>
+ * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
+ * Copyright (C) 2016 JFwknop developers and contributors.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,9 +22,6 @@ import com.cipherdyne.gui.MainWindowView;
 import com.cipherdyne.jfwknop.EnumFwknopConfigKey;
 import com.cipherdyne.jfwknop.ExternalCommand;
 import com.cipherdyne.jfwknop.JFwknopConfig;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -42,12 +40,12 @@ public class FwknopClientModel {
 
     public FwknopClientModel(final MainWindowView view) {
         this.view = view;
-        this.fwknopConfig.put(EnumFwknopConfigKey.FWKNOP_FILEPATH, 
+        this.fwknopConfig.put(EnumFwknopConfigKey.FWKNOP_FILEPATH,
             JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.FWKNOP_FILEPATH));
         this.fwknopConfig.put(EnumFwknopConfigKey.FWKNOP_ARGS, "");
-        this.fwknopConfig.put(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS, 
+        this.fwknopConfig.put(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS,
             JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.FWKNOP_EXTRA_ARGS));
-        this.fwknopConfig.put(EnumFwknopConfigKey.FWKNOP_VERBOSE, 
+        this.fwknopConfig.put(EnumFwknopConfigKey.FWKNOP_VERBOSE,
             JFwknopConfig.getInstance().getConfigKey().get(EnumFwknopConfigKey.FWKNOP_VERBOSE));
         updateListeners();
     }
@@ -72,7 +70,7 @@ public class FwknopClientModel {
      * The fwknop client settings are stored in the JFwknop configuration file
      */
     public void save() {
-        
+
         // Get jfwknop configuration keys
         Map<EnumFwknopConfigKey, String> jfwknopConfig = JFwknopConfig.getInstance().getConfigKey();
 
@@ -86,13 +84,13 @@ public class FwknopClientModel {
         // Save the Jwknop settings
         JFwknopConfig.getInstance().saveConfig();
     }
-    
+
     /**
      * Start a fwknop command
-     * 
+     *
      * @param period period between to knock. Set to 0 to knowk only once
      */
-    public void start(final long period) {                
+    public void start(final long period) {
         command = new ExternalCommand(buildArgs(), period, this.view);
         Thread thread = new Thread(command);
         thread.start();
@@ -107,14 +105,14 @@ public class FwknopClientModel {
             this.command = null;
         }
     }
-    
+
     public void refresh() {
         updateListeners();
     }
 
     /**
-     * Gather fwknop file path, fwknop arguments and extra arguments and build
-     * the fwknop command line as a String array
+     * Gather fwknop file path, fwknop arguments and extra arguments and build the fwknop command
+     * line as a String array
      *
      * @return the fwknop command line as a String array
      */

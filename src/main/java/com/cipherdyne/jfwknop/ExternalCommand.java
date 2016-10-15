@@ -1,5 +1,6 @@
 /* 
- * Copyright (C) 2016 Franck Joncourt <franck.joncourt@gmail.com>
+ * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
+ * Copyright (C) 2016 JFwknop developers and contributors.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -47,7 +48,7 @@ public class ExternalCommand implements Runnable {
 
     /**
      * External command constructor that is executed only once
-     * 
+     *
      * @param args List of argument to use to build the process
      * @param console IConsole appender to log command output
      */
@@ -60,7 +61,7 @@ public class ExternalCommand implements Runnable {
 
     /**
      * External command constructor that runs a command periodically.
-     * 
+     *
      * @param args List of argument to use to build the process
      * @param period Period between two command executions
      * @param console IConsole appender to log command output
@@ -92,7 +93,7 @@ public class ExternalCommand implements Runnable {
             while (this.isRunning) {
 
                 appendToConsole("[*] Executing : " + Arrays.toString(this.args));
-                
+
                 // Build the process and run it
                 ProcessBuilder pb = new ProcessBuilder(args);
                 pb = pb.redirectErrorStream(true);
