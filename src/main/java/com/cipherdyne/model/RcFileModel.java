@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2016 Franck Joncourt <franck.joncourt@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -21,9 +21,9 @@ import com.cipherdyne.gui.MainWindowView;
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
 import com.cipherdyne.jfwknop.RcFile;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
-
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -56,7 +56,7 @@ public class RcFileModel {
      * @param filePath Absolute path the rc file.
      * @throws IOException if the rc file does not exist
      */
-    public void loadRcFile(final String filePath) throws IOException {
+    public void load(final String filePath) throws IOException {
         this.rcFile = new RcFile(filePath);
         this.rcFile.parse();
         this.context = this.rcFile.getConfig();
@@ -64,14 +64,15 @@ public class RcFileModel {
     }
 
     // FIXME: do not set context directly but prefer setContext method
-    public void saveRcFile(final Map<EnumFwknopRcKey, String> context) {
+    public void save(final Map<EnumFwknopRcKey, String> context) {
         this.rcFile.setConfig(context);
         logger.info("Save config");
         this.rcFile.save();
     }
 
     // FIXME: do not set context directly but prefer setContext method
-    public void saveAsRcFile(final Map<EnumFwknopRcKey, String> newContext, final String filename) {
+    @Deprecated
+    public void saveAs(final Map<EnumFwknopRcKey, String> newContext, final String filename) {
         this.context = newContext;
         if (!this.exists()) {
             this.rcFile = new RcFile("fwknoprctmp");
@@ -99,6 +100,19 @@ public class RcFileModel {
         }
 
         return filename;
+    }
+
+    /**
+     * Set rc filename
+     *
+     * @param filename
+     */
+    public void setRcFilename(String filename) {
+        this.rcFile = new RcFile(filename);
+    }
+
+    public List<String> getStanzas() {
+        return this.rcFile.lookUpStanza();
     }
 
     public void setContext(Map<EnumFwknopRcKey, String> context) {

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2016 Franck Joncourt <franck.joncourt@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -26,7 +26,9 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -50,7 +52,7 @@ public class RcFile {
      * @throws IOException if the rc file does not exist
      */
     public void parse() throws IOException {
-        
+
         try (BufferedReader reader = new BufferedReader(new FileReader(this.filepath))) {
 
             final Pattern pattern = Pattern.compile("^(?!#)(.*)\\s(.*)");
@@ -110,7 +112,7 @@ public class RcFile {
 
     private void fixPermissions() {
         File file = new File(this.filepath);
-        
+
         // Clear all permissions for all users
         file.setReadable(false, false);
         file.setWritable(false, false);
@@ -139,5 +141,36 @@ public class RcFile {
      */
     public String getRcFilename() {
         return this.filepath;
+    }
+
+    /**
+     * Look up stanzas in rf file
+     *
+     * @return the list of stanza available in the rc file
+     * @throws IOException
+     */
+    public List<String> lookUpStanza() throws IOException {
+        List<String> stanzaList = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(this.filepath))) {
+
+            final Pattern pattern = Pattern.compile("^\\[(.*)\\]");
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                final Matcher matcher = pattern.matcher(line);
+
+                if (matcher.find()) {
+                    stanzaList.add(matcher.group(1).trim());
+                }
+            }
+
+            reader.close();
+
+        } catch (final IOException e) {
+            LOGGER.error("Unable to open rc file : " + e.getMessage());
+            throw (e);
+        }
+
+        return stanzaList;
     }
 }

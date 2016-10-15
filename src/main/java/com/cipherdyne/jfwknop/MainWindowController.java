@@ -74,7 +74,7 @@ public class MainWindowController {
         this.keyModel = new KeyModel(this.view);
 
         // Setup sub controller
-        List<IController> controllerList = new ArrayList<IController>(Arrays.asList(
+        List<IController> controllerList = new ArrayList<>(Arrays.asList(
             new CipherTabController(this.view, this),
             new GeneralTabController(this.view, this),
             new SettingsTabController(this.view, this),
@@ -90,7 +90,7 @@ public class MainWindowController {
         // Try to open ~/.fwknoprc
         try {
             String fwknoprc = System.getProperty("user.home") + System.getProperty("file.separator") + ".fwknoprc";
-            this.rcFileModel.loadRcFile(fwknoprc);
+            this.rcFileModel.load(fwknoprc);
             updateNewRcFile(fwknoprc);
             updateConfigurationList();
         } catch (IOException ex) {
@@ -132,7 +132,7 @@ public class MainWindowController {
             if (result == JFileChooser.APPROVE_OPTION) {
                 String filename = fileChooser.getSelectedFile().getAbsolutePath();
                 try {
-                    this.rcFileModel.loadRcFile(filename);
+                    this.rcFileModel.load(filename);
                     updateNewRcFile(filename);
                     updateConfigurationList();
                 } catch (IOException ex) {
@@ -147,7 +147,7 @@ public class MainWindowController {
         // Set up action listener when saving a file
         this.view.getSaveMenuItem().addActionListener(e -> {
             if (MainWindowController.this.rcFileModel.exists()) {
-                MainWindowController.this.rcFileModel.saveRcFile(convertViewToConfig(this.view.getVariables()));
+                MainWindowController.this.rcFileModel.save(convertViewToConfig(this.view.getVariables()));
             } else {
                 saveAs();
             }
@@ -227,7 +227,7 @@ public class MainWindowController {
     public int save() {
         int error = 0;
         if (MainWindowController.this.rcFileModel.exists()) {
-            MainWindowController.this.rcFileModel.saveRcFile(convertViewToConfig(this.view.getVariables()));
+            MainWindowController.this.rcFileModel.save(convertViewToConfig(this.view.getVariables()));
         } else {
             error = saveAs();
         }
@@ -247,7 +247,7 @@ public class MainWindowController {
         final int result = fileChooser.showSaveDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
             final String filename = fileChooser.getSelectedFile().getAbsolutePath();
-            MainWindowController.this.rcFileModel.saveAsRcFile(convertViewToConfig(this.view.getVariables()),
+            MainWindowController.this.rcFileModel.saveAs(convertViewToConfig(this.view.getVariables()),
                 filename);
             updateNewRcFile(filename);
             updateConfigurationList();
@@ -268,7 +268,7 @@ public class MainWindowController {
         for (final JMenuItem miFilename : this.view.getVarRecentRcFiles()) {
             miFilename.addActionListener(e -> {
                 try {
-                    MainWindowController.this.rcFileModel.loadRcFile(e.getActionCommand());
+                    MainWindowController.this.rcFileModel.load(e.getActionCommand());
                     updateNewRcFile(e.getActionCommand());
                 } catch (IOException ex) {
                     this.LOGGER.error("Unable to load rc file : " + e.getActionCommand());

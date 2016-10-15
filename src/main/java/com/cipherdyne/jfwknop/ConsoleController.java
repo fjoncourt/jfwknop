@@ -65,7 +65,7 @@ public class ConsoleController extends AbstractController {
             String filename = ((JFwknopComboBox) e.getSource()).getText();
             if (filename != null) {
                 try {
-                    this.parentController.getRcFileModel().loadRcFile(filename);
+                    this.parentController.getRcFileModel().load(filename);
                     this.parentController.updateNewRcFile(filename);
                 } catch (IOException ex) {
                     MainWindowController.LOGGER.error("Unable to load rc file : " + filename);
