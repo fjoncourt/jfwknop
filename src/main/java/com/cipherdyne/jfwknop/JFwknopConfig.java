@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -40,7 +40,7 @@ public class JFwknopConfig {
 
     private static JFwknopConfig instance = null;
 
-    private static final String CONFIG_PROPERTIES = "config.properties";
+    private static final String CONFIG_PROPERTIES = ".jfwknoprc";
     private final SortedProperties configProperties;
     private static final String CONFIG_RECENT_FILE_PREFIX = "recentFile";
 
@@ -59,14 +59,21 @@ public class JFwknopConfig {
 
         // Opening properties file
         try {
-            this.configProperties.load(new FileInputStream(CONFIG_PROPERTIES));
+            this.configProperties.load(new FileInputStream(this.getJfwknoprcFilepath()));
         } catch (final IOException e) {
-            logMgr.error("Unable to load configuration file (" + CONFIG_PROPERTIES + ") : " + e.getMessage());
+            logMgr.error("Unable to load configuration file (" + this.getJfwknoprcFilepath() + ") : " + e.getMessage());
             logMgr.error("A default configuration file is created");
-            createDefaultConfig(CONFIG_PROPERTIES);
+            createDefaultConfig(this.getJfwknoprcFilepath());
         }
 
         readConfig();
+    }
+
+    /**
+     * @return Jfwknop rc filepath according to the user home directory
+     */
+    private String getJfwknoprcFilepath() {
+        return System.getProperty("user.home") + System.getProperty("file.separator") + CONFIG_PROPERTIES;
     }
 
     public static JFwknopConfig getInstance() {
@@ -156,9 +163,9 @@ public class JFwknopConfig {
 
         // Store settings
         try {
-            this.configProperties.store(new FileOutputStream(CONFIG_PROPERTIES), null);
+            this.configProperties.store(new FileOutputStream(this.getJfwknoprcFilepath()), null);
         } catch (IOException ex) {
-            logMgr.error("Unable to save jfwknop configuration file (" + CONFIG_PROPERTIES + ") : " + ex.getMessage());
+            logMgr.error("Unable to save jfwknop configuration file (" + this.getJfwknoprcFilepath() + ") : " + ex.getMessage());
         }
     }
 
