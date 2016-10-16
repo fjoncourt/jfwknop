@@ -18,32 +18,21 @@
  */
 package com.cipherdyne.gui;
 
-import com.cipherdyne.jfwknop.EnumFwknopRcKey;
-import com.cipherdyne.jfwknop.IFwknopVariable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JMenuItem;
-
 /**
+ * Enumeration of all menu items that are available from the menu toolbar
  *
  * @author Franck Joncourt
  */
-class DefaultFrame extends JFrame {
-
-    protected final Map<EnumFwknopRcKey, IFwknopVariable> varMap;
-    protected final List<JMenuItem> varRecentRcFiles;
-    protected final Map<EnumButton, JButton> btnMap;
-    protected final Map<EnumMenuItem, JMenuItem> menuItemMap;
-
-    public DefaultFrame(String title) {
-        super(title);
-        this.varMap = new HashMap<>();
-        this.varRecentRcFiles = new ArrayList<>();
-        this.btnMap = new HashMap<>();
-        this.menuItemMap = new HashMap<>();
-    }
+public enum EnumMenuItem {
+    FILE_NEW,
+    FILE_OPEN,
+    FILE_SAVE,
+    FILE_SAVEAS,
+    FILE_EXIT,
+    TOOLS_OPENTERMINAL,
+    TOOLS_OPENRCFILE,
+    TOOLS_GENERATE_ACCESS,
+    TOOLS_EXPORT_FILE,
+    WIZARD_EASYSETUP,
+    HELP_ABOUT;
 }

@@ -19,15 +19,10 @@
 package com.cipherdyne.jfwknop;
 
 import com.cipherdyne.gui.MainWindowView;
-import com.cipherdyne.gui.ssh.SshController;
-import com.cipherdyne.gui.wizard.WizardController;
 import com.cipherdyne.model.FwknopClientModel;
 import com.cipherdyne.model.KeyModel;
 import com.cipherdyne.model.RcFileModel;
 import com.cipherdyne.utils.InternationalizationHelper;
-import java.awt.Desktop;
-import java.awt.event.ActionEvent;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,13 +30,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -76,6 +69,7 @@ public class MainWindowController {
 
         // Set up sub controllers
         List<IController> controllerList = new ArrayList<>(Arrays.asList(
+            new MenuBarController(this.view, this),
             new CipherTabController(this.view, this),
             new GeneralTabController(this.view, this),
             new SettingsTabController(this.view, this),
@@ -114,7 +108,7 @@ public class MainWindowController {
      * If this is a multi stanza file, then the application prompts the user to select the stanza to
      * load and split the file in several single stanza file.
      */
-    private void loadRcFile(String rcFilename) {
+    public void loadRcFile(String rcFilename) {
         try {
 
             // Initialize the rc file model and check for the number of stanza available before laoding it
@@ -174,82 +168,6 @@ public class MainWindowController {
 
     private void populateMenuBar() {
 
-        // Set up action listener when opening a new configuration file
-        this.view.getOpenMenuItem().addActionListener(e -> {
-            final JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Browse");
-            fileChooser.setFileHidingEnabled(false);
-            final int result = fileChooser.showOpenDialog(null);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                loadRcFile(fileChooser.getSelectedFile().getAbsolutePath());
-            }
-        });
-
-        // Set up action listener when quitting the application
-        this.view.getExitMenuItem().addActionListener(e -> System.exit(0));
-
-        // Set up action listener when saving a file
-        this.view.getSaveMenuItem().addActionListener(e -> {
-            if (MainWindowController.this.rcFileModel.exists()) {
-                MainWindowController.this.rcFileModel.save(convertViewToConfig(this.view.getVariables()));
-            } else {
-                saveAs();
-            }
-        });
-        this.view.getSaveAsMenuItem().addActionListener(e -> {
-            MainWindowController.this.saveAs();
-        });
-
-        // Set up action listener to open a terminal
-        this.view.getOpenTerminalMenuItem().addActionListener(e -> {
-            ExternalCommand command = new ExternalCommand("x-terminal-emulator".split(" "), null);
-            Thread thread = new Thread(command);
-            thread.start();
-        });
-
-        // Set up action listener to edit rc file with the default text editor
-        this.view.getOpenRcFileMenuItem().addActionListener(e -> {
-            String filename = MainWindowController.this.rcFileModel.getRcFilename();
-
-            // Inform the user no rc file is currently loaded
-            if (StringUtils.EMPTY.equals(filename)) {
-                JOptionPane.showMessageDialog(MainWindowController.this.view,
-                    InternationalizationHelper.getMessage("i18n.no.rcfile.loaded"),
-                    InternationalizationHelper.getMessage("i18n.error"),
-                    JOptionPane.ERROR_MESSAGE);
-            } // Otherwise launch the editor
-            else {
-                try {
-                    Desktop.getDesktop().open(new File(filename));
-                    //ExternalCommand extCmd = new ExternalCommand("xdg-open " + filename);
-                    //extCmd.run();
-                } catch (IOException ex) {
-                    java.util.logging.Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-
-        // Set up action listener to scp files to remote server
-        this.view.getExportFileMenuItem().addActionListener(e -> {
-            new SshController(this.view);
-        });
-
-        // Set up action listener to generate access.conf file for fwknop server
-        this.view.getGenerateAccessMenuItem().addActionListener((ActionEvent e) -> {
-            final JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle(InternationalizationHelper.getMessage(InternationalizationHelper.getMessage("i18n.save.as")));
-            fileChooser.setSelectedFile(new File("access.conf"));
-            final int result = fileChooser.showSaveDialog(null);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                AccessFile accessFile = new AccessFile(fileChooser.getSelectedFile().getAbsolutePath());
-                accessFile.generate(convertViewToConfig(MainWindowController.this.view.getVariables()));
-            }
-        });
-
-        this.view.getEasySetupMenuItem().addActionListener(e -> {
-            new WizardController(this, this.view);
-        });
-
         populateRecentFiles();
 
         // FIXME: Not very nice
@@ -284,7 +202,7 @@ public class MainWindowController {
      *
      * @return 0 if successful, > 0 if an error occured
      */
-    private int saveAs() {
+    public int saveAs() {
         int error = 0;
         final JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle(InternationalizationHelper.getMessage("i18n.save.as"));
@@ -339,7 +257,7 @@ public class MainWindowController {
         populateRecentFiles();
     }
 
-    private Map<EnumFwknopRcKey, String> convertViewToConfig(final Map<EnumFwknopRcKey, IFwknopVariable> viewVariables) {
+    public Map<EnumFwknopRcKey, String> convertViewToConfig(final Map<EnumFwknopRcKey, IFwknopVariable> viewVariables) {
         final Map<EnumFwknopRcKey, String> updatedConfig = new HashMap<>();
         String value;
         for (final Entry<EnumFwknopRcKey, IFwknopVariable> entry : viewVariables.entrySet()) {

@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -18,14 +18,14 @@
  */
 package com.cipherdyne.gui;
 
-import com.cipherdyne.jfwknop.EnumFwknopConfigKey;
-import com.cipherdyne.jfwknop.EnumFwknopRcKey;
-import com.cipherdyne.jfwknop.IFwknopVariable;
-import com.cipherdyne.utils.InternationalizationHelper;
 import com.cipherdyne.gui.components.JFwknopArgs;
 import com.cipherdyne.gui.components.JFwknopCheckBox;
 import com.cipherdyne.gui.components.JFwknopComboBox;
 import com.cipherdyne.gui.components.JFwknopTextField;
+import com.cipherdyne.jfwknop.EnumFwknopConfigKey;
+import com.cipherdyne.jfwknop.EnumFwknopRcKey;
+import com.cipherdyne.jfwknop.IFwknopVariable;
+import com.cipherdyne.utils.InternationalizationHelper;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.text.DateFormat;
@@ -33,7 +33,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -44,7 +43,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-
 import net.miginfocom.swing.MigLayout;
 
 public class MainWindowView extends DefaultFrame implements IConsole {
@@ -52,20 +50,9 @@ public class MainWindowView extends DefaultFrame implements IConsole {
     private static final long serialVersionUID = 7003086413693874319L;
     private static final String JFWKNOP_TITLE = "JFwknop - ";
 
-    private JMenuItem exitMenuItem;
-    private JMenuItem saveMenuItem;
-    private JMenuItem saveAsMenuItem;
-    private JMenuItem openMenuItem;
     private JMenu recentsMenu;
-    private JMenuItem openTerminalMenuItem;
-    private JMenuItem openRcFileMenuItem;
-    private JMenuItem exportFileMenuItem;
-    private JMenuItem generateAccessMenuItem;
-    private JMenuItem easySetupMenuItem;
-    private JMenuItem aboutMenuItem;
 
     private final SettingsTab settingsTab;
-    private final CipherTab cipherTab;
 
     private final ConsolePanel consolePanel;
 
@@ -83,8 +70,7 @@ public class MainWindowView extends DefaultFrame implements IConsole {
         final JTabbedPane rcConfigPane = new JTabbedPane(JTabbedPane.TOP);
         rcConfigPane.addTab("General", null, new GeneralTab(varMap, btnMap), "General");
         rcConfigPane.addTab("Network", null, new NetworkTab(varMap, btnMap), "Network");
-        this.cipherTab = new CipherTab(varMap, btnMap);
-        rcConfigPane.addTab("Cipher", null, this.cipherTab, "Cipher");
+        rcConfigPane.addTab("Cipher", null, new CipherTab(varMap, btnMap), "Cipher");
         mainPane.addTab("Configuration", null, rcConfigPane, "Configuration");
         this.settingsTab = new SettingsTab(varMap);
 
@@ -134,73 +120,109 @@ public class MainWindowView extends DefaultFrame implements IConsole {
         setJMenuBar(menubar);
     }
 
+    /**
+     * Build the tools menu
+     *
+     * @return the menu
+     */
     private JMenu createToolMenu() {
+
+        // Create menu
         final JMenu menu = new JMenu(InternationalizationHelper.getMessage("window.menu.tools"));
 
-        this.openTerminalMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.tools.openterminal"),
-            new ImageIcon(this.getClass().getResource("/openterminal16.png")));
-        menu.add(this.openTerminalMenuItem);
+        // Create all items
+        this.menuItemMap.put(EnumMenuItem.TOOLS_OPENTERMINAL, new JMenuItem(InternationalizationHelper.getMessage("window.menu.tools.openterminal"),
+            new ImageIcon(this.getClass().getResource("/openterminal16.png"))));
 
-        this.openRcFileMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.tools.openrcfile"),
-            new ImageIcon(this.getClass().getResource("/edit16.png")));
-        menu.add(this.openRcFileMenuItem);
+        this.menuItemMap.put(EnumMenuItem.TOOLS_OPENRCFILE, new JMenuItem(InternationalizationHelper.getMessage("window.menu.tools.openrcfile"),
+            new ImageIcon(this.getClass().getResource("/edit16.png"))));
 
-        this.generateAccessMenuItem = new JMenuItem(InternationalizationHelper.getMessage("i18n.window.menu.tools.generate.access"));
-        menu.add(this.generateAccessMenuItem);
+        this.menuItemMap.put(EnumMenuItem.TOOLS_GENERATE_ACCESS, new JMenuItem(InternationalizationHelper.getMessage("i18n.window.menu.tools.generate.access")));
 
-        this.exportFileMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.tools.exportfile"),
-            new ImageIcon(this.getClass().getResource("/export16.png")));
-        menu.add(this.exportFileMenuItem);
+        this.menuItemMap.put(EnumMenuItem.TOOLS_EXPORT_FILE, new JMenuItem(InternationalizationHelper.getMessage("window.menu.tools.exportfile"),
+            new ImageIcon(this.getClass().getResource("/export16.png"))));
+
+        // Add items to menu
+        menu.add(this.menuItemMap.get(EnumMenuItem.TOOLS_OPENTERMINAL));
+        menu.add(this.menuItemMap.get(EnumMenuItem.TOOLS_OPENRCFILE));
+        menu.add(this.menuItemMap.get(EnumMenuItem.TOOLS_GENERATE_ACCESS));
+        menu.add(this.menuItemMap.get(EnumMenuItem.TOOLS_EXPORT_FILE));
 
         return menu;
     }
 
     private JMenu createWizardMenu() {
+
+        // Create menu
         final JMenu menu = new JMenu(InternationalizationHelper.getMessage("i18n.window.menu.wizard"));
         menu.setMnemonic(KeyEvent.VK_W);
 
-        this.easySetupMenuItem = new JMenuItem(InternationalizationHelper.getMessage("i18n.window.menu.wizard.easysetup"),
-            new ImageIcon(this.getClass().getResource("/wizard16.png")));
-        menu.add(this.easySetupMenuItem);
+        // Create all items
+        this.menuItemMap.put(EnumMenuItem.WIZARD_EASYSETUP, new JMenuItem(InternationalizationHelper.getMessage("i18n.window.menu.wizard.easysetup"),
+            new ImageIcon(this.getClass().getResource("/wizard16.png"))));
+
+        // Add items to menu
+        menu.add(this.menuItemMap.get(EnumMenuItem.WIZARD_EASYSETUP));
 
         return menu;
     }
 
     private JMenu createHelpMenu() {
+
+        // Create menu
         final JMenu menu = new JMenu(InternationalizationHelper.getMessage("window.menu.help"));
         menu.setMnemonic(KeyEvent.VK_H);
 
-        this.aboutMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.help.about"));
-        menu.add(this.aboutMenuItem);
+        // Create all items
+        this.menuItemMap.put(EnumMenuItem.HELP_ABOUT, new JMenuItem(InternationalizationHelper.getMessage("window.menu.help.about")));
+
+        // Add items to menu
+        menu.add(this.menuItemMap.get(EnumMenuItem.HELP_ABOUT));
 
         return menu;
     }
 
+    /**
+     * Build the file menu
+     *
+     * @return the menu
+     */
     private JMenu createFileMenu() {
+
+        // Create the menu
         final JMenu menu = new JMenu(InternationalizationHelper.getMessage("window.menu.file"));
         menu.setMnemonic(KeyEvent.VK_F);
 
-        this.openMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.file.openfile"),
-            new ImageIcon(this.getClass().getResource("/open16.png")));
-        menu.add(this.openMenuItem);
+        // Create all items
+        this.menuItemMap.put(EnumMenuItem.FILE_NEW, new JMenuItem(InternationalizationHelper.getMessage("window.menu.file.new"),
+            new ImageIcon(this.getClass().getResource("/new16.png"))));
 
-        this.saveMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.file.savefile"),
-            new ImageIcon(this.getClass().getResource("/save16.png")));
-        this.saveMenuItem.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        menu.add(this.saveMenuItem);
+        this.menuItemMap.put(EnumMenuItem.FILE_OPEN, new JMenuItem(InternationalizationHelper.getMessage("window.menu.file.openfile"),
+            new ImageIcon(this.getClass().getResource("/open16.png"))));
 
-        this.saveAsMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.file.saveasfile"),
-            new ImageIcon(this.getClass().getResource("/saveas16.png")));
-        menu.add(this.saveAsMenuItem);
+        this.menuItemMap.put(EnumMenuItem.FILE_SAVE, new JMenuItem(InternationalizationHelper.getMessage("window.menu.file.savefile"),
+            new ImageIcon(this.getClass().getResource("/save16.png"))));
 
+        this.menuItemMap.put(EnumMenuItem.FILE_SAVEAS, new JMenuItem(InternationalizationHelper.getMessage("window.menu.file.saveasfile"),
+            new ImageIcon(this.getClass().getResource("/saveas16.png"))));
+
+        this.menuItemMap.put(EnumMenuItem.FILE_EXIT, new JMenuItem(InternationalizationHelper.getMessage("window.menu.file.exitapplication")));
+
+        // Set mnemonics and shortcuts
+        this.menuItemMap.get(EnumMenuItem.FILE_NEW).setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        this.menuItemMap.get(EnumMenuItem.FILE_SAVE).setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        this.menuItemMap.get(EnumMenuItem.FILE_EXIT).setMnemonic(KeyEvent.VK_E);
+
+        // Add items to menu
+        menu.add(this.menuItemMap.get(EnumMenuItem.FILE_NEW));
+        menu.add(this.menuItemMap.get(EnumMenuItem.FILE_OPEN));
+        menu.add(this.menuItemMap.get(EnumMenuItem.FILE_SAVE));
+        menu.add(this.menuItemMap.get(EnumMenuItem.FILE_SAVEAS));
         menu.addSeparator();
         this.recentsMenu = new JMenu("Recent files");
         menu.add(this.recentsMenu);
-
         menu.addSeparator();
-        this.exitMenuItem = new JMenuItem(InternationalizationHelper.getMessage("window.menu.file.exitapplication"));
-        this.exitMenuItem.setMnemonic(KeyEvent.VK_E);
-        menu.add(this.exitMenuItem);
+        menu.add(this.menuItemMap.get(EnumMenuItem.FILE_EXIT));
 
         return menu;
     }
@@ -284,56 +306,12 @@ public class MainWindowView extends DefaultFrame implements IConsole {
         return this.settingsTab.varFwknopExtraArgs;
     }
 
-    public JMenuItem getOpenMenuItem() {
-        return this.openMenuItem;
-    }
-
-    public JMenuItem getExitMenuItem() {
-        return this.exitMenuItem;
-    }
-
-    public JMenuItem getSaveMenuItem() {
-        return this.saveMenuItem;
-    }
-
-    public JMenuItem getSaveAsMenuItem() {
-        return this.saveAsMenuItem;
-    }
-
-    public JMenuItem getEasySetupMenuItem() {
-        return this.easySetupMenuItem;
+    public JMenuItem getMenuItem(EnumMenuItem item) {
+        return this.menuItemMap.get(item);
     }
 
     public List<JMenuItem> getVarRecentRcFiles() {
         return this.varRecentRcFiles;
-    }
-
-    /**
-     * @return the menu item used to open a terminal
-     */
-    public JMenuItem getOpenTerminalMenuItem() {
-        return this.openTerminalMenuItem;
-    }
-
-    /**
-     * @return the menu item used to open the current rc file
-     */
-    public JMenuItem getOpenRcFileMenuItem() {
-        return this.openRcFileMenuItem;
-    }
-
-    /**
-     * @return the menu item used to send file through sssh copy
-     */
-    public JMenuItem getExportFileMenuItem() {
-        return this.exportFileMenuItem;
-    }
-
-    /**
-     * @return the menu item used to generate access.conf file
-     */
-    public JMenuItem getGenerateAccessMenuItem() {
-        return this.generateAccessMenuItem;
     }
 
     @Override
