@@ -41,10 +41,10 @@ import org.apache.log4j.Logger;
 public class RcFile {
 
     // Pattern that matches a stanza
-    final private static Pattern StanzaPattern = Pattern.compile("^\\[(.*)\\]");
+    final private static Pattern STANZA_PATTERN = Pattern.compile("^\\[(.*)\\]");
 
     // Pattern that matches a key/value line
-    final private static Pattern keyPattern = Pattern.compile("^(?!#)(.*)\\s(.*)");
+    final private static Pattern KEY_PATTERN = Pattern.compile("^(?!#)(.*)\\s(.*)");
 
     // Default stanza used by fwknop client in fwknoprc file to provide common settings for all stanzas
     final public static String DEFAULT_STANZA = "default";
@@ -56,7 +56,7 @@ public class RcFile {
     static final Logger LOGGER = LogManager.getLogger(RcFile.class.getName());
 
     // List of key found in the rc file once parsed
-    private Map<EnumFwknopRcKey, String> config = new HashMap<>();
+    private Map<EnumFwknopRcKey, String> config;
 
     /**
      * Constructor
@@ -84,12 +84,13 @@ public class RcFile {
             String line;
             EnumFwknopRcKey key;
             String currentStanza = StringUtils.EMPTY;
+            this.config = new HashMap<>();
 
             // Iterate over all lines in the rc file
             while ((line = reader.readLine()) != null) {
 
                 // Detect stanza and set it as current to avoid parsing unwanted stanza
-                final Matcher stanzaMatcher = StanzaPattern.matcher(line);
+                final Matcher stanzaMatcher = STANZA_PATTERN.matcher(line);
                 if (stanzaMatcher.find()) {
                     currentStanza = stanzaMatcher.group(1).trim();
                     continue;
@@ -97,7 +98,7 @@ public class RcFile {
 
                 // Parse only line for default and selected stanza
                 if (DEFAULT_STANZA.equals(currentStanza) || selectedStanza.equals(currentStanza)) {
-                    final Matcher keyMatcher = keyPattern.matcher(line);
+                    final Matcher keyMatcher = KEY_PATTERN.matcher(line);
                     if (keyMatcher.find()) {
                         try {
                             key = EnumFwknopRcKey.valueOf(keyMatcher.group(1).trim());
@@ -201,7 +202,7 @@ public class RcFile {
             String line;
 
             while ((line = reader.readLine()) != null) {
-                final Matcher matcher = StanzaPattern.matcher(line);
+                final Matcher matcher = STANZA_PATTERN.matcher(line);
 
                 if (matcher.find()) {
                     String stanza = matcher.group(1).trim();

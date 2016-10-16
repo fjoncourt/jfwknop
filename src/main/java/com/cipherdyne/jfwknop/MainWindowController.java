@@ -90,26 +90,39 @@ public class MainWindowController {
 
         this.view.display();
 
-        loadDefaultFwknoprc();
+        // Load initial rc file at startup
+        loadRcFile();
     }
 
     /**
-     * Load ~./fwknoprc file if only one user specifi stanza is available
+     * Load ~/.fwknoprc file or the latest configuration previously open if it exists
      */
-    private void loadDefaultFwknoprc() {
+    private void loadRcFile() {
+
+        String rcFilename = System.getProperty("user.home") + System.getProperty("file.separator") + RcFileModel.FWKNOPRC;
+        if (this.jfwknopConfig.getRecentFileList().size() > 0) {
+            rcFilename = this.jfwknopConfig.getRecentFileList().get(0);
+        }
+
+        // Load rc file
+        loadRcFile(rcFilename);
+    }
+
+    /**
+     * Load a rc file and check whether this is a multi stanza file or a single stanza file.
+     *
+     * If this is a multi stanza file, then the application prompts the user to select the stanza to
+     * load and split the file in several single stanza file.
+     */
+    private void loadRcFile(String rcFilename) {
         try {
-            String fwknoprc = System.getProperty("user.home") + System.getProperty("file.separator") + ".fwknoprc";
 
             // Initialize the rc file model and check for the number of stanza available before laoding it
-            this.rcFileModel.setRcFilename(fwknoprc);
+            this.rcFileModel.setRcFilename(rcFilename);
             List<String> stanzaList = this.rcFileModel.getStanzas();
 
-            // If there is no stanza or only one stanza defined, we can load the rf file
-            if (stanzaList.size() < 2) {
-                this.rcFileModel.setRcFilename(fwknoprc);
-                this.rcFileModel.load();
-            } // If there are more than one stanza defined, we prompt the user to select the stanza to load
-            else {
+            // If there are more than one stanza defined, we prompt the user to select the stanza to load
+            if (stanzaList.size() >= 2) {
                 String selectedStanza = (String) JOptionPane.showInputDialog(this.view,
                     InternationalizationHelper.getMessage("i18n.select.the.stanza.to.load"),
                     InternationalizationHelper.getMessage("i18n.warning"),
@@ -123,10 +136,15 @@ public class MainWindowController {
                     throw new IOException();
                 }
 
-                this.rcFileModel.load(selectedStanza);
+                // Convert the multiple stanza file to several single stanza file
+                this.rcFileModel.convertToSingleStanzaFile(rcFilename);
+
+                // Select the new single stanza file as rc file
+                this.rcFileModel.setRcFilename(rcFilename + "." + selectedStanza);
             }
 
-            updateNewRcFile(fwknoprc);
+            this.rcFileModel.load();
+            updateNewRcFile(this.rcFileModel.getRcFilename());
             updateConfigurationList();
         } catch (IOException ex) {
             // Nothing to do - The file does not exist or no stanza has ben selected by the user
@@ -163,15 +181,7 @@ public class MainWindowController {
             fileChooser.setFileHidingEnabled(false);
             final int result = fileChooser.showOpenDialog(null);
             if (result == JFileChooser.APPROVE_OPTION) {
-                String filename = fileChooser.getSelectedFile().getAbsolutePath();
-                try {
-                    this.rcFileModel.setRcFilename(filename);
-                    this.rcFileModel.load();
-                    updateNewRcFile(filename);
-                    updateConfigurationList();
-                } catch (IOException ex) {
-                    this.LOGGER.error("Unable to load rc file : " + filename);
-                }
+                loadRcFile(fileChooser.getSelectedFile().getAbsolutePath());
             }
         });
 

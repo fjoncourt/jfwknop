@@ -28,24 +28,60 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+/**
+ * Model used to store fwknoprc settings that are displayed in JFwknop UI
+ *
+ * @author Franck Joncourt
+ */
 public class RcFileModel {
 
+    // Default fwknop rc filename
+    static final public String FWKNOPRC = ".fwknoprc";
+
+    // Static logger for this class
     static final Logger LOGGER = LogManager.getLogger(RcFileModel.class.getName());
 
+    // Context that contains the current fwknoprc settings
     private Map<EnumFwknopRcKey, String> context;
-    private final MainWindowView view;
+
+    // Rc file instance
     private RcFile rcFile;
 
+    // The registered listener that is notified/updated when the model changes
+    private final MainWindowView listener;
+
+    /**
+     * Rc file model constructor
+     *
+     * @param view listener to update when the model changes
+     */
     public RcFileModel(final MainWindowView view) {
         super();
-        this.view = view;
+        this.listener = view;
     }
 
     /**
-     * Refresh all listeners
+     * Refresh all listeners (registered view)
      */
     public void updateListeners() {
-        this.view.onRcFileChange(this.context);
+        this.listener.onRcFileChange(this.context);
+    }
+
+    /**
+     * Convert a multi stanza rc file to several single stanza rc file
+     *
+     * @param rcFilename initial rc file that contains more than one stanza
+     * @throws IOException
+     */
+    public void convertToSingleStanzaFile(String rcFilename) throws IOException {
+
+        RcFile legacyRcFile = new RcFile(rcFilename);
+        List<String> stanzaList = legacyRcFile.lookUpStanza();
+        for (String stanza : stanzaList) {
+            RcFile singleStanzaRcFile = new RcFile(rcFilename);
+            singleStanzaRcFile.parse(stanza);
+            singleStanzaRcFile.saveAs(rcFilename + "." + stanza);
+        }
     }
 
     /**
@@ -56,15 +92,14 @@ public class RcFileModel {
      *
      * @throws IOException if the rc file does not exist
      */
+    //FIXME description
     public void load() throws IOException {
         String selectedStanza = null;
         List<String> stanzaList = this.rcFile.lookUpStanza();
         if (stanzaList.size() == 1) {
             selectedStanza = stanzaList.get(0);
         }
-        this.rcFile.parse(selectedStanza);
-        this.context = this.rcFile.getConfig();
-        updateListeners();
+        load(selectedStanza);
     }
 
     /**
@@ -72,6 +107,7 @@ public class RcFileModel {
      * @param selectedStanza
      * @throws IOException
      */
+    // FIXME description
     public void load(String selectedStanza) throws IOException {
         this.rcFile.parse(selectedStanza);
         this.context = this.rcFile.getConfig();

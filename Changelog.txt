@@ -9,6 +9,7 @@ JFwknop - 1.2.0
     * Wizard - Generate warning - Closes #16
       + Automatic resolution is used by default, *-R* option from fwknop, rather
         than *source*.
+    * Load ~/.fwknoprc file at startup - Closes #17
 
 JFwknop - 1.1.0 - 02/10/2016
 
