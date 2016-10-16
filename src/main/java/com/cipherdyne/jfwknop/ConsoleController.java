@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -63,11 +63,17 @@ public class ConsoleController extends AbstractController {
         });
 
         this.parentView.getCbConfigList().addActionListener((ActionEvent e) -> {
-            String filename = ((JFwknopComboBox) e.getSource()).getText();
-            if (filename != null) {
+            JFwknopComboBox cb = ((JFwknopComboBox) e.getSource());
+            String filename = cb.getText();
+
+            // Reload the rc file if this is not the default configuration and filename is valid
+            if ((filename != null) && !cb.isDefault()) {
                 try {
-                    this.parentController.getRcFileModel().load(filename);
-                    this.parentController.updateNewRcFile(filename);
+                    if (!this.parentController.getRcFileModel().getRcFilename().equals(filename)) {
+                        this.parentController.getRcFileModel().setRcFilename(filename);
+                        this.parentController.getRcFileModel().load();
+                        this.parentController.updateNewRcFile(filename);
+                    }
                 } catch (IOException ex) {
                     MainWindowController.LOGGER.error("Unable to load rc file : " + filename);
                 }

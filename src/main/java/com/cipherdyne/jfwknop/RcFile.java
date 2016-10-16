@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -34,45 +34,82 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 public class RcFile {
 
+    // Pattern that matches a stanza
+    final private static Pattern StanzaPattern = Pattern.compile("^\\[(.*)\\]");
+
+    // Pattern that matches a key/value line
+    final private static Pattern keyPattern = Pattern.compile("^(?!#)(.*)\\s(.*)");
+
+    // Default stanza used by fwknop client in fwknoprc file to provide common settings for all stanzas
+    final public static String DEFAULT_STANZA = "default";
+
+    // Path to the rc file
     private String filepath;
+
+    // Static logger for this class
     static final Logger LOGGER = LogManager.getLogger(RcFile.class.getName());
 
+    // List of key found in the rc file once parsed
     private Map<EnumFwknopRcKey, String> config = new HashMap<>();
 
+    /**
+     * Constructor
+     *
+     * @param filepath rc file patch
+     */
     public RcFile(final String filepath) {
         this.filepath = filepath;
     }
 
     /**
-     * Parse the rcfile and update the context with the key found
+     * Parse rc file and initialize context with key/value found in default and selected stanza
      *
-     * @throws IOException if the rc file does not exist
+     * @param selectedStanza Stanza to load settings from along with the default stanza settings
+     * @throws IOException
      */
-    public void parse() throws IOException {
+    public void parse(String selectedStanza) throws IOException {
+
+        if (selectedStanza == null) {
+            selectedStanza = DEFAULT_STANZA;
+        }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(this.filepath))) {
 
-            final Pattern pattern = Pattern.compile("^(?!#)(.*)\\s(.*)");
             String line;
             EnumFwknopRcKey key;
+            String currentStanza = StringUtils.EMPTY;
 
+            // Iterate over all lines in the rc file
             while ((line = reader.readLine()) != null) {
-                final Matcher matcher = pattern.matcher(line);
-                if (matcher.find()) {
-                    try {
-                        key = EnumFwknopRcKey.valueOf(matcher.group(1).trim());
-                    } catch (final java.lang.IllegalArgumentException e) {
-                        LOGGER.warn("Unsupported variable: " + e.getMessage());
-                        continue;
+
+                // Detect stanza and set it as current to avoid parsing unwanted stanza
+                final Matcher stanzaMatcher = StanzaPattern.matcher(line);
+                if (stanzaMatcher.find()) {
+                    currentStanza = stanzaMatcher.group(1).trim();
+                    continue;
+                }
+
+                // Parse only line for default and selected stanza
+                if (DEFAULT_STANZA.equals(currentStanza) || selectedStanza.equals(currentStanza)) {
+                    final Matcher keyMatcher = keyPattern.matcher(line);
+                    if (keyMatcher.find()) {
+                        try {
+                            key = EnumFwknopRcKey.valueOf(keyMatcher.group(1).trim());
+                        } catch (final java.lang.IllegalArgumentException e) {
+                            LOGGER.warn("Unsupported variable: " + e.getMessage());
+                            continue;
+                        }
+                        this.config.put(key, keyMatcher.group(2).trim());
                     }
-                    this.config.put(key, matcher.group(2).trim());
                 }
             }
+
             reader.close();
 
         } catch (final IOException e) {
@@ -98,7 +135,7 @@ public class RcFile {
         final Charset charset = Charset.forName("utf-8");
 
         try (BufferedWriter writer = Files.newBufferedWriter(fileP, charset)) {
-            writer.write("[default]\n");
+            writer.write("[" + DEFAULT_STANZA + "]\n");
             for (final Entry<EnumFwknopRcKey, String> entry : this.config.entrySet()) {
                 if (!entry.getValue().isEmpty()) {
                     writer.write(entry.getKey().toString() + "\t\t" + entry.getValue() + "\n");
@@ -112,6 +149,12 @@ public class RcFile {
 
     }
 
+    /**
+     * Configure read/write persmissions for local user only.
+     *
+     * Rc file contains passwords used to authenticate on fwknop server. We ensure the file
+     * permissions as set accordingly
+     */
     private void fixPermissions() {
         File file = new File(this.filepath);
 
@@ -146,30 +189,32 @@ public class RcFile {
     }
 
     /**
-     * Look up stanzas in rf file
+     * Look up the lsit of stanzas available in the rc file
      *
-     * @return the list of stanza available in the rc file
+     * @return the list of stanza available in the rc file except the default stanza
      * @throws IOException
      */
     public List<String> lookUpStanza() throws IOException {
         List<String> stanzaList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(this.filepath))) {
 
-            final Pattern pattern = Pattern.compile("^\\[(.*)\\]");
             String line;
 
             while ((line = reader.readLine()) != null) {
-                final Matcher matcher = pattern.matcher(line);
+                final Matcher matcher = StanzaPattern.matcher(line);
 
                 if (matcher.find()) {
-                    stanzaList.add(matcher.group(1).trim());
+                    String stanza = matcher.group(1).trim();
+                    if (!DEFAULT_STANZA.equals(stanza)) {
+                        stanzaList.add(stanza);
+                    }
                 }
             }
 
             reader.close();
 
         } catch (final IOException e) {
-            LOGGER.error("Unable to open rc file : " + e.getMessage());
+            LOGGER.error("Unable to open rc file *" + this.filepath + "* :" + e.getMessage());
             throw (e);
         }
 

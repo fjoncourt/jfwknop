@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -74,7 +74,7 @@ public class MainWindowController {
         // Initialize the key model from the configuration
         this.keyModel = new KeyModel(this.view);
 
-        // Setup sub controller
+        // Set up sub controllers
         List<IController> controllerList = new ArrayList<>(Arrays.asList(
             new CipherTabController(this.view, this),
             new GeneralTabController(this.view, this),
@@ -88,17 +88,49 @@ public class MainWindowController {
         // Setup action listeners
         populateMenuBar();
 
-        // Try to open ~/.fwknoprc
+        this.view.display();
+
+        loadDefaultFwknoprc();
+    }
+
+    /**
+     * Load ~./fwknoprc file if only one user specifi stanza is available
+     */
+    private void loadDefaultFwknoprc() {
         try {
             String fwknoprc = System.getProperty("user.home") + System.getProperty("file.separator") + ".fwknoprc";
-            this.rcFileModel.load(fwknoprc);
+
+            // Initialize the rc file model and check for the number of stanza available before laoding it
+            this.rcFileModel.setRcFilename(fwknoprc);
+            List<String> stanzaList = this.rcFileModel.getStanzas();
+
+            // If there is no stanza or only one stanza defined, we can load the rf file
+            if (stanzaList.size() < 2) {
+                this.rcFileModel.setRcFilename(fwknoprc);
+                this.rcFileModel.load();
+            } // If there are more than one stanza defined, we prompt the user to select the stanza to load
+            else {
+                String selectedStanza = (String) JOptionPane.showInputDialog(this.view,
+                    InternationalizationHelper.getMessage("i18n.select.the.stanza.to.load"),
+                    InternationalizationHelper.getMessage("i18n.warning"),
+                    JOptionPane.WARNING_MESSAGE,
+                    null,
+                    stanzaList.toArray(),
+                    stanzaList.get(0));
+
+                // If the user cancel, we abort the update by throwing an exception
+                if (selectedStanza == null) {
+                    throw new IOException();
+                }
+
+                this.rcFileModel.load(selectedStanza);
+            }
+
             updateNewRcFile(fwknoprc);
             updateConfigurationList();
         } catch (IOException ex) {
-            // Nothing to do - The file does not exist
+            // Nothing to do - The file does not exist or no stanza has ben selected by the user
         }
-
-        this.view.display();
     }
 
     /**
@@ -133,7 +165,8 @@ public class MainWindowController {
             if (result == JFileChooser.APPROVE_OPTION) {
                 String filename = fileChooser.getSelectedFile().getAbsolutePath();
                 try {
-                    this.rcFileModel.load(filename);
+                    this.rcFileModel.setRcFilename(filename);
+                    this.rcFileModel.load();
                     updateNewRcFile(filename);
                     updateConfigurationList();
                 } catch (IOException ex) {
@@ -269,7 +302,8 @@ public class MainWindowController {
         for (final JMenuItem miFilename : this.view.getVarRecentRcFiles()) {
             miFilename.addActionListener(e -> {
                 try {
-                    MainWindowController.this.rcFileModel.load(e.getActionCommand());
+                    this.rcFileModel.setRcFilename(e.getActionCommand());
+                    this.rcFileModel.load();
                     updateNewRcFile(e.getActionCommand());
                 } catch (IOException ex) {
                     this.LOGGER.error("Unable to load rc file : " + e.getActionCommand());

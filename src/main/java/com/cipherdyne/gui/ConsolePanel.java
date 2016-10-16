@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -19,12 +19,12 @@
 package com.cipherdyne.gui;
 
 import com.cipherdyne.gui.components.JFwknopCheckBox;
-import com.cipherdyne.jfwknop.EnumFwknopRcKey;
-import com.cipherdyne.jfwknop.IFwknopVariable;
-import com.cipherdyne.utils.InternationalizationHelper;
 import com.cipherdyne.gui.components.JFwknopComboBox;
 import com.cipherdyne.gui.components.JFwknopLabel;
 import com.cipherdyne.gui.components.JFwknopTextField;
+import com.cipherdyne.jfwknop.EnumFwknopRcKey;
+import com.cipherdyne.jfwknop.IFwknopVariable;
+import com.cipherdyne.utils.InternationalizationHelper;
 import java.awt.Font;
 import java.util.Map;
 import javax.swing.ImageIcon;
@@ -49,16 +49,16 @@ public class ConsolePanel extends JPanel {
 
     /* Button to Execute the fwknop client with the curent selected configuration */
     public JButton btnExecute;
-    
+
     /* Button to stop the current knock if run periodically  */
     public JButton btnStop;
 
     /* Combo box used to select the configuration to apply to knock */
     public JFwknopComboBox cbConfigList;
-    
+
     /* Check box used to select if the knock is periodic or not */
     public JFwknopCheckBox periodicExecution;
-    
+
     /* Period between two fwknop execution */
     public JFwknopTextField varPeriod;
 
@@ -69,8 +69,8 @@ public class ConsolePanel extends JPanel {
 
     /**
      * Set up the console view
-     * 
-     * @param varMap 
+     *
+     * @param varMap
      */
     private void initialize(Map<EnumFwknopRcKey, IFwknopVariable> varMap) {
 
@@ -98,8 +98,8 @@ public class ConsolePanel extends JPanel {
         JPanel btnPanel = new JPanel(new MigLayout("insets 0, gap 0, flowx", "", ""));
         ImageIcon clearImg = new ImageIcon(this.getClass().getResource("/clear16.png"));
         ImageIcon stopImg = new ImageIcon(this.getClass().getResource("/stop16.png"));
-        
-        
+
+
         this.btnClearConsole = new JButton(clearImg);
         this.btnClearConsole.setToolTipText(InternationalizationHelper.getMessage("i18n.btn.clear"));
         btnPanel.add(btnClearConsole);
@@ -111,7 +111,7 @@ public class ConsolePanel extends JPanel {
         this.btnStop.setToolTipText(InternationalizationHelper.getMessage("i18n.btn.stop"));
         this.btnStop.setEnabled(false);
         btnPanel.add(btnStop);
-        
+
         topPanel.add(btnPanel);
 
         JPanel settingsPanel = new JPanel(new MigLayout("insets 0, gap 5, flowx", "[70]0![][][]", ""));

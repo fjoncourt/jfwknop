@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 
 public class RcFileModel {
 
-    static final Logger logger = LogManager.getLogger(RcFileModel.class.getName());
+    static final Logger LOGGER = LogManager.getLogger(RcFileModel.class.getName());
 
     private Map<EnumFwknopRcKey, String> context;
     private final MainWindowView view;
@@ -54,12 +54,26 @@ public class RcFileModel {
      * The RC file is parsed and if this one is valid, model listeners are updated with tits
      * configuration
      *
-     * @param filePath Absolute path the rc file.
      * @throws IOException if the rc file does not exist
      */
-    public void load(final String filePath) throws IOException {
-        this.rcFile = new RcFile(filePath);
-        this.rcFile.parse();
+    public void load() throws IOException {
+        String selectedStanza = null;
+        List<String> stanzaList = this.rcFile.lookUpStanza();
+        if (stanzaList.size() == 1) {
+            selectedStanza = stanzaList.get(0);
+        }
+        this.rcFile.parse(selectedStanza);
+        this.context = this.rcFile.getConfig();
+        updateListeners();
+    }
+
+    /**
+     *
+     * @param selectedStanza
+     * @throws IOException
+     */
+    public void load(String selectedStanza) throws IOException {
+        this.rcFile.parse(selectedStanza);
         this.context = this.rcFile.getConfig();
         updateListeners();
     }
@@ -67,7 +81,7 @@ public class RcFileModel {
     // FIXME: do not set context directly but prefer setContext method
     public void save(final Map<EnumFwknopRcKey, String> context) {
         this.rcFile.setConfig(context);
-        logger.info("Save config");
+        LOGGER.info("Save config");
         this.rcFile.save();
     }
 
@@ -79,7 +93,7 @@ public class RcFileModel {
             this.rcFile = new RcFile("fwknoprctmp");
         }
         this.rcFile.setConfig(this.context);
-        logger.info("Save config as :" + filename);
+        LOGGER.info("Save config as :" + filename);
         this.rcFile.saveAs(filename);
     }
 
@@ -119,4 +133,5 @@ public class RcFileModel {
     public void setContext(Map<EnumFwknopRcKey, String> context) {
         this.context = context;
     }
+
 }
