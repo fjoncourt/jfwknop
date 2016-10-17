@@ -57,7 +57,7 @@ public class MainWindowController {
         InternationalizationHelper.configure(this.jfwknopConfig.getConfigKey().get(EnumFwknopConfigKey.LANGUAGE));
 
         // Build the view
-        this.view = new MainWindowView("Default configuration");
+        this.view = new MainWindowView();
         this.view.buildRecentFilesList(this.jfwknopConfig.getRecentFileList());
         this.rcFileModel = new RcFileModel(this.view);
 
@@ -79,8 +79,14 @@ public class MainWindowController {
             controller.initialize();
         }
 
-        // Setup action listeners
-        populateMenuBar();
+        populateRecentFiles();
+
+        // FIXME: Not very nice
+        // Set up config list and select default config
+        ArrayList<String> configs = new ArrayList<>();
+        configs.add(InternationalizationHelper.getMessage("i18n.default"));
+        configs.addAll(1, this.jfwknopConfig.getRecentFileList());
+        this.view.setCbConfigList(configs.toArray(new String[0]));
 
         this.view.display();
 
@@ -107,6 +113,8 @@ public class MainWindowController {
      *
      * If this is a multi stanza file, then the application prompts the user to select the stanza to
      * load and split the file in several single stanza file.
+     *
+     * @param rcFilename rc file to load
      */
     public void loadRcFile(String rcFilename) {
         try {
@@ -166,18 +174,6 @@ public class MainWindowController {
             this.view.getBtnFwknopVerbose().isSelected() ? "1" : "0");
     }
 
-    private void populateMenuBar() {
-
-        populateRecentFiles();
-
-        // FIXME: Not very nice
-        // Set up config list and select default config
-        ArrayList<String> configs = new ArrayList<>();
-        configs.add(InternationalizationHelper.getMessage("i18n.default"));
-        configs.addAll(1, this.jfwknopConfig.getRecentFileList());
-        this.view.setCbConfigList(configs.toArray(new String[0]));
-    }
-
     /**
      * Save current fwknop configuration.
      *
@@ -209,7 +205,7 @@ public class MainWindowController {
         final int result = fileChooser.showSaveDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
             final String filename = fileChooser.getSelectedFile().getAbsolutePath();
-            MainWindowController.this.rcFileModel.saveAs(convertViewToConfig(this.view.getVariables()),
+            this.rcFileModel.saveAs(convertViewToConfig(this.view.getVariables()),
                 filename);
             updateNewRcFile(filename);
             updateConfigurationList();
@@ -234,7 +230,7 @@ public class MainWindowController {
                     this.rcFileModel.load();
                     updateNewRcFile(e.getActionCommand());
                 } catch (IOException ex) {
-                    this.LOGGER.error("Unable to load rc file : " + e.getActionCommand());
+                    LOGGER.error("Unable to load rc file : " + e.getActionCommand());
                 }
             });
         }

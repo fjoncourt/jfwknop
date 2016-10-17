@@ -49,6 +49,7 @@ public class MainWindowView extends DefaultFrame implements IConsole {
 
     private static final long serialVersionUID = 7003086413693874319L;
     private static final String JFWKNOP_TITLE = "JFwknop - ";
+    private static final String DEFAULT_CONFIGURATION = "Default configuration";
 
     private JMenu recentsMenu;
 
@@ -56,8 +57,8 @@ public class MainWindowView extends DefaultFrame implements IConsole {
 
     private final ConsolePanel consolePanel;
 
-    public MainWindowView(final String title) {
-        super(JFWKNOP_TITLE + title);
+    public MainWindowView() {
+        super(JFWKNOP_TITLE + DEFAULT_CONFIGURATION);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new MigLayout("inset 0, gap 0, flowy", "[grow]", "[][fill]"));
         setIconImage(new ImageIcon(this.getClass().getResource("/cipherdyne.png")).getImage());
@@ -233,13 +234,23 @@ public class MainWindowView extends DefaultFrame implements IConsole {
 
     public void onRcFileChange(final Map<EnumFwknopRcKey, String> rcFileContext) {
 
+        if (rcFileContext == null) {
+            this.setTitle(DEFAULT_CONFIGURATION);
+        }
+
         this.varMap.entrySet().stream().map((entry) -> entry.getKey()).forEach((crtKey) -> {
             final IFwknopVariable component = this.varMap.get(crtKey);
-            final String newVal = rcFileContext.get(crtKey);
             if (component != null) {
-                if (newVal != null) {
-                    component.setText(newVal);
-                } else {
+                // Context is not empty - set value
+                if (rcFileContext != null) {
+                    final String newVal = rcFileContext.get(crtKey);
+                    if (newVal != null) {
+                        component.setText(newVal);
+                    } else {
+                        component.setDefaultValue();
+                    }
+                } // Context is empty - set default value for everything
+                else {
                     component.setDefaultValue();
                 }
             }

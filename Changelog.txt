@@ -12,6 +12,8 @@ JFwknop - 1.2.0
     * Load ~/.fwknoprc file at startup - Closes #17
     * JFwknop configuration file is renamed from config.properties to
       .jfwknoprc and is created in user home directory - Closes #13
+    * Added new entry in File menu to provide the ability to create an empty
+      configuration - Closes #6
 
 JFwknop - 1.1.0 - 02/10/2016
 

@@ -47,6 +47,7 @@ class MenuBarController extends AbstractController {
     public void initialize() {
         // Set up action listener when creating an empty configuration
         this.parentView.getMenuItem(EnumMenuItem.FILE_NEW).addActionListener(e -> {
+            this.parentController.getRcFileModel().reset();
         });
 
         // Set up action listener when opening a new configuration file

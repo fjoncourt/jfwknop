@@ -58,6 +58,7 @@ public class RcFileModel {
     public RcFileModel(final MainWindowView view) {
         super();
         this.listener = view;
+        this.reset();
     }
 
     /**
@@ -168,6 +169,17 @@ public class RcFileModel {
 
     public void setContext(Map<EnumFwknopRcKey, String> context) {
         this.context = context;
+    }
+
+    /**
+     * Reset the rc file model.
+     *
+     * This method clears the context/settings and updates listeners
+     */
+    public void reset() {
+        this.rcFile = null;
+        this.context = null;
+        this.updateListeners();
     }
 
 }
