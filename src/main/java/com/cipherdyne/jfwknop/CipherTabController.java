@@ -18,6 +18,7 @@
  */
 package com.cipherdyne.jfwknop;
 
+import com.cipherdyne.gui.components.IFwknopVariable;
 import com.cipherdyne.gui.EnumButton;
 import com.cipherdyne.gui.MainWindowView;
 import com.cipherdyne.gui.gpg.GpgController;

@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -16,14 +16,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.cipherdyne.jfwknop;
+package com.cipherdyne.gui.wizard;
 
-public interface IFwknopVariable {
-    void setText(final String val);
-
-    String getText();
-
-    void setDefaultValue();
-
-    boolean isDefault();
+/**
+ *
+ * @author Franck Joncourt
+ */
+public enum EnumWizardPanel {
+    SELECT_CRYPTO,
+    SETUP_AES,
+    SETUP_HMAC,
+    SETUP_ACCESS,
+    SETUP_GNUPG,
+    SETUP_REMOTE_HOST;
 }

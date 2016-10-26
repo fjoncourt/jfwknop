@@ -18,7 +18,7 @@
  */
 package com.cipherdyne.gui.ssh;
 
-import com.cipherdyne.jfwknop.IFwknopVariable;
+import com.cipherdyne.gui.components.IFwknopVariable;
 import com.cipherdyne.utils.InternationalizationHelper;
 import com.cipherdyne.gui.components.JFwknopLabel;
 import com.cipherdyne.gui.components.JFwknopTextField;

@@ -16,17 +16,31 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.cipherdyne.gui.wizard;
+package com.cipherdyne.gui.wizard.panels;
+
+import com.cipherdyne.gui.components.IFwknopVariable;
+import com.cipherdyne.gui.components.JFwknopTextField;
+import com.cipherdyne.gui.wizard.EnumWizardButton;
+import com.cipherdyne.gui.wizard.EnumWizardVariable;
+import java.util.Map;
+import javax.swing.JButton;
 
 /**
+ * Wizard view that displays basic Fwknop variables to set up in order to quickly run and SPA packet
  *
  * @author Franck Joncourt
  */
-public enum EnumWizardButton {
-    CANCEL,
-    BACK,
-    NEXT,
-    FINISH,
-    GENERATE_AES_KEY,
-    GENERATE_HMAC_KEY;
+public class AccessSettings extends DefaultPanel {
+
+    /**
+     * Wizard view to selct AES or GPG encryption
+     */
+    public AccessSettings(Map<EnumWizardVariable, IFwknopVariable> varMap, Map<EnumWizardButton, JButton> btnMap) {
+        super();
+
+        varMap.put(EnumWizardVariable.ACCESS, new JFwknopTextField("tcp/22"));
+
+        // Add object to the newly created panel
+        this.add(Utils.createItem(varMap, EnumWizardVariable.ACCESS), "growx");
+    }
 }

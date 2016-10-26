@@ -18,6 +18,7 @@
  */
 package com.cipherdyne.jfwknop;
 
+import com.cipherdyne.gui.components.IFwknopVariable;
 import com.cipherdyne.gui.components.JFwknopComboBox;
 import com.cipherdyne.gui.components.JFwknopLabel;
 import com.cipherdyne.gui.components.JFwknopTextArea;

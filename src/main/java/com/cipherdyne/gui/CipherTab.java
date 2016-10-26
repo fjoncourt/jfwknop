@@ -20,7 +20,7 @@ package com.cipherdyne.gui;
 
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
 import com.cipherdyne.jfwknop.FwknopFactory;
-import com.cipherdyne.jfwknop.IFwknopVariable;
+import com.cipherdyne.gui.components.IFwknopVariable;
 import com.cipherdyne.utils.InternationalizationHelper;
 import java.util.Arrays;
 import java.util.Map;

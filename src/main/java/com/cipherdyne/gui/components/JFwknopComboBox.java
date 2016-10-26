@@ -18,7 +18,6 @@
  */
 package com.cipherdyne.gui.components;
 
-import com.cipherdyne.jfwknop.IFwknopVariable;
 import java.awt.Color;
 
 import javax.swing.JComboBox;

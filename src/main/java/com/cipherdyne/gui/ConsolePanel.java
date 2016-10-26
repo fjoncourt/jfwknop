@@ -23,7 +23,7 @@ import com.cipherdyne.gui.components.JFwknopComboBox;
 import com.cipherdyne.gui.components.JFwknopLabel;
 import com.cipherdyne.gui.components.JFwknopTextField;
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
-import com.cipherdyne.jfwknop.IFwknopVariable;
+import com.cipherdyne.gui.components.IFwknopVariable;
 import com.cipherdyne.utils.InternationalizationHelper;
 import java.awt.Font;
 import java.util.Map;

@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -18,10 +18,26 @@
  */
 package com.cipherdyne.gui.wizard;
 
+import com.cipherdyne.utils.InternationalizationHelper;
+
 /**
  *
  * @author Franck Joncourt
  */
 public enum EnumWizardVariable {
-    KEY, HMAC, REMOTE_HOST, ACCESS;
+    ENCRYPTION_MODE("i18n.wizard.encryptionmode.description"),
+    AES_KEY("i18n.wizard.key.description"),
+    HMAC_KEY("i18n.wizard.hmac.description"),
+    REMOTE_HOST("i18n.wizard.remotehost.description"),
+    ACCESS("i18n.wizard.access.description");
+
+    private final String description;
+
+    private EnumWizardVariable(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return InternationalizationHelper.getMessage(this.description);
+    }
 }

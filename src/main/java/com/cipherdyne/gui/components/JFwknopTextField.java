@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -18,11 +18,8 @@
  */
 package com.cipherdyne.gui.components;
 
-import com.cipherdyne.jfwknop.IFwknopVariable;
-import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-
 import javax.swing.JTextField;
 import org.apache.commons.lang3.StringUtils;
 

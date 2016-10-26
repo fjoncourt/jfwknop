@@ -19,7 +19,7 @@
 package com.cipherdyne.gui;
 
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
-import com.cipherdyne.jfwknop.IFwknopVariable;
+import com.cipherdyne.gui.components.IFwknopVariable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

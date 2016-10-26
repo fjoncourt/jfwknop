@@ -1,4 +1,4 @@
-/*
+/* 
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -16,17 +16,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.cipherdyne.gui.wizard;
+package com.cipherdyne.gui.components;
 
-/**
- *
- * @author Franck Joncourt
- */
-public enum EnumWizardButton {
-    CANCEL,
-    BACK,
-    NEXT,
-    FINISH,
-    GENERATE_AES_KEY,
-    GENERATE_HMAC_KEY;
+public interface IFwknopVariable {
+    void setText(final String val);
+
+    String getText();
+
+    void setDefaultValue();
+
+    boolean isDefault();
 }

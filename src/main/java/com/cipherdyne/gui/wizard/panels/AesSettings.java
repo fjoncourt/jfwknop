@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -16,38 +16,34 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.cipherdyne.gui;
+package com.cipherdyne.gui.wizard.panels;
 
-import com.cipherdyne.jfwknop.EnumFwknopRcKey;
-import com.cipherdyne.jfwknop.FwknopFactory;
 import com.cipherdyne.gui.components.IFwknopVariable;
+import com.cipherdyne.gui.components.JFwknopTextField;
+import com.cipherdyne.gui.wizard.EnumWizardButton;
+import com.cipherdyne.gui.wizard.EnumWizardVariable;
 import com.cipherdyne.utils.InternationalizationHelper;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import javax.swing.JButton;
-import javax.swing.JPanel;
-import net.miginfocom.swing.MigLayout;
 
 /**
+ * Wizard view that displays basic Fwknop variables to set up in order to quickly run and SPA packet
  *
- * @author franck
+ * @author Franck Joncourt
  */
-public class NetworkTab extends JPanel {
+public class AesSettings extends DefaultPanel {
 
-    public NetworkTab(Map<EnumFwknopRcKey, IFwknopVariable> varMap, Map<EnumButton, JButton> btnMap) {
-        super(new MigLayout("fill", "", ""));
-        initializeVariables(varMap);
-    }
+    /**
+     * Wizard view to selct AES or GPG encryption
+     */
+    public AesSettings(Map<EnumWizardVariable, IFwknopVariable> varMap, Map<EnumWizardButton, JButton> btnMap) {
+        super();
 
-    private void initializeVariables(Map<EnumFwknopRcKey, IFwknopVariable> varMap) {
-        List<EnumFwknopRcKey> list = Arrays.asList(
-            EnumFwknopRcKey.NAT_ACCESS,
-            EnumFwknopRcKey.NAT_LOCAL,
-            EnumFwknopRcKey.NAT_PORT,
-            EnumFwknopRcKey.NAT_RAND_PORT);
+        varMap.put(EnumWizardVariable.AES_KEY, new JFwknopTextField(""));
+        btnMap.put(EnumWizardButton.GENERATE_AES_KEY, new JButton(InternationalizationHelper.getMessage("i18n.wizard.generate.aes.key")));
 
-        this.add(FwknopFactory.createPanel(new MigLayout("insets 1, wrap 2, gapy 1!", "[120]0![200]", ""),
-            InternationalizationHelper.getMessage("i18n.nat"), varMap, list), "growy, aligny top");
+        // Add object to the newly created panel
+        this.add(Utils.createItem(varMap, EnumWizardVariable.AES_KEY), "growx");
+        this.add(btnMap.get(EnumWizardButton.GENERATE_AES_KEY), "growx");
     }
 }

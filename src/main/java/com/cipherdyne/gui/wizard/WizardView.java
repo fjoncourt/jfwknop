@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -18,124 +18,176 @@
  */
 package com.cipherdyne.gui.wizard;
 
-import com.cipherdyne.gui.components.JFwknopTextField;
+import com.cipherdyne.gui.components.IFwknopVariable;
+import com.cipherdyne.gui.wizard.panels.AccessSettings;
+import com.cipherdyne.gui.wizard.panels.AesSettings;
+import com.cipherdyne.gui.wizard.panels.CryptoSettings;
+import com.cipherdyne.gui.wizard.panels.HmacSettings;
+import com.cipherdyne.gui.wizard.panels.RemoteHostSettings;
 import com.cipherdyne.utils.InternationalizationHelper;
-import java.awt.Color;
-import java.awt.Component;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JEditorPane;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * Wizard view that displays basic Fwknop variables to set up in order to quickly run and SPA packet
  *
  * @author Franck Joncourt
  */
-public class WizardView extends DefaultDialog<EnumWizardVariable, EnumWizardButton> {
+class WizardView extends JDialog {
 
-    /**
-     * Wizard view
-     *
-     * @param frame parent frame to inherit from
-     */
+    private final Map<EnumWizardVariable, IFwknopVariable> varMap = new HashMap<>();
+    private final Map<EnumWizardButton, JButton> btnMap = new HashMap<>();
+    private Map<EnumWizardPanel, JPanel> panelMap = new HashMap<>();
+
+    private JPanel mainPanel;
+    private EnumWizardPanel currentPanel = EnumWizardPanel.SELECT_CRYPTO;
+
     public WizardView(JFrame frame) {
-        super(frame, InternationalizationHelper.getMessage("i18n.wizard.title"));
-
-        // Create variable components and add them to the map
-        this.varMap.put(EnumWizardVariable.KEY, new JFwknopTextField(""));
-        this.varMap.put(EnumWizardVariable.HMAC, new JFwknopTextField(""));
-        this.varMap.put(EnumWizardVariable.REMOTE_HOST, new JFwknopTextField(""));
-        this.varMap.put(EnumWizardVariable.ACCESS, new JFwknopTextField("tcp/22"));
-
-        // Create button components and add them to the map
-        this.btnMap.put(EnumWizardButton.GENERATE_RIJNDAEL_KEY, new JButton(InternationalizationHelper.getMessage("i18n.wizard.generate.rijndael.key")));
-        this.btnMap.put(EnumWizardButton.GENERATE_HMAC_KEY, new JButton(InternationalizationHelper.getMessage("i18n.wizard.generate.hmac.key")));
-        this.btnMap.put(EnumWizardButton.CANCEL, new JButton(InternationalizationHelper.getMessage("i18n.wizard.cancel")));
-        this.btnMap.put(EnumWizardButton.CREATE, new JButton(InternationalizationHelper.getMessage("i18n.wizard.create")));
-
-        // Create the wizard picture to be added on the view
-        JPanel imagePanel = new JPanel(new MigLayout("flowy", "", ""));
-        JLabel wizardLabel = new JLabel();
-        wizardLabel.setIcon(new ImageIcon(this.getClass().getResource("/wizard256.png")));
-        imagePanel.add(wizardLabel);
-        imagePanel.add(this.btnMap.get(EnumWizardButton.GENERATE_RIJNDAEL_KEY), "growx");
-        imagePanel.add(this.btnMap.get(EnumWizardButton.GENERATE_HMAC_KEY), "growx");
-
-        // Add components to the panel
-        this.setLayout(new MigLayout("fill, insets 10, flowx", "[256]0![500!]", "[500]"));
-
-        JPanel mainPanel = new JPanel(new MigLayout("flowy", "", ""));
-        mainPanel.add(createVarPanel(), "growx");
-        mainPanel.add(createButtonPanel(), "growx");
-
-        this.add(imagePanel);
-        this.add(mainPanel);
-
-        this.pack();
-        
+        super(frame, InternationalizationHelper.getMessage("i18n.wizard.title"), true);
+        this.createViews();
+        this.createButtons();
+        this.create();
         this.setLocationRelativeTo(frame);
         this.setResizable(false);
     }
 
-    /**
-     * Create an item for the wizard setup.
-     *
-     * An item is composed of a long description and a variable to be filled in. Both of them are
-     * added to a single panel.
-     *
-     * @param longDescription description to display to the user to help him fill in the variable
-     * value
-     * @param var EnumVariable variable that contains the user value
-     * @return the panel that contains the description and the variable
-     */
-    private JPanel createItem(String longDescription, EnumWizardVariable var) {
-        JPanel panel = new JPanel(new MigLayout("insets 0, gapy 1, flowy, fillx", "", ""));
+    private void createViews() {
+        this.panelMap.put(EnumWizardPanel.SELECT_CRYPTO, new CryptoSettings(varMap, btnMap));
+        this.panelMap.put(EnumWizardPanel.SETUP_AES, new AesSettings(varMap, btnMap));
+        this.panelMap.put(EnumWizardPanel.SETUP_HMAC, new HmacSettings(varMap, btnMap));
+        this.panelMap.put(EnumWizardPanel.SETUP_ACCESS, new AccessSettings(varMap, btnMap));
+        this.panelMap.put(EnumWizardPanel.SETUP_REMOTE_HOST, new RemoteHostSettings(varMap, btnMap));
+    }
 
-        // Create a transparent text area rather than a label since the description can long and may need to be wrapped on several lines
-        JEditorPane editorPane = new JEditorPane();
-        editorPane.setEditable(false);
-        editorPane.setOpaque(false);
-        editorPane.setBackground(new Color(10, 10, 10, 0));
-        editorPane.setContentType("text/html");
-        editorPane.setText(longDescription);
+    private void createButtons() {
+        this.btnMap.put(EnumWizardButton.CANCEL, new JButton(InternationalizationHelper.getMessage("i18n.wizard.cancel")));
+        this.btnMap.put(EnumWizardButton.BACK, new JButton(InternationalizationHelper.getMessage("i18n.wizard.back")));
+        this.btnMap.put(EnumWizardButton.NEXT, new JButton(InternationalizationHelper.getMessage("i18n.wizard.next")));
+        this.btnMap.put(EnumWizardButton.FINISH, new JButton(InternationalizationHelper.getMessage("i18n.wizard.finish")));
+    }
 
-        // Add object to the newly created panel
-        panel.add(editorPane, "growx");
-        panel.add((Component) this.varMap.get(var), "growx");
+    private void create() {
+        // Add components to the panel
+        this.setLayout(new MigLayout("insets 5, flowx, wrap 2", "[256!]0![500!]", "[][]"));
+        this.mainPanel = new JPanel(new MigLayout("fill", "", ""));
 
-        return panel;
+        updateMainPanel(currentPanel);
+
+        this.add(createWizardPanel());
+        this.add(this.mainPanel, "grow");
+        this.add(createFooterPanel(), "growx, spanx 2");
+
+        this.pack();
+    }
+
+    public Map<EnumWizardVariable, IFwknopVariable> getContext() {
+        return this.varMap;
+    }
+
+    public IFwknopVariable getVariable(EnumWizardVariable varId) {
+        return this.varMap.get(varId);
+    }
+
+    public JButton getButton(EnumWizardButton btnId) {
+        return this.btnMap.get(btnId);
+    }
+
+    protected JPanel createWizardPanel() {
+        JPanel imagePanel = new JPanel(new MigLayout("flowy, insets 0", "", ""));
+        JLabel wizardPicture = new JLabel(new ImageIcon(this.getClass().getResource("/wizard256.png")));
+        imagePanel.add(wizardPicture);
+
+        return imagePanel;
     }
 
     /**
-     * Create the panel to display the user settings (rijndael key, remote spa server and access
-     * field)
+     * Create a apanel that contains the cancel and next buttons
      *
      * @return the panel
      */
-    private JPanel createVarPanel() {
-        JPanel varPanel = new JPanel(new MigLayout("insets 0, gapy 10, flowy", "", ""));
+    private JPanel createFooterPanel() {
 
-        varPanel.add(createItem(InternationalizationHelper.getMessage("i18n.wizard.key.description"), EnumWizardVariable.KEY), "growx");
-        varPanel.add(createItem(InternationalizationHelper.getMessage("i18n.wizard.hmac.description"), EnumWizardVariable.HMAC), "growx");
-        varPanel.add(createItem(InternationalizationHelper.getMessage("i18n.wizard.remotehost.description"), EnumWizardVariable.REMOTE_HOST), "growx");
-        varPanel.add(createItem(InternationalizationHelper.getMessage("i18n.wizard.access.description"), EnumWizardVariable.ACCESS), "growx");
-
-        return varPanel;
-    }
-
-    /**
-     * Create a apanel that contains the create and cancel button
-     *
-     * @return the panel
-     */
-    private JPanel createButtonPanel() {
         JPanel btnPanel = new JPanel(new MigLayout("insets 0, fillx, flowx", "", ""));
-        btnPanel.add(this.btnMap.get(EnumWizardButton.CANCEL), "align left");
-        btnPanel.add(this.btnMap.get(EnumWizardButton.CREATE), "align right");
+        btnPanel.add(this.btnMap.get(EnumWizardButton.CANCEL), "width 120, center");
+        btnPanel.add(this.btnMap.get(EnumWizardButton.BACK), "width 120, center");
+        btnPanel.add(this.btnMap.get(EnumWizardButton.NEXT), "width 120, center");
+        btnPanel.add(this.btnMap.get(EnumWizardButton.FINISH), "width 120, center");
+
         return btnPanel;
+    }
+
+    private void updateMainPanel(EnumWizardPanel panel) {
+        boolean backButtonEnabled = true;
+        boolean nextButtonEnabled = true;
+        boolean finishButtonEnabled = false;
+
+        this.currentPanel = panel;
+
+        this.mainPanel.removeAll();
+        this.mainPanel.add(this.panelMap.get(this.currentPanel), "grow");
+        this.mainPanel.repaint();
+
+        if (this.currentPanel == EnumWizardPanel.SELECT_CRYPTO) {
+            backButtonEnabled = false;
+        } else if (this.currentPanel == EnumWizardPanel.SETUP_REMOTE_HOST) {
+            nextButtonEnabled = false;
+            finishButtonEnabled = true;
+        }
+
+        this.btnMap.get(EnumWizardButton.BACK).setEnabled(backButtonEnabled);
+        this.btnMap.get(EnumWizardButton.NEXT).setEnabled(nextButtonEnabled);
+        this.btnMap.get(EnumWizardButton.FINISH).setEnabled(finishButtonEnabled);
+    }
+
+    public void next() {
+        EnumWizardPanel nextPanel;
+
+        switch (this.currentPanel) {
+            case SELECT_CRYPTO:
+                nextPanel = EnumWizardPanel.SETUP_AES;
+                break;
+            case SETUP_AES:
+                nextPanel = EnumWizardPanel.SETUP_HMAC;
+                break;
+            case SETUP_HMAC:
+                nextPanel = EnumWizardPanel.SETUP_ACCESS;
+                break;
+            case SETUP_ACCESS:
+                nextPanel = EnumWizardPanel.SETUP_REMOTE_HOST;
+                break;
+            default:
+                nextPanel = this.currentPanel;
+        }
+
+        updateMainPanel(nextPanel);
+    }
+
+    public void back() {
+        EnumWizardPanel previousPanel;
+
+        switch (this.currentPanel) {
+            case SETUP_AES:
+                previousPanel = EnumWizardPanel.SELECT_CRYPTO;
+                break;
+            case SETUP_HMAC:
+                previousPanel = EnumWizardPanel.SETUP_AES;
+                break;
+            case SETUP_ACCESS:
+                previousPanel = EnumWizardPanel.SETUP_HMAC;
+                break;
+            case SETUP_REMOTE_HOST:
+                previousPanel = EnumWizardPanel.SETUP_ACCESS;
+                break;
+            default:
+                previousPanel = this.currentPanel;
+        }
+
+        updateMainPanel(previousPanel);
     }
 }

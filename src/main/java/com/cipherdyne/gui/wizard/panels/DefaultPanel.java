@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -16,33 +16,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.cipherdyne.gui.wizard;
+package com.cipherdyne.gui.wizard.panels;
 
-import com.cipherdyne.jfwknop.IFwknopVariable;
-import java.util.HashMap;
-import java.util.Map;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
+import javax.swing.JPanel;
+import net.miginfocom.swing.MigLayout;
 
 /**
  *
  * @author Franck Joncourt
  */
-class DefaultDialog<A,B> extends JDialog {
+public class DefaultPanel extends JPanel {
 
-    protected final Map<A, IFwknopVariable> varMap = new HashMap<>();
-    protected final Map<B, JButton> btnMap = new HashMap<>();
-
-    public DefaultDialog(JFrame frame, String title) {
-        super(frame, title, true);
-    }
-
-    public IFwknopVariable getVariable(A varId) {
-        return this.varMap.get(varId);
-    }
-
-    public JButton getButton(B btnId) {
-        return this.btnMap.get(btnId);
+    public DefaultPanel() {
+        this.setLayout(new MigLayout("aligny top, fillx, insets 0, gapy 5, flowy", "", ""));
     }
 }

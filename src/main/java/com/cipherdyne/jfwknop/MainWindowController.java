@@ -18,6 +18,7 @@
  */
 package com.cipherdyne.jfwknop;
 
+import com.cipherdyne.gui.components.IFwknopVariable;
 import com.cipherdyne.gui.MainWindowView;
 import com.cipherdyne.model.FwknopClientModel;
 import com.cipherdyne.model.KeyModel;
