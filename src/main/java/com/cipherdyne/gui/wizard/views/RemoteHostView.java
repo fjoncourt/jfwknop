@@ -16,12 +16,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.cipherdyne.gui.wizard.panels;
+package com.cipherdyne.gui.wizard.views;
 
 import com.cipherdyne.gui.components.IFwknopVariable;
 import com.cipherdyne.gui.components.JFwknopTextField;
 import com.cipherdyne.gui.wizard.EnumWizardButton;
 import com.cipherdyne.gui.wizard.EnumWizardVariable;
+import com.cipherdyne.gui.wizard.EnumWizardView;
 import java.util.Map;
 import javax.swing.JButton;
 
@@ -30,16 +31,17 @@ import javax.swing.JButton;
  *
  * @author Franck Joncourt
  */
-public class RemoteHostSettings extends DefaultPanel {
+public class RemoteHostView extends AbstractView {
 
-    /**
-     * Wizard view to selct AES or GPG encryption
-     */
-    public RemoteHostSettings(Map<EnumWizardVariable, IFwknopVariable> varMap, Map<EnumWizardButton, JButton> btnMap) {
-        super();
-
+    @Override
+    public void initialize(Map<EnumWizardVariable, IFwknopVariable> varMap, Map<EnumWizardButton, JButton> btnMap) {
         varMap.put(EnumWizardVariable.REMOTE_HOST, new JFwknopTextField(""));
 
         this.add(Utils.createItem(varMap, EnumWizardVariable.REMOTE_HOST), "growx");
+    }
+
+    @Override
+    public EnumWizardView getNextPanel() {
+        return EnumWizardView.SETUP_REMOTE_HOST;
     }
 }

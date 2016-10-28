@@ -16,12 +16,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.cipherdyne.gui.wizard.panels;
+package com.cipherdyne.gui.wizard.views;
 
 import com.cipherdyne.gui.components.IFwknopVariable;
 import com.cipherdyne.gui.components.JFwknopTextField;
 import com.cipherdyne.gui.wizard.EnumWizardButton;
 import com.cipherdyne.gui.wizard.EnumWizardVariable;
+import com.cipherdyne.gui.wizard.EnumWizardView;
 import com.cipherdyne.utils.InternationalizationHelper;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -37,20 +38,16 @@ import javax.swing.JRadioButton;
  *
  * @author Franck Joncourt
  */
-public class CryptoSettings extends DefaultPanel {
+public class CryptoView extends AbstractView {
 
     private JEditorPane cryptoDescription;
-    final private static String AES_ENCRYPTION = "AES";
+    final public static String AES_ENCRYPTION = "AES";
     final private static String GNUPG_ENCRYPTION = "GnuPG";
 
-    final private Map<EnumWizardVariable, IFwknopVariable> varMap;
+    private Map<EnumWizardVariable, IFwknopVariable> varMap;
 
-    /**
-     * Wizard view to selct AES or GPG encryption
-     */
-    public CryptoSettings(Map<EnumWizardVariable, IFwknopVariable> varMap, Map<EnumWizardButton, JButton> btnMap) {
-        super();
-
+    @Override
+    public void initialize(Map<EnumWizardVariable, IFwknopVariable> varMap, Map<EnumWizardButton, JButton> btnMap) {
         this.varMap = varMap;
 
         //Create the radio buttons and add them to a group to handle autoamtic selection/unselection
@@ -74,9 +71,11 @@ public class CryptoSettings extends DefaultPanel {
         this.cryptoDescription.setBackground(new Color(10, 10, 10, 0));
         this.cryptoDescription.setContentType("text/html");
         this.cryptoDescription.setText(InternationalizationHelper.getMessage("i18n.wizard.encyption.gnupg.description"));
+        this.cryptoDescription.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
 
         // Add object to the newly created panel
         this.add(new JLabel(InternationalizationHelper.getMessage("i18n.wizard.select.encryption.mode")), "growx");
+        this.add(new JLabel(" "));
         this.add(aesButton, "growx");
         this.add(gpgButton, "growx");
         this.add(this.cryptoDescription, "growx");
@@ -93,6 +92,29 @@ public class CryptoSettings extends DefaultPanel {
             this.varMap.get(EnumWizardVariable.ENCRYPTION_MODE).setText(GNUPG_ENCRYPTION);
 
         });
+    }
 
+    @Override
+    public EnumWizardView getNextPanel() {
+        EnumWizardView nextPanel;
+        if (this.isGpgSelected()) {
+            nextPanel = EnumWizardView.SETUP_GPG_HOME_DIRECTORY;
+        } else {
+            nextPanel = EnumWizardView.SETUP_AES;
+        }
+        return nextPanel;
+    }
+
+    /**
+     * @return true if the GPG encryption mod is selected, false if AES encryption mode is selected
+     */
+    public boolean isGpgSelected() {
+        boolean isGpgSelected = false;
+
+        if (this.varMap.get(EnumWizardVariable.ENCRYPTION_MODE).getText().equals(GNUPG_ENCRYPTION)) {
+            isGpgSelected = true;
+        }
+
+        return isGpgSelected;
     }
 }

@@ -19,17 +19,13 @@
 package com.cipherdyne.gui.wizard;
 
 import com.cipherdyne.gui.components.IFwknopVariable;
-import com.cipherdyne.gui.wizard.panels.AccessSettings;
-import com.cipherdyne.gui.wizard.panels.AesSettings;
-import com.cipherdyne.gui.wizard.panels.CryptoSettings;
-import com.cipherdyne.gui.wizard.panels.HmacSettings;
-import com.cipherdyne.gui.wizard.panels.RemoteHostSettings;
+import com.cipherdyne.gui.wizard.views.CryptoView;
+import com.cipherdyne.gui.wizard.views.IWizardView;
 import com.cipherdyne.utils.InternationalizationHelper;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -39,17 +35,17 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Franck Joncourt
  */
-class WizardView extends JDialog {
+class WizardMainView extends JFrame {
 
     private final Map<EnumWizardVariable, IFwknopVariable> varMap = new HashMap<>();
     private final Map<EnumWizardButton, JButton> btnMap = new HashMap<>();
-    private Map<EnumWizardPanel, JPanel> panelMap = new HashMap<>();
+    final private Map<EnumWizardView, IWizardView> panelMap = new HashMap<>();
 
     private JPanel mainPanel;
-    private EnumWizardPanel currentPanel = EnumWizardPanel.SELECT_CRYPTO;
+    private EnumWizardView currentPanel = EnumWizardView.SELECT_CRYPTO;
 
-    public WizardView(JFrame frame) {
-        super(frame, InternationalizationHelper.getMessage("i18n.wizard.title"), true);
+    public WizardMainView(JFrame frame) {
+        super(InternationalizationHelper.getMessage("i18n.wizard.title"));
         this.createViews();
         this.createButtons();
         this.create();
@@ -58,18 +54,17 @@ class WizardView extends JDialog {
     }
 
     private void createViews() {
-        this.panelMap.put(EnumWizardPanel.SELECT_CRYPTO, new CryptoSettings(varMap, btnMap));
-        this.panelMap.put(EnumWizardPanel.SETUP_AES, new AesSettings(varMap, btnMap));
-        this.panelMap.put(EnumWizardPanel.SETUP_HMAC, new HmacSettings(varMap, btnMap));
-        this.panelMap.put(EnumWizardPanel.SETUP_ACCESS, new AccessSettings(varMap, btnMap));
-        this.panelMap.put(EnumWizardPanel.SETUP_REMOTE_HOST, new RemoteHostSettings(varMap, btnMap));
+        for (EnumWizardView v : EnumWizardView.values()) {
+            this.panelMap.put(v, v.getView());
+            this.panelMap.get(v).initialize(varMap, btnMap);
+        }
     }
 
     private void createButtons() {
-        this.btnMap.put(EnumWizardButton.CANCEL, new JButton(InternationalizationHelper.getMessage("i18n.wizard.cancel")));
-        this.btnMap.put(EnumWizardButton.BACK, new JButton(InternationalizationHelper.getMessage("i18n.wizard.back")));
-        this.btnMap.put(EnumWizardButton.NEXT, new JButton(InternationalizationHelper.getMessage("i18n.wizard.next")));
-        this.btnMap.put(EnumWizardButton.FINISH, new JButton(InternationalizationHelper.getMessage("i18n.wizard.finish")));
+        this.btnMap.put(EnumWizardButton.CANCEL, new JButton(EnumWizardButton.CANCEL.getDescription()));
+        this.btnMap.put(EnumWizardButton.BACK, new JButton(EnumWizardButton.BACK.getDescription()));
+        this.btnMap.put(EnumWizardButton.NEXT, new JButton(EnumWizardButton.NEXT.getDescription()));
+        this.btnMap.put(EnumWizardButton.FINISH, new JButton(EnumWizardButton.FINISH.getDescription()));
     }
 
     private void create() {
@@ -122,20 +117,21 @@ class WizardView extends JDialog {
         return btnPanel;
     }
 
-    private void updateMainPanel(EnumWizardPanel panel) {
+    private void updateMainPanel(EnumWizardView nextPanel) {
         boolean backButtonEnabled = true;
         boolean nextButtonEnabled = true;
         boolean finishButtonEnabled = false;
 
-        this.currentPanel = panel;
+        this.panelMap.get(nextPanel).setPreviousPanel(this.currentPanel);
+        this.currentPanel = nextPanel;
 
         this.mainPanel.removeAll();
-        this.mainPanel.add(this.panelMap.get(this.currentPanel), "grow");
+        this.mainPanel.add((JPanel) this.panelMap.get(this.currentPanel), "grow");
         this.mainPanel.repaint();
 
-        if (this.currentPanel == EnumWizardPanel.SELECT_CRYPTO) {
+        if (this.currentPanel == EnumWizardView.SELECT_CRYPTO) {
             backButtonEnabled = false;
-        } else if (this.currentPanel == EnumWizardPanel.SETUP_REMOTE_HOST) {
+        } else if (this.currentPanel == EnumWizardView.SETUP_REMOTE_HOST) {
             nextButtonEnabled = false;
             finishButtonEnabled = true;
         }
@@ -146,48 +142,17 @@ class WizardView extends JDialog {
     }
 
     public void next() {
-        EnumWizardPanel nextPanel;
-
-        switch (this.currentPanel) {
-            case SELECT_CRYPTO:
-                nextPanel = EnumWizardPanel.SETUP_AES;
-                break;
-            case SETUP_AES:
-                nextPanel = EnumWizardPanel.SETUP_HMAC;
-                break;
-            case SETUP_HMAC:
-                nextPanel = EnumWizardPanel.SETUP_ACCESS;
-                break;
-            case SETUP_ACCESS:
-                nextPanel = EnumWizardPanel.SETUP_REMOTE_HOST;
-                break;
-            default:
-                nextPanel = this.currentPanel;
-        }
-
-        updateMainPanel(nextPanel);
+        updateMainPanel(this.panelMap.get(this.currentPanel).getNextPanel());
     }
 
     public void back() {
-        EnumWizardPanel previousPanel;
+        updateMainPanel(this.panelMap.get(this.currentPanel).getPreviousPanel());
+    }
 
-        switch (this.currentPanel) {
-            case SETUP_AES:
-                previousPanel = EnumWizardPanel.SELECT_CRYPTO;
-                break;
-            case SETUP_HMAC:
-                previousPanel = EnumWizardPanel.SETUP_AES;
-                break;
-            case SETUP_ACCESS:
-                previousPanel = EnumWizardPanel.SETUP_HMAC;
-                break;
-            case SETUP_REMOTE_HOST:
-                previousPanel = EnumWizardPanel.SETUP_ACCESS;
-                break;
-            default:
-                previousPanel = this.currentPanel;
-        }
-
-        updateMainPanel(previousPanel);
+    /**
+     * @return true if the GPG encryption mod is selected, false if AES encryption mode is selected
+     */
+    public boolean isGpgSelected() {
+        return ((CryptoView) (this.panelMap.get(EnumWizardView.SELECT_CRYPTO))).isGpgSelected();
     }
 }

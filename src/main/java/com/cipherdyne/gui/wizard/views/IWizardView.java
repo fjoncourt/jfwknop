@@ -16,17 +16,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.cipherdyne.gui.wizard;
+package com.cipherdyne.gui.wizard.views;
+
+import com.cipherdyne.gui.components.IFwknopVariable;
+import com.cipherdyne.gui.wizard.EnumWizardButton;
+import com.cipherdyne.gui.wizard.EnumWizardVariable;
+import com.cipherdyne.gui.wizard.EnumWizardView;
+import java.util.Map;
+import javax.swing.JButton;
 
 /**
  *
  * @author Franck Joncourt
  */
-public enum EnumWizardPanel {
-    SELECT_CRYPTO,
-    SETUP_AES,
-    SETUP_HMAC,
-    SETUP_ACCESS,
-    SETUP_GNUPG,
-    SETUP_REMOTE_HOST;
+public interface IWizardView {
+
+    public void initialize(Map<EnumWizardVariable, IFwknopVariable> varMap, Map<EnumWizardButton, JButton> btnMap);
+
+    public EnumWizardView getNextPanel();
+
+    public EnumWizardView getPreviousPanel();
+
+    public void setPreviousPanel(EnumWizardView currentPanel);
 }

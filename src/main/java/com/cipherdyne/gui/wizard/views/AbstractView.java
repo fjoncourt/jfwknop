@@ -16,8 +16,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.cipherdyne.gui.wizard.panels;
+package com.cipherdyne.gui.wizard.views;
 
+import com.cipherdyne.gui.wizard.EnumWizardView;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 
@@ -25,9 +26,21 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Franck Joncourt
  */
-public class DefaultPanel extends JPanel {
+abstract class AbstractView extends JPanel implements IWizardView {
 
-    public DefaultPanel() {
+    private EnumWizardView previousPanel;
+
+    public AbstractView() {
         this.setLayout(new MigLayout("aligny top, fillx, insets 0, gapy 5, flowy", "", ""));
+    }
+
+    @Override
+    public void setPreviousPanel(EnumWizardView panel) {
+        this.previousPanel = panel;
+    }
+
+    @Override
+    public EnumWizardView getPreviousPanel() {
+        return this.previousPanel;
     }
 }

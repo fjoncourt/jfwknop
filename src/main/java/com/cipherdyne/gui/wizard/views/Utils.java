@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.cipherdyne.gui.wizard.panels;
+package com.cipherdyne.gui.wizard.views;
 
 import com.cipherdyne.gui.components.IFwknopVariable;
 import com.cipherdyne.gui.wizard.EnumWizardVariable;
@@ -54,6 +54,7 @@ public class Utils {
         editorPane.setBackground(new Color(10, 10, 10, 0));
         editorPane.setContentType("text/html");
         editorPane.setText(var.getDescription());
+        editorPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
 
         // Add object to the newly created panel
         panel.add(editorPane, "growx");

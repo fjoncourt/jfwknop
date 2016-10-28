@@ -16,13 +16,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.cipherdyne.gui.wizard.panels;
+package com.cipherdyne.gui.wizard.views;
 
 import com.cipherdyne.gui.components.IFwknopVariable;
 import com.cipherdyne.gui.components.JFwknopTextField;
 import com.cipherdyne.gui.wizard.EnumWizardButton;
 import com.cipherdyne.gui.wizard.EnumWizardVariable;
-import com.cipherdyne.utils.InternationalizationHelper;
+import com.cipherdyne.gui.wizard.EnumWizardView;
 import java.util.Map;
 import javax.swing.JButton;
 
@@ -31,19 +31,18 @@ import javax.swing.JButton;
  *
  * @author Franck Joncourt
  */
-public class HmacSettings extends DefaultPanel {
+public class AccessView extends AbstractView {
 
-    /**
-     * Wizard view to selct AES or GPG encryption
-     */
-    public HmacSettings(Map<EnumWizardVariable, IFwknopVariable> varMap, Map<EnumWizardButton, JButton> btnMap) {
-        super();
-
-        varMap.put(EnumWizardVariable.HMAC_KEY, new JFwknopTextField(""));
-        btnMap.put(EnumWizardButton.GENERATE_HMAC_KEY, new JButton(InternationalizationHelper.getMessage("i18n.wizard.generate.hmac.key")));
+    @Override
+    public void initialize(Map<EnumWizardVariable, IFwknopVariable> varMap, Map<EnumWizardButton, JButton> btnMap) {
+        varMap.put(EnumWizardVariable.ACCESS, new JFwknopTextField("tcp/22"));
 
         // Add object to the newly created panel
-        this.add(Utils.createItem(varMap, EnumWizardVariable.HMAC_KEY), "growx");
-        this.add(btnMap.get(EnumWizardButton.GENERATE_HMAC_KEY), "growx");
+        this.add(Utils.createItem(varMap, EnumWizardVariable.ACCESS), "growx");
+    }
+
+    @Override
+    public EnumWizardView getNextPanel() {
+        return EnumWizardView.SETUP_REMOTE_HOST;
     }
 }

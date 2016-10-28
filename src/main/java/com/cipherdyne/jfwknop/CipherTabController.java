@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -18,9 +18,9 @@
  */
 package com.cipherdyne.jfwknop;
 
-import com.cipherdyne.gui.components.IFwknopVariable;
 import com.cipherdyne.gui.EnumButton;
 import com.cipherdyne.gui.MainWindowView;
+import com.cipherdyne.gui.components.IFwknopVariable;
 import com.cipherdyne.gui.gpg.GpgController;
 import com.cipherdyne.model.KeyModel;
 import com.cipherdyne.utils.InternationalizationHelper;
@@ -91,13 +91,13 @@ public class CipherTabController extends AbstractController {
         // Add action listener to select a GPG key and its home directory
         this.parentView.getButton(EnumButton.CIPHER_SELECT_RECIPIENT_GPG_ID).addActionListener((ActionEvent e) -> {
             javax.swing.SwingUtilities.invokeLater(() -> new GpgController(this.parentView,
-                EnumFwknopRcKey.GPG_RECIPIENT,
+                this.parentView.getVariables().get(EnumFwknopRcKey.GPG_RECIPIENT),
                 this.parentView.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).getText()));
         });
 
         this.parentView.getButton(EnumButton.CIPHER_SELECT_SIGNER_GPG_ID).addActionListener((ActionEvent e) -> {
             javax.swing.SwingUtilities.invokeLater(() -> new GpgController(this.parentView,
-                EnumFwknopRcKey.GPG_SIGNER,
+                this.parentView.getVariables().get(EnumFwknopRcKey.GPG_SIGNER),
                 this.parentView.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).getText()));
         });
 

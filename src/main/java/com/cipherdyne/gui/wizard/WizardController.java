@@ -19,41 +19,50 @@
 package com.cipherdyne.gui.wizard;
 
 import com.cipherdyne.gui.MainWindowView;
+import com.cipherdyne.gui.gpg.GpgController;
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
 import com.cipherdyne.jfwknop.MainWindowController;
 import com.cipherdyne.model.RcFileModel;
+import com.cipherdyne.utils.InternationalizationHelper;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JFileChooser;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
 /**
  * Controller used to manage variables from the wizard view
  */
 public class WizardController {
 
-    // Logger
-    static final Logger LOGGER = LogManager.getLogger(WizardController.class.getName());
-
     // View used to display the wizard
-    final private WizardView view;
+    final private WizardMainView view;
 
     // Parent window we come from
     final private MainWindowView parentWindow;
 
+    // Parent controller we come from
     final private MainWindowController parentController;
 
+    /**
+     * WizardController constructor
+     *
+     * @param parentController parent controller where can get KeyModel, RcFileModel ...
+     * @param frame parent frame we come from
+     */
     public WizardController(MainWindowController parentController, MainWindowView frame) {
         this.parentWindow = frame;
         this.parentController = parentController;
-        this.view = new WizardView(this.parentWindow);
+        this.view = new WizardMainView(this.parentWindow);
 
-        populateBtn();
+        populateFooterBtn();
+        populateViewsBtn();
         this.view.setVisible(true);
     }
 
-    private void populateBtn() {
+    /**
+     * Set up action listener for buttons in the footer wizard view
+     */
+    private void populateFooterBtn() {
 
         // When the user cancel the easy setup, we close the wizard window and go back to the main JFwknop view
         this.view.getButton(EnumWizardButton.CANCEL).addActionListener(e -> {
@@ -63,37 +72,9 @@ public class WizardController {
         // When the user create the configuration, we fetch his settings and update the JFwknop model accordingly
         this.view.getButton(EnumWizardButton.FINISH).addActionListener(e -> {
 
-            //for (Map.Entry<EnumWizardVariable, IFwknopVariable> var : this.view.getContext().entrySet()) {
-            //    System.out.println(var.getKey() + " ==> " + var.getValue().getText());
-            //}
-
-            // Get rcFile model used by JFwknop
+            // Get rcFile model used by JFwknop, update it according to the context and refresh all listeners
             RcFileModel rcFileModel = this.parentController.getRcFileModel();
-
-            // Create an empty context
-            Map<EnumFwknopRcKey, String> context = new HashMap<EnumFwknopRcKey, String>();
-
-            // Handle default HMAC values
-            String useHmac = "N";
-            String hmacKey = this.view.getVariable(EnumWizardVariable.HMAC_KEY).getText();
-
-            if (!StringUtils.EMPTY.equals(hmacKey)) {
-                useHmac = "Y";
-            }
-
-            // Add new ones from user input
-            context.put(EnumFwknopRcKey.KEY, this.view.getVariable(EnumWizardVariable.AES_KEY).getText());
-            context.put(EnumFwknopRcKey.USE_HMAC, useHmac);
-            context.put(EnumFwknopRcKey.HMAC_KEY, hmacKey);
-            context.put(EnumFwknopRcKey.SPA_SERVER, this.view.getVariable(EnumWizardVariable.REMOTE_HOST).getText());
-            context.put(EnumFwknopRcKey.ACCESS, this.view.getVariable(EnumWizardVariable.ACCESS).getText());
-            context.put(EnumFwknopRcKey.ALLOW_IP, "resolve");
-
-            // Add new ones from user input
-            context.put(EnumFwknopRcKey.ALLOW_IP, "resolve");
-
-            // Update context and refresh all listeners
-            rcFileModel.setContext(context);
+            rcFileModel.setContext(createContext());
             rcFileModel.updateListeners();
 
             // Close this window
@@ -109,7 +90,51 @@ public class WizardController {
         this.view.getButton(EnumWizardButton.BACK).addActionListener(e -> {
             this.view.back();
         });
+    }
 
+    /**
+     * @return a context that contains JFwknop settings according to the user inputs in the wizard
+     */
+    private Map<EnumFwknopRcKey, String> createContext() {
+
+        // Create an empty context
+        Map<EnumFwknopRcKey, String> context = new HashMap<>();
+
+        // Configure default HMAC values
+        String useHmac = "N";
+        String hmacKey = this.view.getVariable(EnumWizardVariable.HMAC_KEY).getText();
+        if (!StringUtils.EMPTY.equals(hmacKey)) {
+            useHmac = "Y";
+        }
+        context.put(EnumFwknopRcKey.USE_HMAC, useHmac);
+        context.put(EnumFwknopRcKey.HMAC_KEY, hmacKey);
+
+        // Configure GPG encryption settings
+        if (this.view.isGpgSelected()) {
+            context.put(EnumFwknopRcKey.USE_GPG, "Y");
+            context.put(EnumFwknopRcKey.GPG_HOMEDIR, this.view.getVariable(EnumWizardVariable.GPG_HOME_DIRECTORY).getText());
+            context.put(EnumFwknopRcKey.GPG_RECIPIENT, this.view.getVariable(EnumWizardVariable.GPG_RECIPIENT_ID).getText());
+            context.put(EnumFwknopRcKey.GPG_SIGNER, this.view.getVariable(EnumWizardVariable.GPG_SIGNER_ID).getText());
+            context.put(EnumFwknopRcKey.GPG_SIGNING_PW, this.view.getVariable(EnumWizardVariable.GPG_SIGNER_PASSWORD).getText());
+
+        } // Configure AES encryption settings
+        else {
+            context.put(EnumFwknopRcKey.USE_GPG, "N");
+            context.put(EnumFwknopRcKey.KEY, this.view.getVariable(EnumWizardVariable.AES_KEY).getText());
+        }
+
+        // Configure other settings
+        context.put(EnumFwknopRcKey.SPA_SERVER, this.view.getVariable(EnumWizardVariable.REMOTE_HOST).getText());
+        context.put(EnumFwknopRcKey.ACCESS, this.view.getVariable(EnumWizardVariable.ACCESS).getText());
+        context.put(EnumFwknopRcKey.ALLOW_IP, "resolve");
+
+        return context;
+    }
+
+    /**
+     * Set up action listeners for buttons in the main panel of the wizard view
+     */
+    private void populateViewsBtn() {
         // Generate a random rijndael key
         this.view.getButton(EnumWizardButton.GENERATE_AES_KEY).addActionListener(e -> {
             this.view.getVariable(EnumWizardVariable.AES_KEY).setText(parentController.getKeyModel().getRandomRijndaelKey());
@@ -120,5 +145,31 @@ public class WizardController {
             this.view.getVariable(EnumWizardVariable.HMAC_KEY).setText(parentController.getKeyModel().getRandomHmacKey());
         });
 
+        // Browse for a GPG home directory
+        this.view.getButton(EnumWizardButton.BROWSE_FOR_GPG_HOMEDIR).addActionListener(e -> {
+            final JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            fileChooser.setFileHidingEnabled(false);
+            fileChooser.setDialogTitle(InternationalizationHelper.getMessage("i18n.browse"));
+            final int result = fileChooser.showOpenDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                this.view.getVariable(EnumWizardVariable.GPG_HOME_DIRECTORY).setText(fileChooser.getSelectedFile().getAbsolutePath());
+            }
+        });
+
+        // Browse for a GPG signer ID
+        this.view.getButton(EnumWizardButton.BROWSE_FOR_GPG_SIGNER_ID).addActionListener(e -> {
+            javax.swing.SwingUtilities.invokeLater(() -> new GpgController(this.view,
+                this.view.getVariable(EnumWizardVariable.GPG_SIGNER_ID),
+                this.view.getVariable(EnumWizardVariable.GPG_HOME_DIRECTORY).getText()));
+        });
+
+        // Browse for a GPG recipient ID
+        this.view.getButton(EnumWizardButton.BROWSE_FOR_GPG_RECIPIENT_ID).addActionListener(e -> {
+            javax.swing.SwingUtilities.invokeLater(() -> new GpgController(this.view,
+                this.view.getVariable(EnumWizardVariable.GPG_RECIPIENT_ID),
+                this.view.getVariable(EnumWizardVariable.GPG_HOME_DIRECTORY).getText()));
+        });
     }
 }

@@ -16,12 +16,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.cipherdyne.gui.wizard.panels;
+package com.cipherdyne.gui.wizard.views;
 
 import com.cipherdyne.gui.components.IFwknopVariable;
 import com.cipherdyne.gui.components.JFwknopTextField;
 import com.cipherdyne.gui.wizard.EnumWizardButton;
 import com.cipherdyne.gui.wizard.EnumWizardVariable;
+import com.cipherdyne.gui.wizard.EnumWizardView;
 import java.util.Map;
 import javax.swing.JButton;
 
@@ -30,17 +31,20 @@ import javax.swing.JButton;
  *
  * @author Franck Joncourt
  */
-public class AccessSettings extends DefaultPanel {
+public class GpgHomeDirectoryView extends AbstractView {
 
-    /**
-     * Wizard view to selct AES or GPG encryption
-     */
-    public AccessSettings(Map<EnumWizardVariable, IFwknopVariable> varMap, Map<EnumWizardButton, JButton> btnMap) {
-        super();
-
-        varMap.put(EnumWizardVariable.ACCESS, new JFwknopTextField("tcp/22"));
+    @Override
+    public void initialize(Map<EnumWizardVariable, IFwknopVariable> varMap, Map<EnumWizardButton, JButton> btnMap) {
+        varMap.put(EnumWizardVariable.GPG_HOME_DIRECTORY, new JFwknopTextField(""));
+        btnMap.put(EnumWizardButton.BROWSE_FOR_GPG_HOMEDIR, new JButton(EnumWizardButton.BROWSE_FOR_GPG_HOMEDIR.getDescription()));
 
         // Add object to the newly created panel
-        this.add(Utils.createItem(varMap, EnumWizardVariable.ACCESS), "growx");
+        this.add(Utils.createItem(varMap, EnumWizardVariable.GPG_HOME_DIRECTORY), "growx");
+        this.add(btnMap.get(EnumWizardButton.BROWSE_FOR_GPG_HOMEDIR), "growx");
+    }
+
+    @Override
+    public EnumWizardView getNextPanel() {
+        return EnumWizardView.SETUP_GPG_SIGNER_ID;
     }
 }

@@ -29,7 +29,11 @@ public enum EnumWizardVariable {
     AES_KEY("i18n.wizard.key.description"),
     HMAC_KEY("i18n.wizard.hmac.description"),
     REMOTE_HOST("i18n.wizard.remotehost.description"),
-    ACCESS("i18n.wizard.access.description");
+    ACCESS("i18n.wizard.access.description"),
+    GPG_HOME_DIRECTORY("i18n.wizard.gnupg.homedirectory.description"),
+    GPG_SIGNER_ID("i18n.wizard.gnupg.signerid.description"),
+    GPG_SIGNER_PASSWORD("i18n.wizard.gnupg.signerid.password"),
+    GPG_RECIPIENT_ID("i18n.wizard.gnupg.recipientid.description");
 
     private final String description;
 
