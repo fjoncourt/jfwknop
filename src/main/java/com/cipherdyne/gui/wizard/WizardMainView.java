@@ -23,6 +23,7 @@ import com.cipherdyne.gui.wizard.views.CryptoView;
 import com.cipherdyne.gui.wizard.views.IWizardView;
 import com.cipherdyne.utils.InternationalizationHelper;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -37,29 +38,50 @@ import net.miginfocom.swing.MigLayout;
  */
 class WizardMainView extends JFrame {
 
+    // List of IFwknopVariable that are available in all views
     private final Map<EnumWizardVariable, IFwknopVariable> varMap = new HashMap<>();
+
+    // List of JBUutton that are available in all views
     private final Map<EnumWizardButton, JButton> btnMap = new HashMap<>();
-    final private Map<EnumWizardView, IWizardView> panelMap = new HashMap<>();
 
-    private JPanel mainPanel;
-    private EnumWizardView currentPanel = EnumWizardView.SELECT_CRYPTO;
+    // List of wizard views available. They are dislayed one at a time
+    final private Map<EnumWizardView, IWizardView> viewMap = new HashMap<>();
 
+    // Main panel which is refreshed according to the wizard step (CRYPTO, HMAC ...)
+    private JPanel mainView;
+
+    // This list contains all the view that are displayed to the user according to his choices.
+    // It is used to provide a way to navigate to previous views through the footer buttons
+    private final LinkedList<EnumWizardView> viewHistory = new LinkedList<>();
+
+    /**
+     * WizardMainView constructor
+     *
+     * @param frame parent frame
+     */
     public WizardMainView(JFrame frame) {
         super(InternationalizationHelper.getMessage("i18n.wizard.title"));
         this.createViews();
         this.createButtons();
-        this.create();
+        this.createMainView();
         this.setLocationRelativeTo(frame);
         this.setResizable(false);
     }
 
+    /**
+     * Create the list of views that will be displayed in the main view of the wizard. They should
+     * be built at WizardMainView initialization
+     */
     private void createViews() {
         for (EnumWizardView v : EnumWizardView.values()) {
-            this.panelMap.put(v, v.getView());
-            this.panelMap.get(v).initialize(varMap, btnMap);
+            this.viewMap.put(v, v.getView());
+            this.viewMap.get(v).initialize(varMap, btnMap);
         }
     }
 
+    /**
+     * Create buttons displayed in the footer of the wizard view (back, finish, next ...)
+     */
     private void createButtons() {
         this.btnMap.put(EnumWizardButton.CANCEL, new JButton(EnumWizardButton.CANCEL.getDescription()));
         this.btnMap.put(EnumWizardButton.BACK, new JButton(EnumWizardButton.BACK.getDescription()));
@@ -67,17 +89,22 @@ class WizardMainView extends JFrame {
         this.btnMap.put(EnumWizardButton.FINISH, new JButton(EnumWizardButton.FINISH.getDescription()));
     }
 
-    private void create() {
-        // Add components to the panel
+    private void createMainView() {
+
+        // Set layout
         this.setLayout(new MigLayout("insets 5, flowx, wrap 2", "[256!]0![500!]", "[][]"));
-        this.mainPanel = new JPanel(new MigLayout("fill", "", ""));
+        this.mainView = new JPanel(new MigLayout("fill", "", ""));
 
-        updateMainPanel(currentPanel);
+        // Create the main panel
+        this.viewHistory.addLast(EnumWizardView.SELECT_CRYPTO);
+        updateMainView(EnumWizardView.SELECT_CRYPTO);
 
+        // Add components to the panel
         this.add(createWizardPanel());
-        this.add(this.mainPanel, "grow");
+        this.add(this.mainView, "grow");
         this.add(createFooterPanel(), "growx, spanx 2");
 
+        // Pack everyting just in case
         this.pack();
     }
 
@@ -117,21 +144,18 @@ class WizardMainView extends JFrame {
         return btnPanel;
     }
 
-    private void updateMainPanel(EnumWizardView nextPanel) {
+    private void updateMainView(EnumWizardView nextPanel) {
         boolean backButtonEnabled = true;
         boolean nextButtonEnabled = true;
         boolean finishButtonEnabled = false;
 
-        this.panelMap.get(nextPanel).setPreviousPanel(this.currentPanel);
-        this.currentPanel = nextPanel;
+        this.mainView.removeAll();
+        this.mainView.add((JPanel) this.viewMap.get(nextPanel), "grow");
+        this.mainView.repaint();
 
-        this.mainPanel.removeAll();
-        this.mainPanel.add((JPanel) this.panelMap.get(this.currentPanel), "grow");
-        this.mainPanel.repaint();
-
-        if (this.currentPanel == EnumWizardView.SELECT_CRYPTO) {
+        if (nextPanel == EnumWizardView.SELECT_CRYPTO) {
             backButtonEnabled = false;
-        } else if (this.currentPanel == EnumWizardView.SETUP_REMOTE_HOST) {
+        } else if (nextPanel == EnumWizardView.SETUP_REMOTE_HOST) {
             nextButtonEnabled = false;
             finishButtonEnabled = true;
         }
@@ -142,17 +166,26 @@ class WizardMainView extends JFrame {
     }
 
     public void next() {
-        updateMainPanel(this.panelMap.get(this.currentPanel).getNextPanel());
+        // Add the current view to history
+        EnumWizardView nextPanel = this.viewMap.get(this.viewHistory.getLast()).getNextPanel();
+        this.viewHistory.addLast(nextPanel);
+
+        // Update view with the lastest one
+        updateMainView(this.viewHistory.getLast());
     }
 
     public void back() {
-        updateMainPanel(this.panelMap.get(this.currentPanel).getPreviousPanel());
+        // Remove the current view from history
+        this.viewHistory.removeLast();
+
+        // Update view with the lastest one
+        updateMainView(this.viewHistory.getLast());
     }
 
     /**
      * @return true if the GPG encryption mod is selected, false if AES encryption mode is selected
      */
     public boolean isGpgSelected() {
-        return ((CryptoView) (this.panelMap.get(EnumWizardView.SELECT_CRYPTO))).isGpgSelected();
+        return ((CryptoView) (this.viewMap.get(EnumWizardView.SELECT_CRYPTO))).isGpgSelected();
     }
 }

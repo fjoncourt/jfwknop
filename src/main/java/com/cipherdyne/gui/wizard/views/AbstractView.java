@@ -18,7 +18,6 @@
  */
 package com.cipherdyne.gui.wizard.views;
 
-import com.cipherdyne.gui.wizard.EnumWizardView;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 
@@ -28,19 +27,7 @@ import net.miginfocom.swing.MigLayout;
  */
 abstract class AbstractView extends JPanel implements IWizardView {
 
-    private EnumWizardView previousPanel;
-
     public AbstractView() {
         this.setLayout(new MigLayout("aligny top, fillx, insets 0, gapy 5, flowy", "", ""));
-    }
-
-    @Override
-    public void setPreviousPanel(EnumWizardView panel) {
-        this.previousPanel = panel;
-    }
-
-    @Override
-    public EnumWizardView getPreviousPanel() {
-        return this.previousPanel;
     }
 }

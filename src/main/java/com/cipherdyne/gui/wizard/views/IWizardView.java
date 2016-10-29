@@ -34,8 +34,4 @@ public interface IWizardView {
     public void initialize(Map<EnumWizardVariable, IFwknopVariable> varMap, Map<EnumWizardButton, JButton> btnMap);
 
     public EnumWizardView getNextPanel();
-
-    public EnumWizardView getPreviousPanel();
-
-    public void setPreviousPanel(EnumWizardView currentPanel);
 }

@@ -20,6 +20,7 @@ package com.cipherdyne.jfwknop;
 
 import com.cipherdyne.gui.EnumMenuItem;
 import com.cipherdyne.gui.MainWindowView;
+import com.cipherdyne.gui.about.About;
 import com.cipherdyne.gui.ssh.SshController;
 import com.cipherdyne.gui.wizard.WizardController;
 import com.cipherdyne.utils.InternationalizationHelper;
@@ -122,8 +123,14 @@ class MenuBarController extends AbstractController {
             }
         });
 
+        // Run wizard
         this.parentView.getMenuItem(EnumMenuItem.WIZARD_EASYSETUP).addActionListener(e -> {
             new WizardController(this.parentController, this.parentView);
+        });
+
+        this.parentView.getMenuItem(EnumMenuItem.HELP_ABOUT).addActionListener(e -> {
+            About aboutView = new About(this.parentView);
+            aboutView.setVisible(true);
         });
 
     }
