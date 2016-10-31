@@ -44,7 +44,7 @@ public class RcFile {
     final private static Pattern STANZA_PATTERN = Pattern.compile("^\\[(.*)\\]");
 
     // Pattern that matches a key/value line
-    final private static Pattern KEY_PATTERN = Pattern.compile("^(?!#)(.*)\\s(.*)");
+    final private static Pattern KEY_PATTERN = Pattern.compile("^(?!#)(.*)\\s+(.*)");
 
     // Default stanza used by fwknop client in fwknoprc file to provide common settings for all stanzas
     final public static String DEFAULT_STANZA = "default";
@@ -98,7 +98,7 @@ public class RcFile {
 
                 // Parse only line for default and selected stanza
                 if (DEFAULT_STANZA.equals(currentStanza) || selectedStanza.equals(currentStanza)) {
-                    final Matcher keyMatcher = KEY_PATTERN.matcher(line);
+                    final Matcher keyMatcher = KEY_PATTERN.matcher(line.trim());
                     if (keyMatcher.find()) {
                         try {
                             key = EnumFwknopRcKey.valueOf(keyMatcher.group(1).trim());
@@ -230,6 +230,6 @@ public class RcFile {
      * @return an access file line as a string ready to be stored
      */
     private String generateFwknoprcLine(EnumFwknopRcKey key, String value) {
-        return String.format("%-32s\t%-32s\n", key.toString(), value);
+        return String.format("%-32s    %s\n", key.toString(), value);
     }
 }

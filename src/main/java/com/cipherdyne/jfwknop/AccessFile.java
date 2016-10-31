@@ -71,6 +71,6 @@ public class AccessFile {
      * @return an access file line as a string ready to be stored
      */
     private String generateAccessLine(EnumFwknopdRcKey key, String value) {
-        return String.format("%-32s\t%-32s\n", key.toString(), value);
+        return String.format("%-32s    %s\n", key.toString(), value);
     }
 }
