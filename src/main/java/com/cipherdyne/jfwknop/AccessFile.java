@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -48,18 +48,29 @@ public class AccessFile {
             for (final Map.Entry<EnumFwknopRcKey, String> entry : fwknopConfig.entrySet()) {
                 if (!entry.getValue().isEmpty() && (entry.getKey().getRemoteKey() != null)) {
                     EnumFwknopdRcKey fwknopdKey = entry.getKey().getRemoteKey();
-                    writer.write(fwknopdKey.toString() + "\t\t" + entry.getValue() + "\n");
+                    writer.write(generateAccessLine(fwknopdKey, entry.getValue()));
                     if (fwknopdKey.equals(EnumFwknopdRcKey.GPG_DECRYPT_ID)) {
-                        writer.write(EnumFwknopdRcKey.GPG_DECRYPT_PW.toString() + "\t\t" + "__CHANGEME__" + "\n");
-                        writer.write(EnumFwknopdRcKey.GPG_HOME_DIR.toString() + "\t\t" + "__CHANGEME__" + "\n");
+                        writer.write(generateAccessLine(EnumFwknopdRcKey.GPG_DECRYPT_PW, "__CHANGEME__"));
+                        writer.write(generateAccessLine(EnumFwknopdRcKey.GPG_HOME_DIR, "__CHANGEME__"));
                     } else if (fwknopdKey.equals(EnumFwknopdRcKey.GPG_REMOTE_ID)) {
-                        writer.write(EnumFwknopdRcKey.GPG_REQUIRE_SIG.toString() + "\t\t" + "Y" + "\n");
-                        writer.write(EnumFwknopdRcKey.GPG_IGNORE_SIG_VERIFY_ERROR.toString() + "\t" + "N" + "\n");
+                        writer.write(generateAccessLine(EnumFwknopdRcKey.GPG_REQUIRE_SIG, "Y"));
+                        writer.write(generateAccessLine(EnumFwknopdRcKey.GPG_IGNORE_SIG_VERIFY_ERROR, "N"));
                     }
                 }
             }
         } catch (final IOException e) {
             LOGGER.error("Unable to create access file: " + this.filename, e);
         }
+    }
+
+    /**
+     * Create a line for an access conf file.
+     *
+     * @param key Key to set
+     * @param value Value to set for the key
+     * @return an access file line as a string ready to be stored
+     */
+    private String generateAccessLine(EnumFwknopdRcKey key, String value) {
+        return String.format("%-32s\t%-32s\n", key.toString(), value);
     }
 }

@@ -139,7 +139,7 @@ public class RcFile {
             writer.write("[" + DEFAULT_STANZA + "]\n");
             for (final Entry<EnumFwknopRcKey, String> entry : this.config.entrySet()) {
                 if (!entry.getValue().isEmpty()) {
-                    writer.write(entry.getKey().toString() + "\t\t" + entry.getValue() + "\n");
+                    writer.write(generateFwknoprcLine(entry.getKey(), entry.getValue()));
                 }
             }
         } catch (final IOException e) {
@@ -220,5 +220,16 @@ public class RcFile {
         }
 
         return stanzaList;
+    }
+
+    /**
+     * Create a line for an fwknoprc conf file.
+     *
+     * @param key Key to set
+     * @param value Value to set for the key
+     * @return an access file line as a string ready to be stored
+     */
+    private String generateFwknoprcLine(EnumFwknopRcKey key, String value) {
+        return String.format("%-32s\t%-32s\n", key.toString(), value);
     }
 }
