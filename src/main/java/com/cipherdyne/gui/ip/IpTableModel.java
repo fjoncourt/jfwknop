@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -28,7 +28,7 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 /**
- *
+ * Table model used to list IPV4 or IPV6 addresses of the host
  */
 public class IpTableModel extends AbstractTableModel {
 
@@ -59,14 +59,14 @@ public class IpTableModel extends AbstractTableModel {
      */
     private void populateIp() {
         this.ipData = new ArrayList<>();
-        
+
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
             while (interfaces.hasMoreElements()) {
                 NetworkInterface iface = interfaces.nextElement();
-                
-                // filters out 127.0.0.1 and inactive interfaces
-                if (iface.isLoopback() || !iface.isUp()) {
+
+                // filters out inactive interfaces
+                if (!iface.isUp()) {
                     continue;
                 }
 
