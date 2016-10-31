@@ -36,15 +36,33 @@ public class AccessFile {
     static final Logger LOGGER = LogManager.getLogger(AccessFile.class.getName());
     private final String filename;
 
+    /**
+     * Access file constructor
+     *
+     * @param filename filepath of the access file
+     */
     public AccessFile(String filename) {
         this.filename = filename;
     }
 
+    /**
+     * Generate an access file from a map of fwknop rc keys
+     *
+     * @param fwknopConfig map of fwknoprc keys to use to generate the access file
+     */
     public void generate(Map<EnumFwknopRcKey, String> fwknopConfig) {
         final Path fileP = Paths.get(this.filename);
         final Charset charset = Charset.forName("utf-8");
 
         try (BufferedWriter writer = Files.newBufferedWriter(fileP, charset)) {
+
+            // Configure "SOURCE" key first as this is requested by fwknopd server when parsing access file
+            if (fwknopConfig.get(EnumFwknopRcKey.ALLOW_IP) != null) {
+                writer.write(generateAccessLine(EnumFwknopRcKey.ALLOW_IP.getRemoteKey(), fwknopConfig.get(EnumFwknopRcKey.ALLOW_IP)));
+                fwknopConfig.remove(EnumFwknopRcKey.ALLOW_IP);
+            }
+
+            // Configure other keys
             for (final Map.Entry<EnumFwknopRcKey, String> entry : fwknopConfig.entrySet()) {
                 if (!entry.getValue().isEmpty() && (entry.getKey().getRemoteKey() != null)) {
                     EnumFwknopdRcKey fwknopdKey = entry.getKey().getRemoteKey();

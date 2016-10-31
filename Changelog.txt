@@ -18,6 +18,8 @@ JFwknop - 1.2.0
       configuration - Closes #6
     * Added About window and provides information about the licence, copyright
       holder, github link, version.
+    * The first key set in access file is the "SOURCE" key in order to comply with
+      fwknop server parsing.
 
 JFwknop - 1.1.0 - 02/10/2016
 
