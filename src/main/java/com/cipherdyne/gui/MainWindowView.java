@@ -18,13 +18,13 @@
  */
 package com.cipherdyne.gui;
 
+import com.cipherdyne.gui.components.IFwknopVariable;
 import com.cipherdyne.gui.components.JFwknopArgs;
 import com.cipherdyne.gui.components.JFwknopCheckBox;
 import com.cipherdyne.gui.components.JFwknopComboBox;
 import com.cipherdyne.gui.components.JFwknopTextField;
 import com.cipherdyne.jfwknop.EnumFwknopConfigKey;
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
-import com.cipherdyne.gui.components.IFwknopVariable;
 import com.cipherdyne.utils.InternationalizationHelper;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
@@ -61,7 +61,7 @@ public class MainWindowView extends DefaultFrame implements IConsole {
         super(JFWKNOP_TITLE + DEFAULT_CONFIGURATION);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new MigLayout("inset 0, gap 0, flowy", "[grow]", "[][fill]"));
-        setIconImage(new ImageIcon(this.getClass().getResource("/cipherdyne.png")).getImage());
+        setIconImage(new ImageIcon(this.getClass().getResource("/jfwknop.png")).getImage());
 
         createMenuBar();
 

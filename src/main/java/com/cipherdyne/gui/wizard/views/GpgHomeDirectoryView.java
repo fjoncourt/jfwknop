@@ -37,10 +37,12 @@ public class GpgHomeDirectoryView extends AbstractView {
     public void initialize(Map<EnumWizardVariable, IFwknopVariable> varMap, Map<EnumWizardButton, JButton> btnMap) {
         varMap.put(EnumWizardVariable.GPG_HOME_DIRECTORY, new JFwknopTextField(""));
         btnMap.put(EnumWizardButton.BROWSE_FOR_GPG_HOMEDIR, new JButton(EnumWizardButton.BROWSE_FOR_GPG_HOMEDIR.getDescription()));
+        btnMap.put(EnumWizardButton.CREATE_GPG_HOMEDIR, new JButton(EnumWizardButton.CREATE_GPG_HOMEDIR.getDescription()));
 
         // Add object to the newly created panel
         this.add(Utils.createItem(varMap, EnumWizardVariable.GPG_HOME_DIRECTORY), "growx");
         this.add(btnMap.get(EnumWizardButton.BROWSE_FOR_GPG_HOMEDIR), "growx");
+        this.add(btnMap.get(EnumWizardButton.CREATE_GPG_HOMEDIR), "growx");
     }
 
     @Override

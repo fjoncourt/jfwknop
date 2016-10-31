@@ -32,6 +32,7 @@ public enum EnumWizardButton {
     GENERATE_AES_KEY("i18n.wizard.generate.aes.key"),
     GENERATE_HMAC_KEY("i18n.wizard.generate.hmac.key"),
     BROWSE_FOR_GPG_HOMEDIR("i18n.wizard.browse.for.gpg.homedir"),
+    CREATE_GPG_HOMEDIR("i18n.wizard.create.gpg.homedir"),
     BROWSE_FOR_GPG_SIGNER_ID("i18n.wizard.browse.for.gpg.signerid"),
     BROWSE_FOR_GPG_RECIPIENT_ID("i18n.wizard.browse.for.gpg.recipientid");
 

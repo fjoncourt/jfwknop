@@ -5,15 +5,19 @@ JFwknop - 1.2.0
       in the ALLOW_IP field - Useful if you send SPA packets on a local network
       and you have more than one network interface.
     * Change Look and Feel and use WebLaf - Closes #12
-    * Wizard - Add random key generation feature - Closes #15
-    * Wizard - Generate warning - Closes #16
-      + Automatic resolution is used by default, *-R* option from fwknop, rather
+    * Improved wizard:
+      + Add random key generation feature - Closes #15
+      + Generate warning - Closes #16
+        Automatic resolution is used by default, *-R* option from fwknop, rather
         than *source*.
+      + Added GPG suport
     * Load ~/.fwknoprc file at startup - Closes #17
     * JFwknop configuration file is renamed from config.properties to
       .jfwknoprc and is created in user home directory - Closes #13
     * Added new entry in File menu to provide the ability to create an empty
       configuration - Closes #6
+    * Added About window and provides information about the licence, copyright
+      holder, github link, version.
 
 JFwknop - 1.1.0 - 02/10/2016
 
