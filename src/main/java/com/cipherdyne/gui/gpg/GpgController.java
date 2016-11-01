@@ -85,6 +85,7 @@ public class GpgController {
             String selectedKeyId = this.view.getSelectKeyId();
             final JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle(InternationalizationHelper.getMessage(InternationalizationHelper.getMessage("i18n.save.as")));
+            fileChooser.setFileHidingEnabled(false);
             fileChooser.setSelectedFile(new File(selectedKeyId + ".asc"));
             final int result = fileChooser.showSaveDialog(null);
             if (result == JFileChooser.APPROVE_OPTION) {
@@ -107,6 +108,7 @@ public class GpgController {
         this.view.getBtnImport().addActionListener((ActionEvent e) -> {
             final JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle(InternationalizationHelper.getMessage("i18n.browse.for.gpg.key"));
+            fileChooser.setFileHidingEnabled(false);
             final int result = fileChooser.showOpenDialog(null);
             if (result == JFileChooser.APPROVE_OPTION) {
                 try {

@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -18,7 +18,6 @@
  */
 package com.cipherdyne.utils;
 
-import com.cipherdyne.gui.gpg.GpgTableModel;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,8 +32,8 @@ import java.security.NoSuchProviderException;
 import java.security.Security;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.bouncycastle.bcpg.ArmoredOutputStream;
 import org.bouncycastle.bcpg.HashAlgorithmTags;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -62,6 +61,8 @@ import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyEncryptorBuilder;
  * @author Franck Joncourt
  */
 public class GpgUtils {
+
+    static final Logger LOGGER = LogManager.getLogger(GpgUtils.class.getName());
 
     static public void addPrivateKeyToKeyring(String gpgHomeDirectory, String keyringFile) throws FileNotFoundException, IOException, PGPException {
         Security.addProvider(new BouncyCastleProvider());
@@ -93,6 +94,8 @@ public class GpgUtils {
         try (FileOutputStream out = new FileOutputStream(new File(gpgHomeDirectory + "/secring.gpg"))) {
             privRings.encode(out);
         }
+
+        importSecretKeyToGnupg2(gpgHomeDirectory, keyringFile);
     }
 
     static public void addPublicKeyToKeyring(String gpgHomeDirectory, String keyringFile) throws FileNotFoundException, IOException, PGPException {
@@ -153,7 +156,7 @@ public class GpgUtils {
             try {
                 pubKey = pgpPub.getPublicKey();
             } catch (Exception e) {
-                Logger.getLogger(GpgTableModel.class.getName()).log(Level.SEVERE, null, e);
+                LOGGER.error(e);
                 continue;
             }
 
@@ -184,7 +187,31 @@ public class GpgUtils {
         try {
             in.close();
         } catch (IOException ex) {
-            Logger.getLogger(GpgTableModel.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error(ex);
+        }
+    }
+
+    /**
+     * Import a GPG v1 private key from an armored file to a GPG v2 keyring
+     *
+     * BouncyCastle does not support GPG V2 and is only able to create GPG v1 key. This methods
+     * provides a workaround to import a GPG V1 key to an existing GPG V2 keyring
+     *
+     * @param gpgHomeDirectory GPG home directory
+     * @param privateKeyFile path to the armored file where the private key is stored
+     */
+    private static void importSecretKeyToGnupg2(String gpgHomeDirectory, String privateKeyFile) {
+
+        // Create the command as a string
+        String gpgCmd = "/usr/bin/gpg --homedir " + gpgHomeDirectory + " -a --import " + privateKeyFile;
+
+        // Build the process and run it
+        ProcessBuilder pb = new ProcessBuilder(gpgCmd.split(" "));
+        pb = pb.redirectErrorStream(true);
+        try {
+            Process p = pb.start();
+        } catch (IOException ex) {
+            LOGGER.error("Unable to import secret key to gnupg v2 keyring");
         }
     }
 
@@ -194,7 +221,7 @@ public class GpgUtils {
 
             // Create the main key set
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA", "BC");
-            keyGen.initialize(1024);
+            keyGen.initialize(2048);
             KeyPair pair = keyGen.generateKeyPair();
 
             // Create output stream
@@ -219,11 +246,11 @@ public class GpgUtils {
             key.encode(pubOut);
             pubOut.close();
 
-            GpgUtils.addPublicKeyToKeyring(gpgHomeDirectory, "public.asc");
-            GpgUtils.addPrivateKeyToKeyring(gpgHomeDirectory, "private.asc");
+            addPublicKeyToKeyring(gpgHomeDirectory, "public.asc");
+            addPrivateKeyToKeyring(gpgHomeDirectory, "private.asc");
 
         } catch (NoSuchAlgorithmException | IOException | PGPException | NoSuchProviderException ex) {
-            Logger.getLogger(GpgUtils.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error(ex);
         }
     }
 }
