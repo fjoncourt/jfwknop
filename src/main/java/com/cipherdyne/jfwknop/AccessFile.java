@@ -34,6 +34,10 @@ import org.apache.log4j.Logger;
 public class AccessFile {
 
     static final Logger LOGGER = LogManager.getLogger(AccessFile.class.getName());
+
+    // Default fwknopd GPG home directory - Generally it is /root/.gnupg
+    static final String DEFAULT_FWKNOPD_GPG_HOMEDIR = "/root/.gnupg";
+
     private final String filename;
 
     /**
@@ -69,7 +73,7 @@ public class AccessFile {
                     writer.write(generateAccessLine(fwknopdKey, entry.getValue()));
                     if (fwknopdKey.equals(EnumFwknopdRcKey.GPG_DECRYPT_ID)) {
                         writer.write(generateAccessLine(EnumFwknopdRcKey.GPG_DECRYPT_PW, "__CHANGEME__"));
-                        writer.write(generateAccessLine(EnumFwknopdRcKey.GPG_HOME_DIR, "__CHANGEME__"));
+                        writer.write(generateAccessLine(EnumFwknopdRcKey.GPG_HOME_DIR, DEFAULT_FWKNOPD_GPG_HOMEDIR));
                     } else if (fwknopdKey.equals(EnumFwknopdRcKey.GPG_REMOTE_ID)) {
                         writer.write(generateAccessLine(EnumFwknopdRcKey.GPG_REQUIRE_SIG, "Y"));
                         writer.write(generateAccessLine(EnumFwknopdRcKey.GPG_IGNORE_SIG_VERIFY_ERROR, "N"));
@@ -89,6 +93,14 @@ public class AccessFile {
      * @return an access file line as a string ready to be stored
      */
     private String generateAccessLine(EnumFwknopdRcKey key, String value) {
-        return String.format("%-32s    %s\n", key.toString(), value);
+        String fwknopdValue;
+        switch (key) {
+            case GPG_REMOTE_ID:
+                fwknopdValue = String.format("%-32s    %s\n", key.toString(), value.substring(value.length() - 8, value.length()));
+                break;
+            default:
+                fwknopdValue = String.format("%-32s    %s\n", key.toString(), value);
+        }
+        return fwknopdValue;
     }
 }

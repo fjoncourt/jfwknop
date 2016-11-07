@@ -23,15 +23,19 @@ import com.cipherdyne.gui.MainWindowView;
 import com.cipherdyne.gui.about.About;
 import com.cipherdyne.gui.ssh.SshController;
 import com.cipherdyne.gui.wizard.WizardController;
+import static com.cipherdyne.jfwknop.JFwknopConfig.getJfwknopWorkingDirectory;
+import com.cipherdyne.utils.GpgUtils;
 import com.cipherdyne.utils.InternationalizationHelper;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.openpgp.PGPException;
 
 /**
  * Controller used to handle menu behavior
@@ -53,7 +57,7 @@ class MenuBarController extends AbstractController {
 
         // Set up action listener when opening a new configuration file
         this.parentView.getMenuItem(EnumMenuItem.FILE_OPEN).addActionListener(e -> {
-            final JFileChooser fileChooser = new JFileChooser();
+            final JFileChooser fileChooser = new JFileChooser(getJfwknopWorkingDirectory());
             fileChooser.setDialogTitle("Browse");
             fileChooser.setFileHidingEnabled(false);
             final int result = fileChooser.showOpenDialog(null);
@@ -111,15 +115,24 @@ class MenuBarController extends AbstractController {
             new SshController(this.parentView);
         });
 
-        // Set up action listener to generate access.conf file for fwknop server
+        // Set up action listener to generate configuration files for fwknop server
         this.parentView.getMenuItem(EnumMenuItem.TOOLS_GENERATE_ACCESS).addActionListener((ActionEvent e) -> {
-            final JFileChooser fileChooser = new JFileChooser();
+            final JFileChooser fileChooser = new JFileChooser(getJfwknopWorkingDirectory());
             fileChooser.setDialogTitle(InternationalizationHelper.getMessage(InternationalizationHelper.getMessage("i18n.save.as")));
             fileChooser.setSelectedFile(new File("access.conf"));
             final int result = fileChooser.showSaveDialog(null);
             if (result == JFileChooser.APPROVE_OPTION) {
                 AccessFile accessFile = new AccessFile(fileChooser.getSelectedFile().getAbsolutePath());
                 accessFile.generate(this.parentController.convertViewToConfig(this.parentView.getVariables()));
+
+                if (!StringUtils.EMPTY.equals(this.parentView.getVariables().get(EnumFwknopRcKey.GPG_SIGNER).getText())) {
+                    try {
+                        String gpgClientId = this.parentView.getVariables().get(EnumFwknopRcKey.GPG_SIGNER).getText();
+                        GpgUtils.exportKey(this.parentView.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).getText(), gpgClientId, JFwknopConfig.getJfwknopWorkingDirectory() + gpgClientId + ".asc");
+                    } catch (IOException | PGPException ex) {
+                        Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         });
 

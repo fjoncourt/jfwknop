@@ -18,8 +18,9 @@
  */
 package com.cipherdyne.jfwknop;
 
-import com.cipherdyne.gui.components.IFwknopVariable;
 import com.cipherdyne.gui.MainWindowView;
+import com.cipherdyne.gui.components.IFwknopVariable;
+import static com.cipherdyne.jfwknop.JFwknopConfig.getJfwknopWorkingDirectory;
 import com.cipherdyne.model.FwknopClientModel;
 import com.cipherdyne.model.KeyModel;
 import com.cipherdyne.model.RcFileModel;
@@ -201,7 +202,7 @@ public class MainWindowController {
      */
     public int saveAs() {
         int error = 0;
-        final JFileChooser fileChooser = new JFileChooser();
+        final JFileChooser fileChooser = new JFileChooser(getJfwknopWorkingDirectory());
         fileChooser.setDialogTitle(InternationalizationHelper.getMessage("i18n.save.as"));
         final int result = fileChooser.showSaveDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {

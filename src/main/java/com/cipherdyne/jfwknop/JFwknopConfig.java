@@ -18,6 +18,7 @@
  */
 package com.cipherdyne.jfwknop;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,11 +37,12 @@ import org.apache.log4j.Logger;
  */
 public class JFwknopConfig {
 
-    static final Logger logMgr = LogManager.getLogger(JFwknopConfig.class.getName());
+    static final Logger LOGGER = LogManager.getLogger(JFwknopConfig.class.getName());
 
     private static JFwknopConfig instance = null;
 
-    private static final String CONFIG_PROPERTIES = ".jfwknoprc";
+    private static final String JFWKNOP_DIRECTORY = ".jfwknop";
+    private static final String JFWKNOP_CONFIG_PROPERTIES = ".jfwknoprc";
     private final SortedProperties configProperties;
     private static final String CONFIG_RECENT_FILE_PREFIX = "recentFile";
 
@@ -61,8 +63,9 @@ public class JFwknopConfig {
         try {
             this.configProperties.load(new FileInputStream(this.getJfwknoprcFilepath()));
         } catch (final IOException e) {
-            logMgr.error("Unable to load configuration file (" + this.getJfwknoprcFilepath() + ") : " + e.getMessage());
-            logMgr.error("A default configuration file is created");
+            LOGGER.error("Unable to load configuration file (" + this.getJfwknoprcFilepath() + ") : " + e.getMessage());
+            LOGGER.error("A default configuration file is created");
+            createDefaultDirectory();
             createDefaultConfig(this.getJfwknoprcFilepath());
         }
 
@@ -72,8 +75,18 @@ public class JFwknopConfig {
     /**
      * @return Jfwknop rc filepath according to the user home directory
      */
-    private String getJfwknoprcFilepath() {
-        return System.getProperty("user.home") + System.getProperty("file.separator") + CONFIG_PROPERTIES;
+    static private String getJfwknoprcFilepath() {
+        return getJfwknopWorkingDirectory() + JFWKNOP_CONFIG_PROPERTIES;
+    }
+
+    /**
+     * @return JFwknop working directory
+     */
+    static public String getJfwknopWorkingDirectory() {
+        return System.getProperty("user.home")
+            + System.getProperty("file.separator")
+            + JFWKNOP_DIRECTORY
+            + System.getProperty("file.separator");
     }
 
     public static JFwknopConfig getInstance() {
@@ -165,7 +178,7 @@ public class JFwknopConfig {
         try {
             this.configProperties.store(new FileOutputStream(this.getJfwknoprcFilepath()), null);
         } catch (IOException ex) {
-            logMgr.error("Unable to save jfwknop configuration file (" + this.getJfwknoprcFilepath() + ") : " + ex.getMessage());
+            LOGGER.error("Unable to save jfwknop configuration file (" + this.getJfwknoprcFilepath() + ") : " + ex.getMessage());
         }
     }
 
@@ -202,6 +215,19 @@ public class JFwknopConfig {
             this.configProperties.getProperty(EnumFwknopConfigKey.KEY_BASE64_RIJNDAEL_LENGTH.getKey()));
         this.configKeyMap.put(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH,
             this.configProperties.getProperty(EnumFwknopConfigKey.KEY_BASE64_HMAC_LENGTH.getKey()));
+    }
+
+    /**
+     * Create the default jfwknop directory where configuration files are stored
+     */
+    private void createDefaultDirectory() {
+        File directory = new File(getJfwknopWorkingDirectory());
+        if (!directory.exists()) {
+            if (directory.mkdirs()) {
+            } else {
+                LOGGER.error("Unable to create JFwknop user directory: " + getJfwknopWorkingDirectory());
+            }
+        }
     }
 
     class SortedProperties extends Properties {

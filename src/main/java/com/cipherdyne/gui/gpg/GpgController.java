@@ -77,7 +77,6 @@ public class GpgController {
     private void updateBtnBehaviour() {
         this.view.getBtnSelect().addActionListener((ActionEvent e) -> {
             String keyId = GpgController.this.view.getSelectKeyId();
-            //this.parentWindow.getVariables().get(GpgController.this.fwknopKey).setText(keyId);
             this.fwknopKey.setText(keyId);
             this.view.dispose();
         });
