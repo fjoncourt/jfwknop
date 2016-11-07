@@ -138,7 +138,7 @@ public class MainWindowView extends DefaultFrame implements IConsole {
         this.menuItemMap.put(EnumMenuItem.TOOLS_OPENRCFILE, new JMenuItem(InternationalizationHelper.getMessage("window.menu.tools.openrcfile"),
             new ImageIcon(this.getClass().getResource("/edit16.png"))));
 
-        this.menuItemMap.put(EnumMenuItem.TOOLS_GENERATE_ACCESS, new JMenuItem(InternationalizationHelper.getMessage("i18n.window.menu.tools.generate.access")));
+        this.menuItemMap.put(EnumMenuItem.TOOLS_GENERATE_SERVER_FILES, new JMenuItem(InternationalizationHelper.getMessage("i18n.window.menu.tools.generate.access")));
 
         this.menuItemMap.put(EnumMenuItem.TOOLS_EXPORT_FILE, new JMenuItem(InternationalizationHelper.getMessage("window.menu.tools.exportfile"),
             new ImageIcon(this.getClass().getResource("/export16.png"))));
@@ -146,7 +146,7 @@ public class MainWindowView extends DefaultFrame implements IConsole {
         // Add items to menu
         menu.add(this.menuItemMap.get(EnumMenuItem.TOOLS_OPENTERMINAL));
         menu.add(this.menuItemMap.get(EnumMenuItem.TOOLS_OPENRCFILE));
-        menu.add(this.menuItemMap.get(EnumMenuItem.TOOLS_GENERATE_ACCESS));
+        menu.add(this.menuItemMap.get(EnumMenuItem.TOOLS_GENERATE_SERVER_FILES));
         menu.add(this.menuItemMap.get(EnumMenuItem.TOOLS_EXPORT_FILE));
 
         return menu;

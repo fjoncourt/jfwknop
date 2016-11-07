@@ -30,11 +30,11 @@ import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.bouncycastle.openpgp.PGPException;
 
 /**
@@ -43,6 +43,8 @@ import org.bouncycastle.openpgp.PGPException;
  * @author Franck Joncourt
  */
 class MenuBarController extends AbstractController {
+
+    static final Logger LOGGER = LogManager.getLogger(MenuBarController.class.getName());
 
     public MenuBarController(MainWindowView parentView, MainWindowController parentController) {
         super(parentView, parentController);
@@ -102,10 +104,8 @@ class MenuBarController extends AbstractController {
             else {
                 try {
                     Desktop.getDesktop().open(new File(filename));
-                    //ExternalCommand extCmd = new ExternalCommand("xdg-open " + filename);
-                    //extCmd.run();
                 } catch (IOException ex) {
-                    java.util.logging.Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error("Unable to open editor:", ex);
                 }
             }
         });
@@ -116,23 +116,19 @@ class MenuBarController extends AbstractController {
         });
 
         // Set up action listener to generate configuration files for fwknop server
-        this.parentView.getMenuItem(EnumMenuItem.TOOLS_GENERATE_ACCESS).addActionListener((ActionEvent e) -> {
-            final JFileChooser fileChooser = new JFileChooser(getJfwknopWorkingDirectory());
-            fileChooser.setDialogTitle(InternationalizationHelper.getMessage(InternationalizationHelper.getMessage("i18n.save.as")));
-            fileChooser.setSelectedFile(new File("access.conf"));
-            final int result = fileChooser.showSaveDialog(null);
+        this.parentView.getMenuItem(EnumMenuItem.TOOLS_GENERATE_SERVER_FILES).addActionListener((ActionEvent e) -> {
+            final JFileChooser fileChooser = new JFileChooser(JFwknopConfig.getJfwknopWorkingDirectory());
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            fileChooser.setFileHidingEnabled(false);
+            fileChooser.setDialogTitle(InternationalizationHelper.getMessage("i18n.browse"));
+            final int result = fileChooser.showOpenDialog(null);
             if (result == JFileChooser.APPROVE_OPTION) {
-                AccessFile accessFile = new AccessFile(fileChooser.getSelectedFile().getAbsolutePath());
-                accessFile.generate(this.parentController.convertViewToConfig(this.parentView.getVariables()));
-
-                if (!StringUtils.EMPTY.equals(this.parentView.getVariables().get(EnumFwknopRcKey.GPG_SIGNER).getText())) {
-                    try {
-                        String gpgClientId = this.parentView.getVariables().get(EnumFwknopRcKey.GPG_SIGNER).getText();
-                        GpgUtils.exportKey(this.parentView.getVariables().get(EnumFwknopRcKey.GPG_HOMEDIR).getText(), gpgClientId, JFwknopConfig.getJfwknopWorkingDirectory() + gpgClientId + ".asc");
-                    } catch (IOException | PGPException ex) {
-                        Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+                generateServerFiles(fileChooser.getSelectedFile().getAbsolutePath());
+                JOptionPane.showMessageDialog(this.parentView,
+                    InternationalizationHelper.getMessage("i18n.server.files.exported.to") + " " + fileChooser.getSelectedFile().getAbsolutePath(),
+                    InternationalizationHelper.getMessage("i18n.information"),
+                    JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
@@ -145,6 +141,32 @@ class MenuBarController extends AbstractController {
             About aboutView = new About(this.parentView);
             aboutView.setVisible(true);
         });
+    }
 
+    /**
+     * Generate file that are required to configure fwknop server. For AES encryption mode we only
+     * needs to create an access configuration file according to the configured key. For GPG, we
+     * only need to export our GPG key in order to import it to the fwknop server keyring.
+     *
+     * @param directory directory where to store fwknop server files
+     */
+    private void generateServerFiles(String directory) {
+
+        // Generate access file
+        AccessFile accessFile = new AccessFile(directory + System.getProperty("file.separator") + "access.conf");
+        accessFile.generate(this.parentController.convertViewToConfig(this.parentView.getVariables()));
+
+        // Export client GPG key if GPG is usesd
+        String gpgSignerId = this.parentView.getVariables().get(EnumFwknopRcKey.GPG_SIGNER).getText();
+        if (!StringUtils.EMPTY.equals(gpgSignerId)) {
+            try {
+                GpgUtils.exportKey(this.parentView.getVariables().get(
+                    EnumFwknopRcKey.GPG_HOMEDIR).getText(),
+                    gpgSignerId,
+                    directory + System.getProperty("file.separator") + gpgSignerId + ".asc");
+            } catch (IOException | PGPException ex) {
+                LOGGER.error("Unable to export GPG key " + gpgSignerId + " :", ex);
+            }
+        }
     }
 }
