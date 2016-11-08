@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -20,9 +20,34 @@ package com.cipherdyne.jfwknop;
 
 public enum EnumFwknopdRcKey {
 
-    SOURCE,
+    SOURCE {
+        /**
+         * The SOURCE key must be set to ANY if the client has selected automatic resolution
+         *
+         * @param value SOURCE from the client point of view
+         * @return the SOURCE value suitable for a server configuration.
+         */
+        @Override
+        public String convert(String value) {
+            if ("RESOLVE".equalsIgnoreCase(value)) {
+                value = "ANY";
+            }
+            return value;
+        }
+    },
 
-    GPG_REMOTE_ID,
+    GPG_REMOTE_ID {
+        /**
+         * The GPG_REMOTE_ID must no be longger than 8 bytes
+         *
+         * @param value GPG client id - 16 bytes long
+         * @return the GPG REMOTE ID value suitable for a server configuration.
+         */
+        @Override
+        public String convert(String value) {
+            return value.substring(value.length() - 8, value.length());
+        }
+    },
     GPG_DECRYPT_ID,
     GPG_DECRYPT_PW,
     GPG_HOME_DIR,
@@ -36,4 +61,14 @@ public enum EnumFwknopdRcKey {
     HMAC_KEY,
     HMAC_KEY_BASE64,
     HMAC_DIGEST_TYPE;
+
+    /**
+     * Convert a fwknop client value to a sduitable value for fwknop server
+     *
+     * @param value set in the fwknop client configuration
+     * @return a suitable value for the fwknop server
+     */
+    public String convert(String value) {
+        return value;
+    }
 }

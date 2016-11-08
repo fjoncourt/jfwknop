@@ -11,9 +11,13 @@ JFwknop - 1.2.0
         Automatic resolution is used by default, *-R* option from fwknop, rather
         than *source*.
       + Added GPG suport
-    * Load ~/.fwknoprc file at startup - Closes #17
+      + It is now possible to naigate forward and backward in case the user change
+        his mind.
+    * Load ~/.fwknoprc file at startup if it exists - Closes #17
     * JFwknop configuration file is renamed from config.properties to
-      .jfwknoprc and is created in user home directory - Closes #13
+      .jfwknoprc and is created in .jfwknop user home directory - Closes #13
+      All JFwknop files can be stored in .jfwknop user home directory preventing
+      files from spreading all over the user home directory.
     * Added new entry in File menu to provide the ability to create an empty
       configuration - Closes #6
     * Added About window and provides information about the licence, copyright
@@ -22,6 +26,8 @@ JFwknop - 1.2.0
       fwknop server parsing.
     * GPG keys are now 2048 bit long rather than 1024. Moreover, JFwknop creates
       GPG V1 keys and import them in GPG V2 keyring using installed gpg binary.
+    * JFwknop generates not only access file for the remote fwknop server but also
+      automatically export GPG signer id if GPG is used.
 
 JFwknop - 1.1.0 - 02/10/2016
 

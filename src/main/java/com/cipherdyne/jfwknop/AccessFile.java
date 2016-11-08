@@ -93,14 +93,6 @@ public class AccessFile {
      * @return an access file line as a string ready to be stored
      */
     private String generateAccessLine(EnumFwknopdRcKey key, String value) {
-        String fwknopdValue;
-        switch (key) {
-            case GPG_REMOTE_ID:
-                fwknopdValue = String.format("%-32s    %s\n", key.toString(), value.substring(value.length() - 8, value.length()));
-                break;
-            default:
-                fwknopdValue = String.format("%-32s    %s\n", key.toString(), value);
-        }
-        return fwknopdValue;
+        return String.format("%-32s    %s\n", key.toString(), key.convert(value));
     }
 }

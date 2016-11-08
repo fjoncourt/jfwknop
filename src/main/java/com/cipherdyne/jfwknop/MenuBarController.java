@@ -160,10 +160,11 @@ class MenuBarController extends AbstractController {
         String gpgSignerId = this.parentView.getVariables().get(EnumFwknopRcKey.GPG_SIGNER).getText();
         if (!StringUtils.EMPTY.equals(gpgSignerId)) {
             try {
+                String shortenedGpgSignerId = gpgSignerId.substring(gpgSignerId.length() - 8, gpgSignerId.length());
                 GpgUtils.exportKey(this.parentView.getVariables().get(
                     EnumFwknopRcKey.GPG_HOMEDIR).getText(),
                     gpgSignerId,
-                    directory + System.getProperty("file.separator") + gpgSignerId + ".asc");
+                    directory + System.getProperty("file.separator") + shortenedGpgSignerId + ".asc");
             } catch (IOException | PGPException ex) {
                 LOGGER.error("Unable to export GPG key " + gpgSignerId + " :", ex);
             }
