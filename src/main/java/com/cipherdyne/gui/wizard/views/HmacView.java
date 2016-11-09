@@ -45,7 +45,7 @@ public class HmacView extends AbstractView {
 
     @Override
     public EnumWizardView getNextPanel() {
-        return EnumWizardView.SETUP_REMOTE_HOST;
+        return EnumWizardView.SETUP_ACCESS;
     }
 
 }
