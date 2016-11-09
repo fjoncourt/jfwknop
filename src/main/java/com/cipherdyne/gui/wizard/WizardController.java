@@ -21,8 +21,10 @@ package com.cipherdyne.gui.wizard;
 import com.cipherdyne.gui.MainWindowView;
 import com.cipherdyne.gui.gpg.GpgController;
 import com.cipherdyne.jfwknop.EnumFwknopRcKey;
+import com.cipherdyne.jfwknop.JFwknopConfig;
 import com.cipherdyne.jfwknop.MainWindowController;
 import com.cipherdyne.model.RcFileModel;
+import com.cipherdyne.utils.GpgUtils;
 import com.cipherdyne.utils.InternationalizationHelper;
 import java.util.HashMap;
 import java.util.Map;
@@ -156,6 +158,12 @@ public class WizardController {
             if (result == JFileChooser.APPROVE_OPTION) {
                 this.view.getVariable(EnumWizardVariable.GPG_HOME_DIRECTORY).setText(fileChooser.getSelectedFile().getAbsolutePath());
             }
+        });
+
+        // Create e GPG home directory
+        this.view.getButton(EnumWizardButton.CREATE_GPG_HOMEDIR).addActionListener(e -> {
+            GpgUtils.createGpg1HomeDirectory(JFwknopConfig.getJfwknopGpgHomeDirectory());
+            this.view.getVariable(EnumWizardVariable.GPG_HOME_DIRECTORY).setText(JFwknopConfig.getJfwknopGpgHomeDirectory());
         });
 
         // Browse for a GPG signer ID

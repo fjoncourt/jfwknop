@@ -42,6 +42,7 @@ public class JFwknopConfig {
     private static JFwknopConfig instance = null;
 
     private static final String JFWKNOP_DIRECTORY = ".jfwknop";
+    private static final String JFWKNOP_GPG_HOME_DIRECTORY = ".gnupg";
     private static final String JFWKNOP_CONFIG_PROPERTIES = ".jfwknoprc";
     private final SortedProperties configProperties;
     private static final String CONFIG_RECENT_FILE_PREFIX = "recentFile";
@@ -61,12 +62,12 @@ public class JFwknopConfig {
 
         // Opening properties file
         try {
-            this.configProperties.load(new FileInputStream(this.getJfwknoprcFilepath()));
+            this.configProperties.load(new FileInputStream(getJfwknoprcFilepath()));
         } catch (final IOException e) {
-            LOGGER.error("Unable to load configuration file (" + this.getJfwknoprcFilepath() + ") : " + e.getMessage());
+            LOGGER.error("Unable to load configuration file (" + getJfwknoprcFilepath() + ") : " + e.getMessage());
             LOGGER.error("A default configuration file is created");
             createDefaultDirectory();
-            createDefaultConfig(this.getJfwknoprcFilepath());
+            createDefaultConfig(getJfwknoprcFilepath());
         }
 
         readConfig();
@@ -86,6 +87,18 @@ public class JFwknopConfig {
         return System.getProperty("user.home")
             + System.getProperty("file.separator")
             + JFWKNOP_DIRECTORY
+            + System.getProperty("file.separator");
+    }
+
+    /**
+     * @return JFwknop GPG home directory
+     */
+    static public String getJfwknopGpgHomeDirectory() {
+        return System.getProperty("user.home")
+            + System.getProperty("file.separator")
+            + JFWKNOP_DIRECTORY
+            + System.getProperty("file.separator")
+            + JFWKNOP_GPG_HOME_DIRECTORY
             + System.getProperty("file.separator");
     }
 

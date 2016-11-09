@@ -1,4 +1,4 @@
-/* 
+/*
  * JFwknop is developed primarily by the people listed in the file 'AUTHORS'.
  * Copyright (C) 2016 JFwknop developers and contributors.
  *
@@ -102,8 +102,8 @@ public class GpgView extends JDialog {
         operationPanel.add(btnCreate, "growx");
         this.add(operationPanel, "span 2, growx, wrap");
 
-        this.add(btnSelect, "growx");
         this.add(btnCancel, "growx");
+        this.add(btnSelect, "growx");
 
         this.pack();
 

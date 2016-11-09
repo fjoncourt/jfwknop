@@ -25,13 +25,18 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.bouncycastle.bcpg.ArmoredOutputStream;
@@ -64,7 +69,10 @@ public class GpgUtils {
 
     static final Logger LOGGER = LogManager.getLogger(GpgUtils.class.getName());
 
-    static public void addPrivateKeyToKeyring(String gpgHomeDirectory, String keyringFile) throws FileNotFoundException, IOException, PGPException {
+    static private final String GPG1_PUBLIC_KEYRING = "pubring.gpg";
+    static private final String GPG1_PRIVATE_KEYRING = "secring.gpg";
+
+    static public void addPrivateKeyToKeyring(final String gpgHomeDirectory, final String keyringFile) throws FileNotFoundException, IOException, PGPException {
         Security.addProvider(new BouncyCastleProvider());
 
         // Read user secret keyring
@@ -94,8 +102,6 @@ public class GpgUtils {
         try (FileOutputStream out = new FileOutputStream(new File(gpgHomeDirectory + "/secring.gpg"))) {
             privRings.encode(out);
         }
-
-        importSecretKeyToGnupg2(gpgHomeDirectory, keyringFile);
     }
 
     static public void addPublicKeyToKeyring(String gpgHomeDirectory, String keyringFile) throws FileNotFoundException, IOException, PGPException {
@@ -199,11 +205,12 @@ public class GpgUtils {
      *
      * @param gpgHomeDirectory GPG home directory
      * @param privateKeyFile path to the armored file where the private key is stored
+     * @param passphrase Passphrase of the key to import
      */
-    private static void importSecretKeyToGnupg2(String gpgHomeDirectory, String privateKeyFile) {
+    private static void addPrivateKeyToGpg2Keyring(final String gpgHomeDirectory, final String privateKeyFile, final String passphrase) {
 
         // Create the command as a string
-        String gpgCmd = "/usr/bin/gpg --homedir " + gpgHomeDirectory + " -a --import " + privateKeyFile;
+        String gpgCmd = "/usr/bin/gpg --homedir " + gpgHomeDirectory + " --batch --passphrase " + passphrase + " -a --import " + privateKeyFile;
 
         // Build the process and run it
         ProcessBuilder pb = new ProcessBuilder(gpgCmd.split(" "));
@@ -215,7 +222,7 @@ public class GpgUtils {
         }
     }
 
-    public static void createKey(String gpgHomeDirectory, String userId, String passphrase) {
+    public static void createKey(final String gpgHomeDirectory, final String userId, final String passphrase) {
         try {
             Security.addProvider(new BouncyCastleProvider());
 
@@ -248,9 +255,57 @@ public class GpgUtils {
 
             addPublicKeyToKeyring(gpgHomeDirectory, "public.asc");
             addPrivateKeyToKeyring(gpgHomeDirectory, "private.asc");
+            addPrivateKeyToGpg2Keyring(gpgHomeDirectory, "private.asc", passphrase);
 
         } catch (NoSuchAlgorithmException | IOException | PGPException | NoSuchProviderException ex) {
             LOGGER.error(ex);
+        }
+    }
+
+    /**
+     * Create an empty GPG V1 home directory with public and private empty keyrings
+     *
+     * @param homeDirectory Full path to the newly GNUPG home directory to create
+     */
+    public static void createGpg1HomeDirectory(final String homeDirectory) {
+        List<String> files = new ArrayList<>(Arrays.asList(
+            homeDirectory + System.getProperty("file.separator") + GPG1_PUBLIC_KEYRING,
+            homeDirectory + System.getProperty("file.separator") + GPG1_PRIVATE_KEYRING));
+        File directory = new File(homeDirectory);
+
+        if (!directory.exists()) {
+            if (directory.mkdirs()) {
+                // Clear all permissions for all users
+                directory.setReadable(false, false);
+                directory.setWritable(false, false);
+                directory.setExecutable(false, false);
+
+                // Set owner permissions
+                directory.setReadable(true, true);
+                directory.setWritable(true, true);
+                directory.setExecutable(true, true);
+                try {
+
+                    for (String keyringPath : files) {
+
+                        Files.createFile(Paths.get(keyringPath));
+                        File keyringFile = new File(keyringPath);
+
+                        // Clear all permissions for all users
+                        keyringFile.setReadable(false, false);
+                        keyringFile.setWritable(false, false);
+                        keyringFile.setExecutable(false, false);
+
+                        // Set owner permissions
+                        keyringFile.setReadable(true, true);
+                        keyringFile.setWritable(true, true);
+                    }
+                } catch (IOException e) {
+                    LOGGER.error("Unable to create JFwknop GPG home directory: ", e);
+                }
+            } else {
+                LOGGER.error("Unable to create JFwknop GPG home directory: " + homeDirectory);
+            }
         }
     }
 }
