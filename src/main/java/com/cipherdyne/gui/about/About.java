@@ -44,7 +44,7 @@ public class About extends JDialog {
         this.setResizable(false);
 
         // Create title
-        JLabel title = new JLabel("JFwknop 1.2.0");
+        JLabel title = new JLabel("JFwknop 1.2.0~rc1");
         title.setFont(new Font(title.getFont().getName(), Font.BOLD, title.getFont().getSize() + 4));
 
         // Create a panel that contains the JFwknop title along with the icon
